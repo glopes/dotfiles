@@ -1,0 +1,29 @@
+Installation:
+
+    git clone git@github.com:glopes/dotfiles.git ~/.dotfiles/vim
+
+Create symlinks:
+
+    ln -s ~/.dotfiles/vim/vimrc ~/.vimrc
+    ln -s ~/.dotfiles/vim/gvimrc ~/.gvimrc
+    
+Switch to the `~/.dotfiles/vim` directory, and fetch submodules:
+
+    cd ~/.dotfiles/vim
+    git submodule init
+    git submodule update    
+
+    
+Oder noch anders als bash-script:
+    #!/bin/bash
+
+    cd vim
+    export VIM_SRC=`pwd`
+    cd
+    ln -nfs $VIM_SRC .vim
+    ln -nfs $VIM_SRC/vimrc.vim .vimrc
+    ln -nfs $VIM_SRC/gvimrc.vim .gvimrc
+
+
+
+
