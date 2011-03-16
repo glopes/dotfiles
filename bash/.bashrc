@@ -59,10 +59,14 @@ WHITE='\e[1;37m'
 NC='\e[0m'              # farblos
 
 # PROMPT
-PS1="${DARKGRAY}\@ ${LIGHTGRAY}\u${DARKGRAY} : ${WHITE}\w \n${LIGHTGRAY}$ ${NC}"
+#PS1="${DARKGRAY}\@ ${LIGHTGRAY}\u${DARKGRAY} : ${WHITE}\w \n${LIGHTGRAY}$ ${NC}"
+PS1="${WHITE}\t \w ${LIGHTGRAY}$ ${NC}"
 
+
+# backslash-escape special characters
+# http://www.hypexr.org/bash_tutorial.php
 # Symbole:
-# \@ = Zeit
+# \t = Zeit
 # \u = aktueller User
 # \h = Rechnername
 # \W = Verzeichnis
@@ -89,7 +93,7 @@ alias lr='ls -lR |more'         # Rekursive Liste mit more (scrollbar)
 alias tree='tree -Csu|more'     # Alternative zum rekursiven ls
 
 # Zur Sicherheit mit Abfrage, bevor überschrieben wird
-alias del='mv --target-directory=/home/dan/.Trash/'
+alias del='mv --target-directory=/home/$USER/.Trash/'
 alias rm='rm -iV'
 alias cp='cp -iV'
 alias mv='mv -iV'
@@ -134,7 +138,7 @@ alias einserver='ssh ei.ne.server.ip -l root'
 # Bashscripts aliases
 
 # Alias für den Touchpadfix
-alias tpfix='sh /home/deinuser/touchpad.sh'
+alias tpfix='sh /home/$USER/touchpad.sh'
 
 ##################################
 
