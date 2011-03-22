@@ -34,7 +34,7 @@ export HISTCONTROL=ignoreboth
 # SCREEN
 
 # Checkt die Fenstergröße nach jedem Befehl und updatet die Anzahl Zeilen und Spalten
-# shopt -s checkwinsize
+shopt -s checkwinsize
 
 # bessere Ausgabe mit less
 [ -x /usr/bin/lesspipe ] && eval "$(lesspipe)"
@@ -44,7 +44,7 @@ BLACK='\e[0;30m'
 BLUE='\e[0;34m'
 GREEN='\e[0;32m'
 CYAN='\e[0;36m'
-RED='\e[0;31m'
+RED='\e[1;31m'
 PURPLE='\e[0;35m'
 BROWN='\e[0;33m'
 LIGHTGRAY='\e[0;37m'
@@ -59,12 +59,19 @@ WHITE='\e[1;37m'
 NC='\e[0m'              # farblos
 
 # PROMPT
-#PS1="${DARKGRAY}\@ ${LIGHTGRAY}\u${DARKGRAY} : ${WHITE}\w \n${LIGHTGRAY}$ ${NC}"
-PS1="${WHITE}\t \w ${LIGHTGRAY}$ ${NC}"
+# PS1="${DARKGRAY}\@ ${LIGHTGRAY}\u${DARKGRAY} : ${WHITE}\w \n${LIGHTGRAY}$ ${NC}"
+# PS1="${WHITE}\t \w ${LIGHTGRAY}$ ${NC}"
+PS1="\t \w: "
 
+ if [ "$USER" == "root" ]; then  
+     PS1='\[\033[01;31m\][\[\033[01;32m\]\t\[\033[00m\] \[\033[01;34m\]\W\[\033[01;31m\]]#\[\033[00m\] '  
+ else  
+     PS1='\[\033[01;37m\][\[\033[01;32m\]\t\[\033[00m\] \[\033[01;34m\]\W\[\033[01;37m\]]\$\[\033[00m\] '  
+ fi  
 
 # backslash-escape special characters
 # http://www.hypexr.org/bash_tutorial.php
+# http://www.pc-erfahrung.de/linux/bash-eingabeprompt.html
 # Symbole:
 # \t = Zeit
 # \u = aktueller User
@@ -151,6 +158,7 @@ echo -e "$USER's .bashrc ${LIGHTGREEN}geladen${NC}${LIGHTGRAY}...";
 echo -e " ";
 echo -ne "Hallo $USER, heute ist ${LIGHTGREEN}"; date;
 echo -e "${LIGHTGRAY}Kernel Information: ${LIGHTGREEN}" `uname -or`;
+echo -e "${RED}Hasta la vista, baby!!! ;)${NC}"
 echo -e "${NC}";
 
 ##################################
