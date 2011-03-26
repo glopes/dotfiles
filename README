@@ -1,6 +1,7 @@
 Installation:
 
-    git clone git@github.com:glopes/dotfiles.git ~/.dotfiles/vim
+    git clone git@github.com:glopes/dotfiles.git 
+    ~/.dotfiles/vim
 
 Create symlinks:
 
