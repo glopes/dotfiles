@@ -32,6 +32,10 @@ apt-get update
 apt-get install vim -y
 # http://svenseidel.net/blog/2010/vim-version-7-3-veroffentlicht/
 
+# GMate
+apt-add-repository ppa:ubuntu-on-rails/ppa
+apt-get update && apt-get install gedit-gmate
+
 # PDF Mod
 # add-apt-repository ppa:pdfmod-team/ppa
 # apt-get update
