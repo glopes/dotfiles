@@ -17,6 +17,11 @@ apt-get install language-support-de
 add-apt-repository ppa:n-muench/vlc
 apt-get update && apt-get install vlc -y
 
+# Scribes
+# add-apt-repository ppa:mystilleef/scribes-daily
+# apt-get update
+# apt-get install scribes
+
 # JDownLoader Faenza Theme
 # http://gnome-look.org/CONTENT/content-files/140138-Faenza-for-jdownloader.rar
 
