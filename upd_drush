@@ -1,0 +1,9 @@
+#! /bin/bash
+cd ~/drush
+git pull
+cd ~/.drush/drush_make
+git pull
+cd ~/quickstart
+git pull
+cd ~/websites
+
