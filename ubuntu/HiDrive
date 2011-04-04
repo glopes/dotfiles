@@ -1,0 +1,14 @@
+Vorbereitung:
+
+sudo adduser username fuse         # Benutzer "username" der Gruppe fuse hinzufügen (wird nach nächstem Login aktiv)
+mkdir ~/hidrive                    # Mountpoint anlegen
+mount funktioniert so:
+
+sshfs -o allow_other -o workaround=rename username@sftp.hidrive.strato.com: ~/hidrive
+Nur mit workaround=rename kann ich Dateien auf dem HiDrive ersetzen und mit gedit bearbeiten (weil das normalerweise anscheinend eine temporäre Datei schreibt und die dann umbenennt).
+
+unmount so:
+
+fusermount -u ~/hidrive
+
+backup-2697
