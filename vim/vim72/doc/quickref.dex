@@ -1,0 +1,1589 @@
+*quickref.txt*  Für Vim Version 7.2.  Letzte Änderung: 2008-Jan-22
+
+
+		  VIM REFERENZ-HANDBUCH    von Bram Moolenaar
+
+			    Schnellreferenzführer
+
+					 *quickref* *Contents* *schnellreferenz*
+ Tag	  Thema				 Tag	  Thema	~
+|Q_ct|  Liste der Hilfedateien		|Q_re|	Befehle wiederholen
+|Q_lr|	Bewegung: Links-rechts		|Q_km|	Tasten belegen
+|Q_ud|	Bewegung: Oben-unten		|Q_ab|	Abkürzungen
+|Q_tm|	Bewegung: Text-Objekte		|Q_op|	Optionen
+|Q_pa|	Bewegung: Mustersuche		|Q_ur|	Undo/Redo Befehle
+|Q_ma|	Bewegung: Markierungen		|Q_et|	Externe Befehle
+|Q_vm|	Bewegung: Verschiedenes		|Q_qf|	Quickfix Befehle
+|Q_ta|	Bewegung: Tags benutzen		|Q_vc|	Verschiedene Befehle
+|Q_sc|	Scrollen			|Q_ce|	Ex: Befehlszeile editieren
+|Q_in|	Einfügen: Text einfügen		|Q_ra|	Ex: Bereiche
+|Q_ai|	Einfügen: Tasten		|Q_ex|	Ex: Spezielle Zeichen
+|Q_ss|	Einfügen: Spezielle Tasten	|Q_st|	VIM starten
+|Q_di|	Einfügen: Digraphen		|Q_ed|	Eine Datei editieren
+|Q_si|	Einfügen: Spezielle Einfügungen	|Q_fl|	Die Argumentenliste benutzen
+|Q_de|	Ändern: Text löschen		|Q_wq|	Schreiben und Beenden
+|Q_cm|	Ändern: Kopieren und bewegen	|Q_ac|	Automatische Befehle
+|Q_ch|	Ändern: Text ändern		|Q_wi|	Befehle für mehrere Fenster
+|Q_co|	Ändern: Komplex			|Q_bu|	Pufferlistenbefehle
+|Q_vi|	Visueller Modus			|Q_sy|	Syntax-Hervorhebung
+|Q_to|	Textobjekte			|Q_gu|	GUI-Befehle
+					|Q_fo|  Falten
+
+------------------------------------------------------------------------------
+N wird benutzt, um eine optionale Anzahl anzuzeigen, die vor dem Befehl
+angegeben werden kann.
+------------------------------------------------------------------------------
+*Q_lr*		Bewegungen links-rechts
+
+|h|	N  h		links (auch: CTRL-H, <BS> oder <Links>)
+|l|	N  l		rechts (auch: <Leerzeichen> oder <Rechts>)
+|0|	   0		zum ersten Zeichen in der Zeile (auch <Pos1>)
+|^|	   ^		zum ersten nicht-leeren Zeichen in der Zeile
+|$|	N  $		zum letzten Zeichen in der Zeile
+			    (N-1 Zeilen nach unten; auch <Ende>)
+|g0|	N  g0		zum ersten Zeichen in der Bildschirmzeile
+			    (unterscheidet sich von »0«, wenn die Zeile
+			    umbricht)
+|g^|	N  g^		zum ersten nicht-leeren Zeichen in der Bildschirmzeile
+			    (unterscheidet sich von »^«, wenn die Zeile
+			    umbricht)
+|g$|	N  g$		zum letzten Zeichen in der Bildschirmzeile
+			    (unterscheidet sich von »$«, wenn die Zeile
+			    umbricht)
+|gm|	N  gm		zur Mitte der Bildschirmzeile
+|bar|	N  |		zu Spalte N (Voreinstellung: 1)
+|f|	N  f{zeich}	zum Nten Auftreten von {zeich} nach rechts
+|F|	N  F{zeich}	zum Nten Auftreten von {zeich} nach links
+|t|	N  t{zeich}	vor das Nte Auftreten von {zeich} nach rechts
+|T|	N  T{zeich}	vor das Nte Auftreten von {zeich} nach links
+|;|	N  ;		das letzte »f«, »F«, »t« oder »T« N-mal wiederholen
+|,|	N  ,		das letzte »f«, »F«, »t« oder »T« N-mal
+			    in entgegengesetzter Richtung wiederholen
+------------------------------------------------------------------------------
+*Q_ud*		Bewegungen rauf-runter
+
+|k|	N  k		N Zeilen hoch (auch: CTRL-P und <Hoch>)
+|j|	N  j		N Zeilen runter (auch: CTRL-J, CTRL-N, <NL> und
+			    <Runter>)
+|-|	N  -		N Zeilen hoch, auf das erste nicht-leere Zeichen
+|+|	N  +		N Zeilen runter, auf das erste nicht-leere Zeichen
+			    (auch: CTRL-M und <CR>)
+|_|	N  _		N-1 Zeilen runter, auf das erste nicht-leere Zeichen
+|G|	N  G		gehe zu Zeile N (Voreinstellung: letzte Zeile), auf das
+			    erste nicht-leere Zeichen
+|gg|	N  gg		gehe zu Zeile N (Voreinstellung: erste Zeile), auf das
+			    erste nicht-leere Zeichen
+|N%|	N  %		gehe zu Prozent % in der Datei.  N muss angegeben
+			    werden, sonst ist es der Befehl |%|.
+|gk|	N  gk		N Bildschirmzeilen hoch (unterscheidet sich von »k«,
+			    wenn die Zeile umbricht)
+|gj|	N  gj		N Bildschirmzeilen runter (unterscheidet sich von »j«,
+			    wenn die Zeile umbricht)
+------------------------------------------------------------------------------
+*Q_tm*		Textobjektbewegungen
+
+|w|	N w		N Worte vorwärts
+|W|	N W		N leerzeichen-getrennte |WORT|e vorwärts
+|e|	N e		vorwärts zum Ende des Nten Wortes
+|E|	N E		vorwärts zum Ende des Nten leerzeichen-getrennten
+			    |WORT|es
+|b|	N b		N Worte zurück
+|B|	N B		N leerzeichen-getrennte |WORT|e zurück
+|ge|	N ge		zurück zum Ende des Nten Wortes
+|gE|	N gE		zurück zum Ende des Nten leerzeichen-getrennten |WORT|es
+
+
+|)|	N )		N Sätze vorwärts
+|(|	N (		N Sätze rückwärts
+|}|	N }		N Absätze vorwärts
+|{|	N {		N Absätze rückwärts
+|]]|	N ]]		N Abschnitte vorwärts, auf den Beginn des Abschnittes
+|[[|	N [[		N Abschnitte rückwärts, auf den Beginn des Abschnittes
+|][|	N ][		N Abschnitte vorwärts, auf das Ende des Abschnittes
+|[]|	N []		N Abschnitte rückwärts, auf das Ende des Abschnittes
+|[(|	N [(		N-mal zurück zu ungeschlossener »(«
+|[{|	N [{		N-mal zurück zu ungeschlossener »{«
+|[m|	N [m		N-mal zurück zu Methodenbeginn (für Java)
+|[M|	N [M		N-mal zurück zu Methodenende (für Java)
+|)]|	N )]		N-mal vorwärts zu ungeschlossener »)«
+|}]|	N }]		N-mal vorwärts zu ungeschlossener »}«
+|]m|	N ]m		N-mal vorwärts zu Methodenbeginn (für Java)
+|]M|	N ]M		N-mal vorwärts zu Methodenende (für Java)
+|[#|	N [#		N-mal zurück zu ungeschlossenem »#if« oder »#else«
+|]#|	N ]#		N-mal vorwärts zu ungeschlossenem »#else« oder »#endif«
+|[star|	N [*		N-mal zurück zum Kommentarbeginn »/*«
+|}star|	N ]*		N-mal vorwärts zum Kommentarende »*/«
+------------------------------------------------------------------------------
+*Q_pa*		Mustersuchen
+
+|/|	N  /{Muster}[/[Offset]]<CR>
+			suche vorwärts nach dem N-ten Auftreten von {Muster}
+|?|	N  ?{Muster}[?[Offset]]<CR>
+			suche rückwärts nach dem N-ten Auftreten von {Muster}
+|/<CR>|	N  /<CR>	wiederhole letzte Suche, vorwärts gerichtet
+|?<CR>|	N  ?<CR>	wiederhole letzte Suche, rückwärts gerichtet
+|n|	N  n		wiederhole letzte Suche
+|N|	N  N		wiederhole letzte Suche, in Gegenrichtung
+|star|	N  *		Suche vorwärts nach dem Identifikator unter dem Cursor
+|#|	N  #		Suche rückwärts nach dem Identifikator unter dem Cursor
+|gstar|	N  *		wie »*«, finde aber auch teilweise Übereinstimmungen
+|g#|	N  #		wie »#«, finde aber auch teilweise Übereinstimmungen
+|gd|	   gd		gehe zu lokaler Deklaration des Identifikators unter
+			    dem Cursor
+|gD|	   gD		gehe zu globaler Deklaration des Identifikators unter
+			    dem Cursor
+
+|pattern|		Spezielle Zeichen in Suchmustern
+
+			Bedeutung	magisch (magic) nichtmagisch (nomagic)	~
+	    passt auf jedes einzelne Zeichen	.	\.
+		      passt auf Zeilenanfang	^	^
+		passt auf <EOL> (Zeilenende)	$	$
+			passt auf Wortanfang	\<	\<
+			  passt auf Wortende	\>	\>
+	     passt auf ein einzelnes Zeichen
+			     aus dem Bereich	[a-z]	\[a-z]
+	    passt auf ein einzelnes Zeichen,
+		das nicht in dem Bereich ist	[^a-z]	\[^a-z]
+	  passt auf ein Identifikatorzeichen	\i	\i
+	   ebenso, schließt aber Ziffern aus	\I	\I
+	  passt auf ein Schlüsselwortzeichen	\k	\k
+	   ebenso, schließt aber Ziffern aus	\K	\K
+	     passt auf ein Dateinamenzeichen	\f	\f
+	   ebenso, schließt aber Ziffern aus	\F	\F
+	    passt auf ein druckbares Zeichen	\p	\p
+	   ebenso, schließt aber Ziffern aus	\P	\P
+		passt auf ein weißes Zeichen	\s	\s
+	  passt auf ein nicht-weißes Zeichen	\S	\S
+
+			     passt auf <Esc>	\e	\e
+			     passt auf <Tab>	\t	\t
+			      passt auf <CR>	\r	\r
+			      passt auf <BS>	\b	\b
+
+passt auf 0 oder mehr des vorhergehenden Atoms	*	\*
+passt auf 1 oder mehr des vorhergehenden Atoms	\+	\+
+  passt auf 0 oder 1 des vorhergehenden Atoms	\=	\=
+   passt auf 2 bis 5 des vorhergehenden Atoms	\{2,5}  \{2,5}
+		     trennt zwei Alternativen	\|	\|
+	   gruppiert ein Muster zu einem Atom	\(\)	\(\)
+
+|search-offset|		Erlaubte Offsets nach Suchbefehlen
+
+    [Num]	[Num] Zeilen abwärts, in Spalte 1
+    +[Num]	[Num] Zeilen abwärts, in Spalte 1
+    -[Num]	[Num] Zeilen aufwärts, in Spalte 1
+    e[+Num]	[Num] Zeichen nach rechts vom Ende der Übereinstimmung
+    e[-Num]	[Num] Zeichen nach links vom Ende der Übereinstimmung
+    s[+Num]	[Num] Zeichen nach rechts vom Beginn der Übereinstimmung
+    s[-Num]	[Num] Zeichen nach links vom Beginn der Übereinstimmung
+    b[+Num]	wie s[+Num]
+    b[-Num]	wie s[-Num]
+    ;{Suchbefehl}	führe als nächstes {Suchbefehl} aus
+------------------------------------------------------------------------------
+*Q_ma*		Markierungen und Bewegungen
+
+|m|	   m{a-zA-Z}	markiere aktuelle Position mit Markierung {a-zA-Z}
+|`a|	   `{a-z}	gehe zur Markierung {a-z} in aktueller Datei
+|`A|	   `{A-Z}	gehe zur Markierung {A-Z} in jeglicher Datei
+|`0|	   `{0-9}	gehe zur Position, wo Vim zuvor beendet wurde
+|``|	   ``		gehe zur Position vor dem letzten Sprung
+|`quote|   `"		gehe zur Position wo diese Datei zuletzt editiert wurde
+|`[|	   `[		gehe zum Beginn des zuletzt bearbeiteten oder
+			eingefügten Textes
+|`]|	   `]		gehe zum Ende des zuletzt bearbeiteten oder
+			eingefügten Textes
+|`<|	   `<		gehe zum Beginn des (letzten) visuellen Bereiches
+|`>|	   `>		gehe zum Ende des (letzten) visuellen Bereiches
+|`.|	   `.		gehe zur Position der letzten Änderung in dieser Datei
+|'|	   '{a-zA-Z0-9[]'"<>.}
+			dasselbe wie »`«, aber auf das erste nichtleere Zeichen
+			in der Zeile
+|:marks|  :marks	gib die aktiven Markierungen aus
+|CTRL-O|  N  CTRL-O	gehe zur N-ten neueren Position in der Sprungliste
+|CTRL-I|  N  CTRL-I	gehe zur N-ten älteren Position in der Sprungliste
+|:ju|	  :ju[mps]	gib die Sprungliste aus
+------------------------------------------------------------------------------
+*Q_vm*		Verschiedene Bewegungen
+
+|%|	   %		finde die nächste »{«, »}«, »(«, »)«, »[«, »]«, das
+			   nächste »/*«, »*/«, »#if«, »#else« oder »#endif«
+			   in dieser Zeile, und gehe zum Übereinstimmenden
+|H|	N  H		gehe zur N-ten Zeile im Fenster, auf das erste
+			   nicht-leere Zeichen
+|M|	   M		gehe zur mittleren Zeile im Fenster, auf das erste
+			   nicht-leere Zeichen
+|L|	N  L		gehe zur N-ten Zeile von unten, auf das erste
+			   nicht-leere Zeichen
+
+|go|	N  go		gehe zum N-ten Byte im Puffer
+|:go|	:[Bereich]go[to] [off]	gehe zu Byte [off] im Puffer
+------------------------------------------------------------------------------
+*Q_ta*		Tags benutzen
+
+|:ta|	   :ta[g][!] {Tag}	Springe zum Tag {Tag}
+|:ta|	   :[Anzahl]ta[g][!]	Springe zum [Anzahl]-ten neueren Tag in der
+				   Tagliste
+|CTRL-]|      CTRL-]		Springe zum Tag unter dem Cursor, solange
+				   keine Änderungen gemacht wurde
+|:ts|	   :ts[select][!] [Tag] Liste passende Tags auf und wähle
+				   einen zum Anspringen aus
+|:tjump|   :tj[ump][!] [Tag]	Springe zum Tag [Tag] oder wähle aus Liste,
+				   wenn es mehrere Übereinstimmungen gibt
+|:ltag|	   :lt[ag][!] [Tag]	Springe zum Tag [Tag] und füge passende Tags
+				   zur Lokationsliste hinzu
+
+|:tags|	   :tags		Gebe Tagliste aus
+|CTRL-T|   N  CTRL-T		Springe zurück vom N-ten älteren Tag in der
+				   Tagliste
+|:po|	   :[Anzahl]po[p][!]	Springe zurück vom [Anzahl]-ten älteren Tag
+				   in der Tagliste
+|:tnext|   :[Anzahl]tn[ext][!]	Springe zum [Anzahl]-ten nächsten passenden
+				   Tag
+|:tp|      :[Anzahl]tp[previous][!] Springe zum [Anzahl]-ten vorigen passenden
+				   Tag
+|:tr|	   :[Anzahl]tr[ewind][!] Springe zum [Anzahl]-ten passenden Tag
+|:tl|	   :tl[ast][!]		Springe zum letzten passenden Tag
+
+|:ptag|	   :pt[ag] {Tag}	Öffne ein Vorschaufenster, um Tag {Tag}
+				   anzuzeigen
+|CTRL-W_}|     CTRL-W }		wie CTRL-], aber zeige Tag in Vorschaufenster
+|:pts|     :pts[elect]		wie »:tselect«, aber zeige Tag in
+				   Vorschaufenster
+|:ptjump|  :ptj[ump]		wie »:tjump«, aber zeige Tag in Vorschaufenster
+|:pclose|  :pc[lose]		schließe Tag-Vorschaufenster
+|CTRL-W_z|     CTRL-W z		schließe Tag-Vorschaufenster
+------------------------------------------------------------------------------
+*Q_sc*		Scrollen
+
+|CTRL-E|	N  CTRL-E	Fenster N Zeilen abwärts (ohne Anzahl: 1 Zeile)
+|CTRL-D|	N  CTRL-D	Fenster N Zeilen abwärts (ohne Anzahl: 1/2
+				   Fenster)
+|CTRL-F|	N  CTRL-F	Fenster N Seiten vorwärts (abwärts)
+|CTRL-Y|	N  CTRL-Y	Fenster N Zeilen aufwärts (ohne Anzahl: 1 Zeile)
+|CTRL-U|	N  CTRL-U	Fenster N Zeilen aufwärts (ohne Anzahl: 1/2
+				   Fenster)
+|CTRL-B|	N  CTRL-B	Fenster N Seiten zurück (aufwärts)
+|z<CR>|		   z<CR>oder zt	neuzeichnen, aktuelle Zeile an erste im Fenster
+|z.|		   z.	oder zz	neuzeichnen, aktuelle Zeile an Mitte vom Fenster
+|z-|		   z-	oder zb	neuzeichnen, aktuelle Zeile an letzte im Fenster
+
+Die folgenden funktionieren nur, wenn 'wrap' deaktiviert ist:
+|zh|		N  zh		scrolle Bildschirm N Zeichen nach rechts
+|zl|		N  zl		scrolle Bildschirm N Zeichen nach links
+|zH|		N  zH		scrolle Bildschirm N halbe Bildschirmbreiten
+				   nach rechts
+|zL|		N  zH		scrolle Bildschirm N halbe Bildschirmbreiten
+				   nach links
+------------------------------------------------------------------------------
+*Q_in*		Text einfügen
+
+|a|	N a	hänge Text nach dem Cursor an (N-mal)
+|A|	N A	hänge Text am Ende der Zeile an (N-mal)
+|i|	N i	füge Text vor dem Cursor ein (N-mal; auch: <Einfg>)
+|I|	N I	füge Text vor dem ersten nicht-leeren Zeichen
+		   in der Zeile ein (N-mal)
+|gI|	N gI	füge Text in Spalte 1 ein (N-mal)
+|o|	N o	öffne neue Zeile unter der aktuellen Zeile,
+		   hänge Text an (N-mal)
+|O|	N O	öffne neue Zeile über der aktuellen Zeile,
+		   hänge Text an (N-mal)
+|:startinsert| :star[tinsert][!] gehe in Einfügemodus,
+		   hänge an, wenn [!] benutzt wird
+|:startreplace| :startr[eplace][!] gehe in Ersetzungsmodus,
+		   am EOL, wenn [!] benutzt wird
+
+im visuellen Blockmodus:
+|v_b_I|    I	füge denselben Text vorn in allen ausgewählten Zeilen ein
+|v_b_A|	   A	hänge denselben Text hinten in allen ausgewählten Zeilen an
+------------------------------------------------------------------------------
+*Q_ai*		Tasten im Einfügemodus
+
+|insert-index|	alphabetischer Index der Befehle im Einfügemodus
+
+Einfügemodus verlassen:
+|i_<Esc>|	<Esc>		  Einfügemodus beenden, zurück zum Normalmodus
+|i_CTRL-C|	CTRL-C		  wie <Esc>, aber benutze keine Abkürzung
+|i_CTRL-O|	CTRL-O {Befehl}   führe {Befehl} aus und kehre zum
+					Einfügemodus zurück
+
+Umher bewegen:
+|i_<Up>|	Cursortasten	  bewege Cursor nach links/rechts/oben/unten
+|i_<S-Left>|	Shift-links/rechts ein Wort nach links/rechts
+|i_<S-Up>|	Shift-hoch/runter eine Bildschirmhöhe rückwärts/vorwärts
+|i_<End>|	<Ende>		  Cursor nach letztes Zeichen in der Zeile
+|i_<Home>|	<Pos1>		  Cursor zu erstem Zeichen in der Zeile
+------------------------------------------------------------------------------
+*Q_ss*		Spezielle Taste im Einfügemodus
+
+|i_CTRL-V|	CTRL-V {Zeich}..  füge Zeichen wörtlich ein,
+				     oder gebe dezimalen Byte-Wert ein
+|i_<NL>|	<NL> oder <CR> oder CTRL-M oder CTRL-J
+				  beginne neue Zeile
+|i_CTRL-E|	CTRL-E		  füge das Zeichen unterhalb des Cursors ein
+|i_CTRL-Y|	CTRL-Y		  füge das Zeichen oberhalb des Cursors ein
+
+|i_CTRL-A|	CTRL-A		  füge zuvor eingefügten Text ein
+|i_CTRL-@|	CTRL-@		  füge zuvor eingefügten Text ein und
+				     beende Einfügemodus
+|i_CTRL-R|	CTRL-R {0-0a-z%#:.-="}  füge den Inhalt eines Registers ein
+
+|i_CTRL-N|	CTRL-N		  füge nächste Übereinstimmung des
+				     Identifikators vor dem Cursor ein
+|i_CTRL-P|	CTRL-P		  füge vorige Übereinstimmung des
+				     Identifikators vor dem Cursor ein
+|i_CTRL-X|	CTRL-X ...	  vervollständige das Wort vor dem Cursor auf
+				     verschiedene Weise
+
+|i_<BS>|	<BS> oder CTRL-H  lösche das Zeichen vor dem Cursor
+|i_<Del>|	<Entf>		  lösche das Zeichen unter dem Cursor
+|i_CTRL-W|	CTRL-W		  lösche das Wort vor dem Cursor
+|i_CTRL-U|	CTRL-U		  lösche alle eingegebenen Zeichen in der
+				     aktuellen Zeile
+|i_CTRL-T|	CTRL-T		  füge eine Schaltbreite Einrückung vor der
+				     aktuellen Zeile ein
+|i_CTRL-D|	CTRL-D		  lösche eine Schaltbreite Einrückung vor der
+				     aktuellen Zeile
+|i_0_CTRL-D|	0 CTRL-D	  lösche alle Einrückung in der aktuellen Zeile
+|i_^_CTRL-D|	^ CTRL-D	  lösche alle Einrückung in der aktuellen Zeile,
+				     stelle in der nächsten Zeile wieder her
+------------------------------------------------------------------------------
+*Q_di*		Digraphen
+
+|:dig|	   :dig[raphs]		zeige aktuelle Liste von Digraphen
+|:dig|	   :dig[raphs] {Zeich1}{Zeich2} {Nummer} ...
+				füge Digraph(en) zur Liste hinzu
+
+Im Einfügen- oder Befehlszeilenmodus:
+|i_CTRL-K|	CTRL-K {Zeich1} {Zeich2}
+				  gebe Digraph ein
+|i_digraph|	{Zeich1} <BS> {Zeich2}
+				  gebe Digraph ein, falls Option 'digraph'
+				  gesetzt ist
+------------------------------------------------------------------------------
+*Q_si*		Spezielle Eingaben
+
+|:r|	   :r [Datei]	 füge den Inhalt von [Datei] unterhalb des Cursors ein
+|:r!|	   :r! {Befehl}  füge die Standardausgabe von {Befehl} unterhalb des
+			      Cursors ein
+------------------------------------------------------------------------------
+*Q_de*		Text löschen
+
+|x|	N  x		lösche N Zeichen unter und nach dem Cursor
+|<Del>| N  <Entf>	lösche N Zeichen unter und nach dem Cursor
+|X|	N  X		lösche N Zeichen vor dem Cursor
+|d|	N  d{Bewegung}	lösche den Text, über den {Bewegung} streicht
+|v_d|	{visuell}d	lösche den hervorgehobenen Text
+|dd|	N  dd		lösche N Zeilen
+|D|	N  D		lösche zum Zeilenende (und N-1 weitere Zeilen)
+|J|	N  J		füge N-1 Zeilen zusammen (lösche <EOL>s)
+|v_J|	{visuell}J	füge die hervorgehobenen Zeilen zusammen
+|gJ|	N  gJ		wie »J«, aber füge keine Leerzeichen ein
+|v_gJ|	{visuell}	wie »{visuell}J«, aber füge keine Leerzeichen ein
+|:d|	:[Bereich]d [x]	lösche Zeilen in [Bereich] [in Register x]
+------------------------------------------------------------------------------
+*Q_cm*		Text kopieren und bewegen
+
+|quote|	  "{Zeich}	benutze Register {Zeich} für das nächste Löschen,
+			    Kopieren oder Einfügen
+|:reg|	  :reg		zeige den Inhalt aller Register
+|:reg|	  :reg {Arg}	zeige den Inhalt der in {Arg} genannten Register
+|y|	  N  y{Bewegung} kopiere den mit {Bewegung} überstrichenen Text
+			    in ein Register
+|v_y|	    {visuell}y	kopiere den hervorgehobenen Text in ein Register
+|yy|	  N  yy		kopiere N Zeilen in ein Register
+|Y|	  N  Y		kopiere N Zeilen in ein Register
+|p|	  N  p		füge ein Register nach der Cursorposition ein (N-mal)
+|P|	  N  P		füge ein Register vor der Cursorposition ein (N-mal)
+|]p|	  N  ]p		wie p, aber passe Einrückung der aktuellen Zeile an
+|[p|	  N  [p		wie P, aber passe Einrückung der aktuellen Zeile an
+|gp|	  N  gp		wie p, aber lasse Cursor nach dem neuen Text
+|gP|	  N  gP		wie P, aber lasse Cursor nach dem neuen Text
+------------------------------------------------------------------------------
+*Q_ch*		Text ändern
+
+|r|	  N  r{Zeich}	ersetze N Zeichen durch {Zeich}
+|gr|	  N  gr{Zeich}	ersetze N Zeichen, ohne das Layout zu beeinflussen
+|R|	  N  R		gehe in Ersetzen-Modus (wiederhole den eingegebenen Text
+			   N-mal)
+|gR|	  N  gR		gehe in virtuellen Ersetzen-Modus: wie Ersetzen-Modus,
+			   aber ohne das Layout zu beeinflussen
+|v_b_r|	 {visuell}r{Zeich}
+			im blockweisen visuellen Modus: Ersetze jedes Zeichen
+			   des ausgewählten Textes durch {Zeich}
+
+	(ändere = lösche Text und gehe in Einfügen-Modus)
+|c|	  N  c{Bewegung} ändere den Text, der mit {Bewegung} überstrichen wird
+|v_c|	     {visuell}c	ändere den hervorgehobenen Text
+|cc|	  N  cc		ändere N Zeilen
+|S|	  N  S		ändere N Zeilen
+|C|	  N  C		ändere bis zum Zeilenende (und N-1 weitere Zeilen)
+|s|	  N  s		ändere N Zeichen
+|v_b_c|	     {visuell}c	im blockweisen visuellen Modus: ändere jede der 
+			   ausgewählten Zeilen bis zum Zeilenende in den
+			   eingegebenen Text
+
+|~|	  N  ~		ändere Groß-/Kleinschreibung für N Zeichen und bewege
+			   Cursor weiter
+|v_~|	     {visuell}~	ändere Groß-/Kleinschreibung für hervorgehobenen Text
+|v_u|	     {visuell}u	ändere hervorgehobenen Text in Kleinschreibung
+|v_U|	     {visuell}U	ändere hervorgehobenen Text in Großschreibung
+|g~|	     g~{Bewegung} ändere Groß-/Kleinschreibung für den mit {Bewegung}
+			   überstrichenen Text
+|gu|	     gu{Bewegung} ändere den mit {Bewegung} überstrichenen Text in
+			   Kleinschreibung
+|gU|	     gU{Bewegung} ändere den mit {Bewegung} überstrichenen Text in
+			   Großschreibung
+|v_g?|	     {visuell}g? führe auf dem hervorgehobenen Text Rot13-Kodierung aus
+|g?|	     g?{Bewegung} führe auf dem von {Bewegung} überstrichenen Text
+			   Rot13-Kodierung aus
+
+|CTRL-A| N CTRL-A	addiere N zur Nummer an oder nach dem Cursor
+|CTRL-X| N CTRL-X	substrahiere N von der Nummer an oder nach dem Cursor
+
+|<|	  N  <{Bewegung} bewege die von {Bewegung} überstrichenen Zeilen eine
+			   Schaltbreite nach links
+|<<|	  N  <<		bewege N Zeilen eine Schaltbreite nach links
+|>|	  N  <{Bewegung} bewege die von {Bewegung} überstrichenen Zeilen eine
+			   Schaltbreite nach rechts
+|>>|	  N  >>		bewege N Zeilen eine Schaltbreite nach rechts
+|gq|	  N  gq{Bewegung} formatiere die von {Bewegung} überstrichenen Zeilen
+			   zur Länge 'textwidth'
+|:ce|	  :[Bereich]ce[nter] [Breite]
+			zentriere die Zeile in [Bereich]
+|:le|	  :[Bereich]le[ft] [Einrückung]
+			richte die Zeilen in [Bereich] linksbündig aus
+			   (mit [Einrückung])
+|:ri|	  :[Bereich]ri[ght] [Breite]
+			richte die Zeilen in [Bereich] rechtsbündig aus
+------------------------------------------------------------------------------
+*Q_co*		Komplexe Änderungen
+
+|!|	   N  !{Bewegung}{Befehl}<CR>
+			filtere die überstrichenen Zeilen durch {Befehl}
+|!!|	   N  !!{Befehl}<CR>
+			filtere N Zeilen durch {Befehl}
+|v_!|	      {visuell}!{Befehl}<CR>
+			filtere die hervorgehobenen Zeilen durch {Befehl}
+|:range!|  :[Bereich]! {Befehl}<CR>
+			filtere die Zeilen im [Bereich] durch {Befehl}
+|=|	   N  ={Bewegung}
+			filtere die überstrichenen Zeilen durch 'equalprg'
+|==|	   N  ==	filtere N Zeilen durch 'equalprg'
+|v_=|	      {visuell}=
+			filtere die hervorgehobenen Zeilen durch 'equalprg'
+|:s|	   :[Bereich]s[ubstitute]/{Muster}/{Zeichenkette}/[g][c]
+			ersetze im [Bereich] {Muster} durch {Zeichenkette};
+			   mit [g] -- ersetze jedes Vorkommen von {Muster};
+			   mit [c] -- bestätige jede Ersetzung
+|:s|	   :[Bereich]s[ubstitute] [g][c]
+			wiederhole voriges »:s« mit neuem Bereich und Optionen
+|:ret|	   :[Bereich]ret[ab][!] [tabstop]
+			setze 'tabstop' auf neuen Wert und passe Einrückung
+			   entsprechend an
+------------------------------------------------------------------------------
+*Q_vi*		Visueller Modus
+
+|visual-index|	Liste von Befehlen des visuellen Modus.
+
+|v|	   v		beginne zeichenweises Hervorheben }
+|V|	   V		beginne zeilenweises Hervorheben  }
+|CTRL-V|   CTRL-V	beginne blockweises Hervorheben   }
+			   -> bewegen Sie den Cursor und benutzen Sie einen
+			      Operator, um den hervorgehobenen Text zu
+			      beeinflussen
+|v_o|	   o		vertausche Cursorposition mit Beginn der Hervorhebung
+|gv|	   gv		beginne Hervorhebung mit vorigem visuellen Bereich
+|v_v|	   v		hebe Zeichen hervor oder beende Hervorhebung
+|v_V|	   V		hebe Zeilen hervor oder beende Hervorhebung
+|v_CTRL-V| CTRL-V	hebe blockweise hervor oder beende Hervorhebung
+------------------------------------------------------------------------------
+*Q_to*		Textobjekte (nur im visuellen Modus oder nach einem Operator)
+
+|v_aw|	   N  aw		Wähle »ein (a) Wort«
+|v_iw|	   N  iw		Wähle »inneres Wort«
+|v_aW|	   N  aW		Wähle »ein (a) |WORT|«
+|v_iW|	   N  iW		Wähle »inneres |WORT|«
+|v_as|	   N  as		Wähle »einen (a) Satz«
+|v_is|	   N  is		Wähle »inneren Satz«
+|v_ap|	   N  ap		Wähle »einen Absatz (a paragraph)«
+|v_ip|	   N  ip		Wähle »inneren Absatz (paragraph)«
+|v_ab|	   N  ab		Wähle »einen (a) Block« (von »[(« bis »])«)
+|v_ib|	   N  ib		Wähle »inneren Block« (von »[(« bis »])«)
+|v_aB|	   N  aB		Wähle »einen (a) Block« (von »[{« bis »]})«
+|v_iB|	   N  iB		Wähle »inneren Block« (von »[{« bis »]})«
+|v_a>|	   N  a>	Wähle »einen <>-Block«
+|v_i>|	   N  i>	Wähle »inneren <>-Block«
+|v_at|	   N  at	Wähle »einen Tag-Block« (von <a> bis </a>)
+|v_it|	   N  it	Wähle »inneren Tag-Block« (von <a> bis </a>)
+|v_a'|	   N  a'	Wähle »einzeln zitierte Zeichenkette«
+|v_i'|	   N  i'	Wähle »innere einzeln zitierte Zeichenkette«
+|v_aquote| N  a"	Wähle »doppelt zitierte Zeichenkette«
+|v_iquote| N  i"	Wähle »innere doppelt zitierte Zeichenkette«
+|v_a`|	   N  i`	Wähle »rückwärts zitierte Zeichenkette«
+|v_i`|	   N  i`	Wähle »innere rückwärts zitierte Zeichenkette«
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+*Q_re*		Befehle wiederholen
+
+|.|	   N  .		wiederhole letzte Änderung (mit durch N ersetzter
+			   Anzahl)
+|q|	      q{a-z}	zeichne getippte Zeichen nach Register {a-z} auf
+|q|	      q{A-Z}	zeichne getippte Zeichen auf, angehängt an
+			   Register {a-z}
+|q|	      q		beende Aufzeichnen
+|@|	   N  @{a-z}	führe den Inhalt von Register {a-z} (N-mal) aus
+|@@|	   N  @@	   wiederhole voriges @{a-z} (N-mal)
+|:@|	   :@{a-z}	führe den Inhalt von Register {a-z} als Ex-Befehl aus
+|:@@|	   :@@		wiederhole voriges :@{a-z}
+|:g|	   :[Bereich]g[lobal]/{Muster}/[Befehl]
+			führe Ex-[Befehl] aus (Voreinstellung: »:p«) auf den
+			   Zeilen in [Bereich] wo {Muster} passt
+|:g|	   :[Bereich]g[lobal]!/{Muster}/[Befehl]
+			führe Ex-[Befehl] aus (Voreinstellung: »:p«) auf den
+			   Zeilen in [Bereich] wo {Muster} NICHT passt
+|:so|	   :so[urce] {Datei}
+			Lese Ex-Befehle aus {Datei}
+|:so|	   :so[urce]! {Datei}
+			Lese Vim-Befehle aus {Datei}
+|:sl|	   :sl[eep] [sek]
+			tue nichts für [sek] Sekunden
+|gs|	   N  gs	gehe für N Sekunden schlafen
+------------------------------------------------------------------------------
+*Q_km*		Tasten belegen
+
+|:map|	     :ma[p] {lhs} {rhs}	  belege {lhs} mit {rhs} im normalen und
+				    visuellen Modus
+|:map!|	     :ma[p]! {lhs} {rhs}  belege {lhs} mit {rhs} im Einfüge- und
+				    Befehlszeilen-Modus
+|:noremap|   :no[remap][!] {lhs} {rhs}
+				  Dasselbe wie »:map«, ohne Neubelegen von {rhs}
+|:unmap|     :unm[ap] {lhs}	  entferne Belegung von {lhs} für normalen und
+				    visuellen Modus
+|:unmap!|    :unm[ap]! {lhs}	  entferne Belegung von {lhs} für Einfüge- und
+				    Befehlszeilen-Modus
+|:map_l|     :ma[p] [lhs]	  liste Belegungen für normalen und visuellen
+				    Modus auf (die mit [lhs] beginnen)
+|:map_l!|    :ma[p]! [lhs]	  liste Belegungen für Einfüge- und
+				    Befehlszeilen-Modus auf (die mit [lhs]
+				    beginnen)
+|:cmap|	     :cmap/:cunmap/:cnoremap
+				  wie »:map!«/»:unmap!«/»:noremap!«, aber nur
+				    für Befehlszeilen-Modus
+|:imap|	     :imap/:iunmap/:inoremap
+				  wie »:map!«/»:unmap!«/»:noremap!«, aber nur
+				    für Einfüge-Modus
+|:nmap|	     :nmap/:nunmap/:nnoremap
+				  wie »:map«/»:unmap«/»:noremap«, aber nur für
+				    normalen Modus
+|:vmap|	     :vmap/:vunmap/:vnoremap
+				  wie »:map«/»:unmap«/»:noremap«, aber nur für
+				    visuellen Modus
+|:omap|	     :omap/:ounmap/:onoremap
+				  wie »:map«/»:unmap«/»:noremap«, aber nur wenn
+				    ein Operator hängt
+|:mapc|      :mapc[lear]	  entferne Belegungen für normalen und
+				    visuellen Modus
+|:mapc|      :mapc[lear]!	  entferne Belegungen für Einfüge- und
+				    Befehlszeilen-Modus
+|:imapc|     :imapc[lear]	  entferne Belegungen für Einfüge-Modus
+|:vmapc|     :vmapc[lear]	  entferne Belegungen für visuellen Modus
+|:omapc|     :omapc[lear]	  entferne Belegungen für Operator-Modus
+|:nmapc|     :nmapc[lear]	  entferne Belegungen für normalen Modus
+|:cmapc|     :cmapc[lear]	  entferne Belegungen für Befehlszeilen-Modus
+|:mkexrc|    :mk[exrc][!] [Datei]  schreibe aktuelle Belegungen, Abkürzungen
+				    und Einstellungen in [Datei]
+				    (Voreinstellung: ».exrc«; benutzen Sie »!«
+				    zum Überschreiben)
+|:mkvimrc|   :mkv[imrc][!] [Datei]
+				  dasselbe wie »:mkexrc«, aber mit
+				    Voreinstellung ».vimrc«
+|:mksession| :mks[ession][!] [Datei]
+				  wie »:mkvimrc«, aber speichere auch aktuelle
+				    Dateien, Fenster, usw., um diese Sitzung
+				    später wieder aufnehmen zu können
+------------------------------------------------------------------------------
+*Q_ab*		Abkürzungen
+
+|:abbreviate|	:ab[breviate] {lhs} {rhs}  füge Abkürzung für {lhs} in {rhs}
+					     hinzu
+|:abbreviate|	:ab[breviate] {lhs}	   Zeige Abkürzungen, die mit {lhs}
+					     beginnen
+|:abbrevialte|	:ab[breviate]		   Zeige alle Abkürzungen
+|:noreabbrev|	:norea[bbrev] [lhs] [rhs]  wie »:ab«, aber belege [rhs]
+					     nicht neu
+|:iabbrev|	:iab/:iunab/:inoreab	   wie »:ab«, aber nur für
+					     Einfüge-Modus
+|:cabbrev|	:cab/:cunab/:cnoreab	   wie »:ab«, aber nur für
+					     Befehlszeilen-Modus
+|:abclear|	:abc[lear]		   entferne alle Abkürzungen
+|:cabclear|	:cabc[lear]		   entferne alle Abkürzungen für
+					     Befehlszeilen-Modus
+|:iabclear|	:iabc[lear]		   entferne alle Abkürzungen für
+					     Einfüge-Modus
+------------------------------------------------------------------------------
+*Q_op*		Optionen
+
+|:set|		:se[t]			  zeige alle modifizierten Optionen
+|:set|		:se[t] all		  zeige alle nicht-termcap-Optionen
+|:set|		:se[t] termcap		  zeige alle termcap-Optionen
+|:set|		:se[t] {Option}		  setze boolesche Option (schalte sie
+					  ein), zeige Zeichenketten- oder
+					  Nummern-Option
+|:set|		:se[t] no{Option}	  Lösche boolesche Option (schalte sie
+					  aus)
+|:set|		:se[t] inv{Option}	  invertiere boolesche Option
+|:set|		:se[t] {Option}={Wert}	  Setze Zeichenketten-/Nummern-Option
+					  auf {Wert}
+|:set|		:se[t] {Option}+={Wert}   hänge {Wert} an Zeichenketten-Option
+					  an, addiere {Wert} zu Nummern-Option
+|:set|		:se[t] {Option}-={Wert}   entferne {Wert} aus Zeichenketten-
+					  Option, ziehe {Wert} von Nummern-
+					  Option ab
+|:set|		:se[t] {Option}?	  zeige Wert von {Option} an
+|:set|		:se[t] {Option}&	  setze {Option} auf Voreinstellung
+
+|:setlocal|	:setl[ocal]		  wie »:set«, aber setze den lokalen
+					  Wert für Optionen, die einen haben
+|:setglobal|	:setg[lobal]		  wie »:set«, aber setze den globalen
+					  Wert einer lokalen Option
+
+|:fix|		:fix[del]		  setze Wert von 't_kD' entsprechend
+					  Wert von 't_kb'
+|:options|	:opt[ions]		  öffne ein neues Fenster zum
+					  Betrachten und Setzen von Optionen,
+					  gruppiert nach Funktionalität, mit
+					  einzeiliger Erklärung und Verweisen
+					  in die Hilfe
+
+Kurze Erklärung jeder Option:		*option-list*
+'aleph'		  'al'	    ASCII-Kode des hebräischen Buchstaben Aleph
+'allowrevins'	  'ari'     erlaube CTRL-_ im Einfüge- und Befehlszeilen-Modus
+'altkeymap'	  'akm'     für zweite Standardsprache (Farsi/Hebräisch)
+'ambiwidth'	  'ambw'    was mit Unicode-Zeichen von mehrdeutiger Breite tun
+'antialias'	  'anti'    Mac OS X: benutze weiche, antialiasierte Zeichen
+'autochdir'	  'acd'     wechsle Verzeichnis zur Datei im aktuellen Fenster
+'arabic'	  'arab'    für Arabisch als zweite Standardsprache
+'arabicshape'	  'arshape' benutze Shaping für arabische Zeichen
+'autoindent'	  'ai'	    nehme Einrückung für neue Zeile von voriger Zeile
+'autoread'	  'ar'	    lese Datei automatisch, wenn außerhalb von Vim
+				geändert
+'autowrite'	  'aw'	    schreibe Datei automatisch bei Änderungen
+'autowriteall'	  'awa'	    wie 'autowrite', funktioniert aber mit mehr Befehlen
+'background'	  'bg'	    »dark« oder »light«, wird für Hervorhebungsfarben
+				benutzt
+'backspace'	  'bs'	    wie Backspace am Zeilenanfang arbeitet
+'backup'	  'bk'	    behalte Sicherheitskopie beim Überschreiben einer
+				Datei
+'backupcopy'	  'bkc'     mache Backup als Kopie, benenne die Datei nicht um
+'backupdir'	  'bdir'    Liste von Verzeichnissen für die Sicherheitskopie
+'backupskip'	  'bsk'     kein Backup für Dateien, die auf diese Muster passen
+'balloondelay'	  'bdlay'   Verzögerung in ms, bevor ein Ballon aufpoppt
+'ballooneval'	  'beval'   Ballon-Auswertung einschalten
+'balloonexpr'	  'bexpr'   im Ballon anzuzeigender Ausdruck
+'binary'	  'bin'     lese/schreibe/editiere Datei im Binärmodus
+'bioskey'	  'biosk'   MS-DOS: benutze BIOS-Aufrufe für Eingabezeichen
+'bomb'			    stelle Datei eine Byte-Reihenfolge-Markierung voran
+'breakat'	  'brk'     Zeichen, die einen Zeilenumbruch verursachen können
+'browsedir'	  'bsdir'   in welchem Verzeichnis das Browsen begonnen werden
+				soll
+'bufhidden'	  'bh'	    was mit einem Puffer geschehen soll, der in keinem
+				Fenster mehr zu sehen ist
+'buflisted'	  'bl'	    ob der Puffer in der Pufferliste angezeigt wird
+'buftype'	  'bt'	    besonderer Typ eines Puffers
+'casemap'	  'cmp'     gibt an, wie Groß-/Kleinschreibung geändert wird
+'cdpath'	  'cd'	    Liste mit »:cd« durchsuchter Verzeichnisse
+'cedit'			    benutzte Taste, um das Befehlszeilenfenster zu
+				öffnen
+'charconvert'	  'ccv'     Ausdruck für Konvertierung der Zeichenkodierung
+'cindent'	  'cin'     führe Einrückung in C-Programmen durch
+'cinkeys'	  'cink'    Tasten, die Einrückung auslösen, wenn 'cindent'
+				gesetzt ist
+'cinoptions'	  'cino'    wie Einrückung ausgeführt wird, wenn 'cindent'
+				gesetzt ist
+'cinwords'	  'cinw'    Worte, wo 'si' und 'cin' eine Einrückung hinzufügen
+'clipboard'	  'cb'      benutze die Zwischenablage als das unbenannte
+				Register
+'cmdheight'	  'ch'	    zu benutzende Zahl von Zeilen für die Befehlszeile
+'cmdwinheight'	  'cwh'     Höhe des Befehlszeilenfensters
+'columns'	  'co'	    Zahl von Spalten in der Anzeige
+'comments'	  'com'     Muster, die eine Kommentarzeile beginnen können
+'commentstring'   'cms'     Schablone für Kommentare: benutzt für Faltungs-
+				Markierer
+'compatible'	  'cp'	    so Vi-kompatibel verhalten wie möglich
+'complete'	  'cpt'     gibt an, wie Vervollständigung im Einfüge-Modus
+				arbeitet
+'completefunc'	  'cfu'     für Vervollständigung im Einfüge-Modus zu
+				benutzende Funktion
+'completeopt'	  'cot'     Optionen für Vervollständigung im Einfüge-Modus
+'confirm'	  'cf'	    fragen, was mit ungesicherten/nur-lese-Dateien
+				geschehen soll
+'conskey'	  'consk'   MS-DOS: hole Tasten direkt von der Konsole
+'copyindent'	  'ci'	    lasse 'autoindent' die existierende Einrückungs-
+				struktur benutzen
+'cpoptions'	  'cpo'     Flags für Vi-kompatibles Verhalten
+'cscopepathcomp'  'cspc'    wie viele Komponenten den Pfads anzeigen
+'cscopeprg'       'csprg'   Befehl, um cscope auszuführen
+'cscopequickfix'  'csqf'    benutze Quickfix-Fenster für cscope Ergebnisse
+'cscopetag'       'cst'     benutze cscope für Tag-Befehle
+'cscopetagorder'  'csto'    bestimmt Suchreihenfolge von »:cstag«
+'cscopeverbose'   'csverb'  gebe Nachrichten aus, wenn zu einer cscope-
+				Datenbank hinzugefügt wird
+'cursorcolumn'	  'cuc'	    hebe Bildschirmspalte des Cursors hervor
+'cursorline'	  'cul'	    hebe Bildschirmzeile des Cursors hervor
+'debug'			    auf »msg« setzen, um alle Fehlermeldungen zu sehen
+'define'	  'def'     zu benutzendes Muster um eine Makrodefinition zu
+				finden
+'delcombine'	  'deco'    lösche nur kombinierende Zeichen
+'dictionary'	  'dict'    Liste von für Schlüsselwortvervollständigung
+				benutzter Dateinamen
+'diff'			    benutze diff-Modus für aktuelles Fenster
+'diffexpr'	  'dex'     benutzter Ausdruck, um an eine diff-Datei zu
+				gelangen
+'diffopt'	  'dip'     für diff-Modus benutzte Optionen
+'digraph'	  'dg'	    aktiviere das Eingeben von Digraphen im Einfüge-
+				Modus
+'directory'	  'dir'     Liste von Verzeichnisnamen für die swap-Datei
+'display'	  'dy'	    Liste von Flags, wie Text darzustellen ist
+'eadirection'	  'ead'     in welche Richtung 'equalalways' arbeitet
+'edcompatible'	  'ed'	    schalte Flags des »:substitude«-Befehls um
+'encoding'	  'enc'     intern benutzte Kodierung
+'endofline'	  'eol'     schreibe Zeilenende für letzte Zeile in Datei
+'equalalways'	  'ea'	    Fenster bekommen automatisch dieselbe Größe
+'equalprg'	  'ep'	    zu benutzendes externes Programm für den »=«-Befehl
+'errorbells'	  'eb'	    läute Glocke bei Fehlermeldungen
+'errorfile'	  'ef'	    Name der Fehlerdatei für den QuickFix-Modus
+'errorformat'	  'efm'     Beschreibung der Zeilen in der Fehlerdatei
+'esckeys'	  'ek'	    erkenne Funktionstasten im Einfügemodus
+'eventignore'	  'ei'	    Autocommand-Ereignisse, die ignoriert werden
+'expandtab'	  'et'	    benutze Leerzeichen, wenn ein <Tab> eingefügt wird
+'exrc'		  'ex'	    lese .vimrc und .exrc im aktuellen Verzeichnis
+'fileencoding'	  'fenc'    Datei-Kodierung für mehr-byte-Text
+'fileencodings'   'fencs'   automatisch erkannte Zeichenkodierungen
+'fileformat'	  'ff'	    für Datei-E/A benutztes Dateiformat
+'fileformats'	  'ffs'     automatisch erkannte Werte für 'fileformat'
+'filetype'	  'ft'	    Dateityp, benutzt für Autocommands
+'fillchars'	  'fcs'     zu benutzende Zeichen, um spezielle Sachen
+				darzustellen
+'fkmap'		  'fk'	    Tastaturbelegung für Farsi
+'foldclose'	  'fcl'     schließe eine Faltung, wenn sie der Cursor verlässt
+'foldcolumn'	  'fdc'     Breite der für das Anzeigen von Faltungen benutzten
+				Spalte
+'foldenable'	  'fen'     setzen, um alle Faltungen geöffnet anzuzeigen
+'foldexpr'	  'fde'     benutzter Ausdruck, wenn 'foldmethod' »expr« ist
+'foldignore'	  'fdi'     ignoriere Zeilen, wenn 'foldmethod' »indent« ist
+'foldlevel'	  'fdl'     schließe Faltungen auf einer höheren Ebene als diese
+'foldlevelstart'  'fdls'    'foldlevel' beim Beginnen des Editierens einer Datei
+'foldmarker'	  'fmr'     benutzte Markierungen, wenn 'foldmethod' »marker«
+				ist
+'foldmethod'	  'fdm'     Art der Faltung
+'foldminlines'	  'fml'     minimale Anzahl Zeilen, dass eine Faltung
+				geschlossen ist
+'foldnestmax'	  'fdn'     maximale Faltungs-Tiefe
+'foldopen'	  'fdo'     für welche Befehle eine Faltung geöffnet wird
+'foldtext'	  'fdt'     benutzter Ausdruck, um eine geschlossene Faltung
+				anzuzeigen
+'formatlistpat'   'flp'     benutzte Muster, um einen Listenkopf zu erkennen
+'formatprg'	  'fp'	    Name des externen vom »gq«-Befehl benutzten
+				Programms
+'formatexpr'	  'fex'     vom »gq«-Befehl benutzter Ausdruck
+'fsync'		  'fs'	    ob fsync() nach dem Schreiben einer Datei
+				aufzurufen ist
+'gdefault'	  'gd'	    das »:substitute«-Flag »g« ist standardmäßig an
+'grepformat'	  'gfm'     Format der Ausgabe von 'grepprg'
+'grepprg'	  'gp'	    für »:grep« zu benutzendes Programm
+'guicursor'	  'gcr'     GUI: Einstellung für Cursor-Form und -Blinken
+'guifont'	  'gfn'     GUI: Name(e) des/der zu benutzenden Zeichensatzes/
+				-sätze
+'guifontset'	  'gfs'     GUI: Namen der zu benutzenden Multi-Byte
+				Zeichensätze
+'guifontwide'	  'gfw'     Liste von Zeichensatznamen für Zeichen mit
+				doppelter Breite
+'guiheadroom'	  'ghr'     GUI: Pixelanzahl für Fensterdekorationen
+'guioptions'	  'go'	    GUI: welche Komponenten und Optionen benutzt werden
+'guipty'		    GUI: versuche, für »:!«-Befehle ein Pseudo-TTY
+				zu benutzen
+'guitablabel'	  'gtl'     GUI: definiertes Label für eine Tab-Seite
+'guitabtooltip'   'gtt'     GUI: definiertes Tooltip für eine Tab-Seite
+'helpfile'	  'hf'	    voller Pfadname der Haupt-Hilfe-Datei
+'helpheight'	  'hh'	    minimale Höhe eines neuen Hilfe-Fensters
+'helplang'	  'hlg'     bevorzugte Hilfe-Sprachen
+'hidden'	  'hid'     Puffer nicht freigeben, wenn er verlassen
+				(|abandon|) wird
+'highlight'	  'hl'	    setzt Hervorhebungsmodus für verschiedene Anlässe
+'hlsearch'	  'hls'     hebe Übereinstimmungen hervor, die auf das letzte
+				Suchmuster passen
+'history'	  'hi'	    Anzahl gespeicherter Befehlszeilen
+'hkmap'		  'hk'	    hebräische Tastaturbelegung
+'hkmapp'	  'hkp'     phonetische hebräische Tastaturbelegung
+'icon'			    lasse Vim den Text des Fensterpiktogramms setzen
+'iconstring'		    zu benutzende Zeichenkette für das Piktogramm von
+				Vim
+'ignorecase'	  'ic'	    ignoriere Groß-/Kleinschreibung in Suchmustern
+'imactivatekey'   'imak'    Taste, die die X-Eingabe-Methode (IM) aktiviert
+'imcmdline'	  'imc'     benutze IM beim Editieren einer Befehlszeile
+'imdisable'	  'imd'     benutze IM in keinem Modus
+'iminsert'	  'imi'     benutze :lmap oder IM im Einfüge-Modus
+'imsearch'	  'ims'     benutze :lmap oder IM beim Eingeben eines
+				Suchmusters
+'include'	  'inc'     zu benutzendes Muster beim Finden einer
+				Include-Datei
+'includeexpr'	  'inex'    benutzter Ausdruck, um eine Include-Zeile zu
+				verarbeiten
+'incsearch'	  'is'	    hebe Übereinstimmung hervor beim Eingeben eines
+				Suchmusters
+'indentexpr'	  'inde'    benutzter Ausdruck, um Einrückung einer Zeile zu
+				bestimmen
+'indentkeys'	  'indk'    Tasten, die Einrückung mit 'indentexpr' auslösen
+'infercase'	  'inf'     passe Groß-/Kleinschreibung der Übereinstimmung für
+				Schlüsselwortvervollständigung an
+'insertmode'	  'im'	    beginne Editieren einer Datei im Einfüge-Modus
+'isfname'	  'isf'     in Datei- und Pfadnamen beinhaltete Zeichen
+'isident'	  'isi'     in Identifikatoren beinhaltete Zeichen
+'iskeyword'	  'isk'     in Schlüsselwörtern beinhaltete Zeichen
+'isprint'	  'isp'     druckbare Zeichen
+'joinspaces'	  'js'	    zwei Leerzeichen nach einem Punkt bei »J« usw.
+'key'			    Verschlüsselungs-Schlüssel
+'keymap'	  'kmp'     Name der Tastaturbelegung
+'keymodel'	  'km'	    aktiviert Beginnen/Enden der Auswahl mit Tasten
+'keywordprg'	  'kp'	    für den Befehl »K« zu benutzendes Programm
+'langmap'	  'lmap'    alphabetische Zeichen für den Modus andere Sprache
+'langmenu'	  'lm'	    für Menüs zu benutzende Sprache
+'laststatus'	  'ls'	    sagt, wann das letzte Fenster eine Statuszeile hat
+'lazyredraw'	  'lz'	    kein Neuzeichnen beim Ausführen von Makros
+'linebreak'	  'lbr'     breche lange Zeilen an Leerzeichen um
+'lines'			    Zahl der Zeilen in der Anzeige
+'linespace'	  'lsp'     zu benutzende Anzahl Pixelzeilen zwischen Zeichen
+'lisp'			    automatische Einrückung für Lisp
+'lispwords'	  'lw'	    Worte, die ändern wie Lisp-Einrückung arbeitet
+'list'			    zeige <Tab> und Zeilenende
+'listchars'	  'lcs'     Zeichen zum Anzeigen im 'list'-Modus
+'loadplugins'	  'lpl'     lade Plugin-Skript beim Start von Vim
+'macatsui'		    Mac GUI: benutze ATSUI-Textzeichnen
+'magic'			    ändert spezielle Zeichen in Suchmustern
+'makeef'	  'mef'     Name der Fehlerdatei (errorfile) für »:make«
+'makeprg'	  'mp'	    für den Befehl »:make« zu benutzendes Programm
+'matchpairs'	  'mps'     Zeichenpaare, bei denen »%« eine Übereinstimmung
+				findet
+'matchtime'	  'mat'     Zehntel einer Sekunde, um die übereinstimmende
+				Klammer anzuzeigen
+'maxcombine'	  'mco'     maximale Anzahl angezeigter kombinierender Zeichen
+'maxfuncdepth'	  'mfd'     maximale rekursive Tiefe für Benutzerfunktionen
+'maxmapdepth'	  'mmd'     maximal rekursive Tiefe für Belegungen
+'maxmem'	  'mm'	    maximal für einen Puffer benutzter Speicher
+				(in KByte)
+'maxmemtot'	  'mmt'     maximal für alle Puffer benutzter Speicher
+				(in KByte)
+'menuitems'	  'mis'     maximale Anzahl von Einträgen in einem Menü
+'mkspellmem'	  'msm'     benutzter Speicher bevor |:mkspell| den Baum
+				komprimiert
+'modeline'	  'ml'	    erkenne Moduszeilen am Beginn oder Ende einer Datei
+'modelines'	  'mls'     auf Moduszeilen überprüfte Anzahl Zeilen
+'modifiable'	  'ma'	    Textänderungen sind nicht möglich
+'modified'	  'mod'     Puffer wurde verändert
+'more'			    halte Auflistungen an, wenn der ganze Bildschirm
+				gefüllt ist
+'mouse'			    nehme Maustastendrucke an
+'mousefocus'	  'mousef'  Fokus der Tastatur folgt der Maus
+'mousehide'	  'mh'	    verstecke Mauszeiger beim Tippen
+'mousemodel'	  'mousem'  ändert Bedeutung der Maustasten
+'mouseshape'	  'mouses'  Form des Mauszeigers in verschiedenen Modi
+'mousetime'	  'mouset'  maximale Zeit zwischen Doppelklicken der Maus
+'mzquantum'	  'mzq'     Intervall zwischen Polls für MzScheme-Threads
+'nrformats'	  'nf'	    vom Befehl CTRL-A erkannte Nummernformate
+'number'	  'nu'	    gebe die Zeilennummer am Anfang jeder Zeile aus
+'numberwidth'	  'nuw'     für die Zeilennummer benutzte Anzahl von Spalten
+'opendevice'	  'odev'    erlaube Lesen/Schreiben von Geräten in MS-Windows
+'omnifunc'	  'ofu'     Funktion für Dateityp-spezifische Vervollständigung
+'operatorfunc'	  'opfunc'  vom Operator |g@| aufzurufende Funktion
+'osfiletype'	  'oft'     Betriebssystem-spezifische Dateityp-Informationen
+'paragraphs'	  'para'    Nroff-Makros, die Absätze trennen
+'paste'			    erlaube Text einzufügen
+'pastetoggle'	  'pt'	    Tastenkode, der 'paste' umschaltet
+'patchexpr'	  'pex'     benutzter Ausdruck, um eine Datei zu patchen
+'patchmode'	  'pm'	    behalte die älteste Version einer Datei
+'path'		  'pa'	    Liste der von »gf« und anderen durchsuchten
+				Verzeichnisse
+'preserveindent'  'pi'	    erhalte die Einrückungsstruktur beim Neuberechnen
+				der Einrückung
+'previewheight'   'pvh'     Höhe des Vorschaufensters
+'previewwindow'   'pvw'     identifiziert das Vorschaufenster
+'printdevice'	  'pdev'    Name des für :hardcopy zu benutzenden Druckers
+'printencoding'   'penc'    beim Drucken zu benutzende Kodierung
+'printexpr'	  'pexpr'   zu benutzender Ausdruck, um PostScript mit
+				:hardcopy zu drucken
+'printfont'	  'pfn'     Name des für :hardcopy zu benutzenden Fonts
+'printheader'	  'pheader' für :hardcopy zu benutzendes Format der Kopfzeilen
+'printmbcharset'  'pmbcs'   für :hardcopy zu benutzender CJK-Zeichensatz
+'printmbfont'	  'pmbfn'   zu benutzende Fontnamen für CJK-Ausgabe von
+				:hardcopy
+'printoptions'	  'popt'    steuert das Format der Ausgabe von :hardcopy
+'pumheight'	  'ph'	    maximale Höhe des Popup-Menüs
+'quoteescape'	  'qe'	    in einer Zeichenkette benutzte Fluchtzeichen
+'readonly'	  'ro'	    verbiete Schreiben des Puffers
+'redrawtime'	  'rdt'     Timeout für 'hlsearch' und |:match| Hervorhebung
+'remap'			    erlaube es Belegungen, rekursiv zu arbeiten
+'report'		    Grenze für Anzeige der Anzahl veränderter Zeilen
+'restorescreen'   'rs'	    Win32: stelle Bildschirm beim Beenden wieder her
+'revins'	  'ri'	    das Einfügen von Zeichen arbeitet rückwärts
+'rightleft'	  'rl'	    das Fenster ist von rechts nach links orientiert
+'rightleftcmd'	  'rlc'     Befehle für die das Editieren von links nach
+				rechts arbeitet
+'ruler'		  'ru'	    zeige Zeile und Spalte des Cursors in der
+				Statuszeile
+'rulerformat'	  'ruf'     eigenes Format für 'ruler'
+'runtimepath'	  'rtp'     für Laufzeitdateien benutzte Liste von
+				Verzeichnissen
+'scroll'	  'scr'     Anzahl mit CTRL-U und CTRL-D zu scrollender Zeilen
+'scrollbind'	  'scb'     im Fenster scrollen, wenn andere Fenster scrollen
+'scrolljump'	  'sj'	    minimale Anzahl zu scrollender Zeilen
+'scrolloff'	  'so'	    minimale Anzahl Zeilen über und unter dem Cursor
+'scrollopt'	  'sbo'     wie sich 'scrollbind' verhalten soll
+'sections'	  'sect'    Abschnitte trennende nroff-Makros
+'secure'		    sicherer Modus für das Lesen der .vimrc im
+				aktuellen Verzeichnis
+'selection'	  'sel'     welcher Typ von Auswahl benutzt werden soll
+'selectmode'	  'slm'     wann statt des visuellen Modus der Auswahlmodus
+				benutzt werden soll
+'sessionoptions'  'ssop'    Optionen für |:mksession|
+'shell'		  'sh'	    Name der für externe Befehle zu benutzenden Shell
+'shellcmdflag'	  'shcf'    Flag an Shell, um einen Befehl auszuführen
+'shellpipe'	  'sp'	    Zeichenkette, um die Ausgabe von »:make« in die
+				Fehlerdatei zu schreiben
+'shellquote'	  'shq'     Quote-Zeichen, die um Shell-Befehle gesetzt werden
+'shellredir'	  'srr'     Zeichenkette, um Ausgabe eines Filters in eine
+				temporäre Datei zu schreiben
+'shellslash'	  'ssl'     benutze »/« in Dateinamen für die Shell
+'shelltemp'	  'stmp'    ob eine temporäre Datei für Shell-Befehle benutzt
+				werden soll
+'shelltype'	  'st'	    Amiga: beeinflusst, wie die Shell benutzt wird
+'shellxquote'	  'sxq'     wie 'shellquote', aber schließt Redirektion ein
+'shiftround'	  'sr'	    runde Einrückung auf ein Vielfaches von 'shiftwidth'
+'shiftwidth'	  'sw'	    für einen (automatischen) Einrückungsschritt zu
+				verwendende Anzahl Leerzeichen
+'shortmess'	  'shm'     Liste von Flags zur Reduzierung der Länge von
+				Mitteilungen
+'shortname'	  'sn'	    nicht-MS-DOS: nehme an, dass Dateinamen aus 8+3
+				Zeichen bestehen
+'showbreak'	  'sbr'     am Anfang von umbrochenen Zeilen zu benutzende
+				Zeichenkette
+'showcmd'	  'sc'	    zeige (partiellen) Befehl in der Statuszeile
+'showfulltag'	  'sft'     zeige volles Tagmuster beim Vervollständigen eines
+				Tags
+'showmode'	  'smd'     zeige aktuellen Modus in der Statuszeile an
+'showtabline'	  'stal'    sagt, ob die Reiterzeile angezeigt wird
+'sidescroll'	  'ss'	    minimale Anzahl Spalten, die horizontal gescrollt
+				werden soll
+'sidescrolloff'   'siso'    minimale Anzahl Spalten links und rechts des
+				Cursors
+'smartcase'	  'scs'     Groß-/Kleinschreibung nicht ignorieren, wenn
+				Muster Großbuchstaben enthält
+'smartindent'	  'si'	    kleveres automatisches Einrücken für C-Programme
+'smarttab'	  'sta'     benutze 'shiftwidth' beim Einfügen von <Tab>
+'softtabstop'	  'sts'     Anzahl von Leerzeichen, die <Tab> beim Editieren
+				benutzt
+'spell'			    aktiviere Rechtschreibüberprüfung
+'spellcapcheck'   'spc'     Muster, um das Ende eines Satzes zu finden
+'spellfile'	  'spf'     Dateien, wo |zg| und |zw| Wörter speichern
+'spelllang'	  'spl'     Sprache(n), für die Rechtschreibüberprüfung
+				vorgenommen werden soll
+'spellsuggest'	  'sps'     benutzte Methode(n), um Schreibungverbesserungen
+				vorzuschlagen
+'splitbelow'	  'sb'	    neues Fenster bei Aufteilung ist unter dem aktuellen
+'splitright'	  'spr'     neues Fenster wird rechts des aktuellen gesetzt
+'startofline'	  'sol'     Befehle bewegen Cursor auf erstes nicht-weißes
+				Zeichen in der Zeile
+'statusline'	  'stl'     angepasstes Format für die Statuszeile
+'suffixes'	  'su'	    bei Mehrfachübereinstimmung ignorierte Suffixe
+'suffixesadd'	  'sua'     hinzugefügte Suffixe beim Suchen einer Datei
+'swapfile'	  'swf'     ob für einen Puffer eine Auslagerungsdatei benutzt
+				wird
+'swapsync'	  'sws'     wie mit einer Auslagerungsdatei synchronisiert wird
+'switchbuf'	  'swb'     bestimmt das Verhalten, wenn zu einem anderen
+				Puffer gewechselt wird
+'synmaxcol'	  'smc'     maximale Spalte, um Syntax-Einheiten zu finden
+'syntax'	  'syn'     für aktuellen Puffer zu ladende Syntax
+'tabstop'	  'ts'	    Anzahl von Leerzeichen, die <Tab> in der Datei
+				benutzt
+'tabline'	  'tal'     angepasstes Format der Reiterzeile in der Console
+'tabpagemax'	  'tpm'     maximale Anzahl Reiter für |-p| und »tab all«
+'tagbsearch'	  'tbs'     benutze binäre Suche in Tag-Dateien
+'taglength'	  'tl'	    Anzahl signifikanter Zeichen für ein Tag
+'tagrelative'	  'tr'	    Dateinamen in Tag-Datei sind relativ
+'tags'		  'tag'     Liste der vom Tag-Befehl benutzten Dateinamen
+'tagstack'	  'tgst'    schiebe Tags in den Tag-Stapel
+'term'			    Name des Terminals
+'termbidi'	  'tbidi'   Terminal beachtet Bidirektionalität
+'termencoding'	  'tenc'    vom Terminal benutzte Zeichenkodierung
+'terse'			    kürze einige Nachrichten ab
+'textauto'	  'ta'	    obsolet, benutzen Sie 'fileformats'
+'textmode'	  'tx'	    obsolet, benutzen Sie 'fileformat'
+'textwidth'	  'tw'	    maximale Breite des einzufügenden Textes
+'thesaurus'	  'tsr'     Liste von Thesaurus-Dateien für Schlüsselwort-
+				Vervollständigung
+'tildeop'	  'top'     Tilde-Befehl »~« verhält sich wie ein Operator
+'timeout'	  'to'	    Time-Out bei Belegungen und Tastenkodes
+'timeoutlen'	  'tm'	    Zeit für Time-Out in Millisekunden
+'title'			    lässt Vim den Titel des Fensters setzen
+'titlelen'		    Prozentsatz von 'columns', der für den Fenstertitel
+				benutzt wird
+'titleold'		    Alter Titel, der beim Beenden wiederhergestellt wird
+'toolbar'	  'tb'	    GUI: was in der Werkzeugleiste angezeigt werden soll
+'toolbariconsize' 'tbis'    Größe der Piktogramme in der Werkzeugleiste
+				(nur für GTK2)
+'ttimeout'		    Time-Out bei Belegungen
+'ttimeoutlen'	  'ttm'     Zeit für Time-Out bei Tastenkodes in Millisekunden
+'ttybuiltin'	  'tbi'     benutze eingebautes Termcap vor externem Termcap
+'ttyfast'	  'tf'	    zeigt eine schnelle Terminal-Verbindung an
+'ttymouse'	  'ttym'    Art der erzeugten Maus-Steuerkodes
+'ttyscroll'	  'tst'     maximale Zeilenanzahl fürs Rollen
+'ttytype'	  'tty'     Alias für 'term'
+'undolevels'	  'ul'	    maximale Anzahl Änderungen, die zurückgenommen
+				werden können
+'updatecount'	  'uc'	    nach so vielen Zeichen die Auslagerungsdatei
+				aktualisieren
+'updatetime'	  'ut'	    nach so vielen Millisekunden die Auslagerungsdatei
+				aktualisieren
+'verbose'	  'vbs'     informative Nachrichten ausgeben
+'verbosefile'	  'vfile'   Datei, in die Nachrichten geschrieben werden
+'viewdir'	  'vdir'    Verzeichnis, in dem Dateien mit :mkview
+				gespeichert werden
+'viewoptions'	  'vop'     gibt an, was mit :mkview gespeichert werden soll
+'viminfo'	  'vi'	    benutze Datei .viminfo beim Starten und Beenden
+'virtualedit'	  've'	    wann virtuelles Editieren benutzt werden soll
+'visualbell'	  'vb'	    benutze statt akustischem ein visuelles Signal
+'warn'			    warne vor Shell-Befehl, wenn der Puffer verändert
+				wurde
+'weirdinvert'	  'wi'	    für Terminals, die eine sonderbare Invertierungs-
+				Methode haben
+'whichwrap'	  'ww'	    erlaube angegebenen Zeichen, Zeilengrenzen zu
+				überschreiten
+'wildchar'	  'wc'	    Befehlszeilen-Zeichen für Wildcard-Expansion
+'wildcharm'	  'wcm'     wie 'wildchar', funktioniert aber auch wenn umbelegt
+'wildignore'	  'wig'     Dateien, die auf diese Muster passen, werden nicht
+				vervollständigt
+'wildmenu'	  'wmnu'    benutze Menü für Befehlszeilen-Vervollständigung
+'wildmode'	  'wim'     Modus für 'wildchar' Befehlszeilen-Expansion
+'wildoptions'	  'wop'     gibt an, wie Befehlszeilen-Vervollständigung
+				erledigt wird
+'winaltkeys'	  'wak'     ob das Fenstersystem ALT-Tasten bearbeitet
+'winheight'	  'wh'	    minimale Zeilenanzahl für das aktuelle Fenster
+'winfixheight'	  'wfh'     behalte Fensterhöhe beim Öffnen/Schließen von
+				Fenstern bei
+'winminheight'	  'wmh'     minimale Zeilenanzahl für alle Fenster
+'winminwidth'	  'wmw'     minimale Spaltenanzahl für alle Fenster
+'winwidth'	  'wiw'     minimale Spaltenanzahl für das aktuelle Fenster
+'wrap'			    lange Zeilen brechen um und gehen auf der nächsten
+				Zeile weiter
+'wrapmargin'	  'wm'	    wieviele Zeichen vom rechten Rand das Umbrechen
+				beginnen soll
+'wrapscan'	  'ws'	    sucht Umbruch am Ende der Datei
+'write'			    Schreiben in eine Datei ist erlaubt
+'writeany'	  'wa'	    in eine Datei schreiben, ohne dass »!« benutzt wird
+'writebackup'	  'wb'	    mache Sicherheitskopie vorm Überschreiben einer
+------------------------------------------------------------------------------
+*Q_ur*		Undo/Redo-Befehle
+
+|u|	  N  u		nehme letzte N Änderungen zurück
+|CTRL-R|  N  CTRL-R	stelle letzte N zurückgenommene Änderungen wieder her
+|U|	     U		stelle zuletzt geänderte Zeile wieder her
+------------------------------------------------------------------------------
+*Q_et*		Externe Befehle
+
+|:shell|	:sh[ell]	starte eine Shell
+|:!|		:!{Befehl}	führe {Befehl} in einer Shell aus
+|K|		   K		schlage Schlüsselwort unter dem Cursor mit dem
+				   Programm in 'keywordprg' nach
+				   (Voreinstellung: »man«)
+------------------------------------------------------------------------------
+*Q_qf*		Quickfix-Befehle
+
+|:cc|		:cc [nr]	zeige Fehler [nr] (Voreinstellung ist nochmal
+				   derselbe)
+|:cnext|	:cn		zeige den nächsten Fehler
+|:cprevious|	:cp		zeige den vorigen Fehler
+|:clist|	:cl		liste alle Fehler auf
+|:cfile|	:cf		lese Fehler auf der Datei in 'errorfile'
+|:cgetbuffer|	:cgetb		wie :cbuffer, springt aber nicht auf den ersten
+				   Fehler
+|:cgetfile|	:cg		wie :cfile, springt aber nicht auf den ersten
+				   Fehler
+|:cgetexpr|	:cgete		wie :cexpr, springt aber nicht auf den ersten
+				   Fehler
+|:caddfile|	:caddf		füge Fehler aus der Fehlerdatei der aktuellen
+				   Quickfix-Liste hinzu
+|:caddexpr|	:cad		füge Fehler von einem Ausdruck der aktuellen
+				   Quickfix-Liste hinzu
+|:cbuffer|	:cb		lese Fehler von Text in einem Puffer
+|:cexpr|	:cex		lese Fehler von einem Ausdruck
+|:cquit|	:cq		ohne Schreiben beenden und einen Fehlerkode (an
+				   den Compiler) zurückgeben
+|:make|		:make [args]	make starten, Fehler lesen und zum ersten
+				   Fehler springen
+|:grep|		:gr[ep] [args]	führe Programm in 'grepprg' aus, um
+				   Übereinstimmungen zu finden und zur ersten
+				   zu springen
+------------------------------------------------------------------------------
+*Q_vc*		Verschiedene Befehle
+
+|CTRL-L|	   CTRL-L	Bildschirm löschen und neuzeichnen
+|CTRL-G|	   CTRL-G	Zeige aktuellen Dateinamen (mit Pfad)
+				   und Cursor-Position
+|ga|		   ga		Zeige ASCII-Wert des Zeichens unter dem Cursor
+				   dezimal, hexadezimal und oktal
+|g8|		   g8		für UTF-8 Kodierung: zeige Byte-Sequenz des
+				   Zeichens unter dem Cursor hexadezimal
+|g_CTRL-G|	   g CTRL-G	zeige Cursor-Spalte, -Zeile und
+				   Zeichenposition
+|CTRL-C|	   CTRL-C	während Suchen: Unterbreche die Suche
+|dos-CTRL-Break|   CTRL-Break	MS-DOS: während Suchen: Unterbreche die Suche
+|<Del>|		   <Del>	beim Eingeben einer Anzahl: lösche letztes
+				   Zeichen
+|:version|	:ve[rsion]	zeige Versionsinformationen
+|:mode|		:mode N		MS-DOS: setze Bildschirmmodus auf N (Zahl, C80,
+				   C4350, usw.)
+|:normal|	:norm[al][!] {Befehle}
+				Führe Befehle des Normal-Modus aus
+|Q|		Q		schalte in den »Ex«-Modus
+
+|:redir|	:redir >{Datei}		leite Nachrichten in {Datei} um
+|:silent|	:silent[!] {Befehl}	führe {Befehl} still aus
+|:confirm|	:confirm {Befehl}	beende, schreibe, usw., mit Nachfrage
+					über ungesicherte Änderungen oder
+					nur-lese-Dateien
+|:browse|	:browse {Befehl}	öffne/lese/schreibe Datei unter
+					Benutzung eines Dialogs zur Dateiauswahl
+------------------------------------------------------------------------------
+*Q_ce*		Editieren der Befehlszeile
+
+|c_<Esc>|	<Esc>		   verlasse Befehlszeile (wenn 'wildchar'
+				      <Esc> ist, tippen Sie es zweimal
+
+|c_CTRL-V|	CTRL-V {Zeich}	   {Zeich} wörtlich einfügen
+|c_CTRL-V|	CTRL-V {Nummer}    dezimalen Wert eines Zeichens einfügen
+				      (bis zu drei Ziffern)
+|c_CTRL-K|	CTRL-K {Zeich1} {Zeich2}
+				   einen Digraphen eingeben (Siehe |Q_di|)
+|c_CTRL-R|	CTRL-R {0-9a-z"%#:-=}
+				   den Inhalt eines Registers einfügen
+
+|c_<Left>|	<Links>/<Rechts>   Cursor nach links/rechts
+|c_<S-Left>|	<U-Links>/<U-Rechts> Cursor ein Wort nach links/rechts
+|c_CTRL-B|	CTRL-B/CTRL-E	   Cursor auf Anfang/Ende der Befehlszeile
+
+|c_<BS>|	<BS>		   lösche Zeichen vor dem Cursor
+|c_<Del>|	<Entf>		   lösche Zeichen unter dem Cursor
+|c_CTRL-W|	CTRL-W		   lösche das Wort vor dem Cursor
+|c_CTRL-U|	CTRL-U		   entferne alle Zeichen
+
+|c_<Up>|	<Hoch>/<Runter>	   Hole ältere/neuere Befehlszeile, die mit dem
+				      aktuellen Befehl beginnt
+|c_<S-Up>|	<U-Hoch>/<S-Runter> Hole ältere/neuere Befehlszeile aus dem
+				    Verlauf
+|:history|	:his[tory]	   zeige ältere Befehlszeilen
+
+Kontext-bezogene Vervollständigung auf der Befehlszeile:
+
+|c_wildchar|	'wildchar'  (Voreinstellung: <Tab>)
+				führe auf dem Muster vor dem Cursor
+				   Vervollständigung aus.  Gib, falls es
+				   mehrere Übereinstimmungen gibt, einen
+				   Signalton aus und zeige erstere; weitere
+				   'wildchar' zeigen die nächsten.
+|c_CTRL-D|	CTRL-D		liste alle Namen auf, die mit
+				   dem Muster vor dem Cursor übereinstimmen
+|c_CTRL-A|	CTRL-A		füge alle Namen ein, die mit dem Muster vor
+				   dem Cursor übereinstimmen
+|c_CTRL-N|	CTRL-N		nach 'wildchar' mit Mehrfachübereinstimmung:
+				   gehe zur nächsten Übereinstimmung
+|c_CTRL-P|	CTRL-P		nach 'wildchar' mit Mehrfachübereinstimmung:
+				   gehe zur vorigen Übereinstimmung
+------------------------------------------------------------------------------
+*Q_ra*		Ex Bereiche
+
+|:range|	,		trennt zwei Zeilennummern
+|:range|	;		ebenso, setzt den Cursor auf die erste
+				Zeilennummer, bevor die zweite ausgewertet wird
+
+|:range|	{Nummer}	eine absolute Zeilennummer
+|:range|	$		Die letzte Zeile der Datei
+|:range|	%		gleichbedeutend mit 1,$ (die ganze Datei)
+|:range|	*		gleichbedeutend mit '<,'> (visueller Bereich)
+|:range|	't		Position der Marke t
+|:range|	/{Muster}[/]	die nächste Zeile, auf der {Muster} passt
+|:range|	?{Muster}[?]	die vorige Zeile, auf der {Muster} passt
+
+
+|:range|	+[Num]		zähle [Num] zu der vorhergehenden Zeilennummer
+				   hinzu (Voreinstellung: 1)
+|:range|	-[Num]		ziehe [Num] von der vorhergehenden Zeilennummer
+				   ab (Voreinstellung: 1)
+------------------------------------------------------------------------------
+*Q_ex*		Ex Sonderzeichen
+
+|:bar|	    |		trennt zwei Befehle (nicht bei »:global« und »:!«)
+|:quote|    "		leitet einen Kommentar ein
+
+|:_%|	    %		der aktuelle Dateiname (nur wo ein Dateiname erwartet
+			   wird)
+|:_#|	    #[Num]	alternativer Dateiname [Num] (nur wo ein Dateiname
+			   erwartet wird)
+	Anmerkung: Die nächsten vier werden wörtlich eingeben;
+		   dies sind keine Sondertasten!
+|:<cword>|  <cword>	Wort unter dem Cursor (nur wo ein Dateiname erwartet
+			   wird)
+|:<cWORD>|  <cWORD>	WORT unter dem Cursor (nur wo ein Dateiname erwartet
+			   wird)
+|:<cfile>|  <cfile>	Dateiname unter dem Cursor (nur wo ein Dateiname
+			   erwartet wird)
+|:<afile>|  <afile>	Dateiname bei einem automatischen Befehl (nur wo ein
+			   Dateiname erwartet wird)
+|:<sfile>|  <sfile>	Dateiname einer ge»:source«ten Datei, innerhalb dieser
+			   Datei (nur wo ein Dateiname erwartet wird)
+
+		Nach »%«, »#«, »<cfile>«, »<sfile>« oder »<afile>«
+		|::p|	    :p		voller Pfad
+		|::h|	    :h		Kopf (head, Dateiname entfernt)
+		|::t|	    :t		Schwanz (tail, nur der Dateiname)
+		|::r|	    :r		Wurzel (root, Erweiterung entfernt)
+		|::e|	    :e		Erweiterung
+		|::s|	    :s/{Muster}/{Ersetzung}/
+					ersetze {Muster} durch {Ersetzung}
+------------------------------------------------------------------------------
+*Q_st*		VIM starten
+
+|-vim|	   vim [Optionen]		Editieren mit einem leeren Puffer
+					    beginnen
+|-file|	   vim [Optionen] {Datei} ...	Editieren mit einer oder mehreren
+					    Dateien beginnen
+|--|	   vim [Optionen] -		Datei von der Standardeingabe lesen
+|-tag|	   vim [Optionen] -t {Tag}	editiere die mit {Tag} verbundene Datei
+|-qf|	   vim [Optionen] -q [FName]	Editieren im QuickFix-Modus beginnen,
+					    den ersten Fehler anzeigen
+
+	Die nützlichsten Vim-Argumente
+	(Für eine vollständige Liste siehe |startup-options|)
+
+|-gui|	-g		    GUI starten (erlaubt auch andere Optionen
+
+|-+|	+[Num]		    setze Cursor auf Zeile [Num] (Voreinstellung:
+				letzte Zeile)
+|-+c|	+{Befehl}	    führe {Befehl} nach Laden der Datei aus
+|-+/|	+/{Muster} {Datei} ... setze Cursor auf erstes Auftreten von {Muster}
+|-v|	-v		    Vi-Modus, starte ex im normalen Modus
+|-e|	-e		    Ex-Modus, starte vim im Ex-Modus
+|-R|	-R		    Nur-Lese-Modus, impliziert -n
+|-m|	-m		    Modifikationen nicht erlaubt (löscht Option 'write')
+|-d|	-d		    Diff-Modus |diff|
+|-b|	-b		    Binär-Modus
+|-l|	-l		    Lisp-Modus
+|-A|	-A		    Arabisch-Modus ('arabic' wird gesetzt)
+|-F|	-F		    Farsi-Modus ('fkmap' und 'rightleft' werden gesetzt)
+|-H|	-H		    Hebräisch-Modus ('hkmap' und 'righleft' werden
+				gesetzt)
+|-V|	-V		    Wortreich, gebe informative Nachrichten
+|-C|	-C		    Kompatibel (zu Vi), setze Option 'compatible'
+|-N|	-N		    Nicht-kompatibel, lösche Option 'compatible'
+|-r|	-r		    liste Auslagerungsdateien auf
+|-r|	-r {Datei} ...	    stelle abgebrochene Sitzung wieder her
+|-n|	-n		    erzeuge keine Auslagerungsdatei
+|-o|	-o [Num]	    öffne [Num] Fenster (Voreinstellung: eines für jede
+				Datei)
+|-f|	-f		    GUI: Vordergrund-Prozess, nicht forken
+			    Amiga: VIM nicht neu starten, um ein Fenster zu
+				öffnen (z.B. für Mail)
+|-s|	-s {ScriptIn}	    lese zuerst die Befehle aus der Datei {ScriptIn}
+|-w|	-w {ScriptOut}	    schreibe getippte Zeichen in Datei {ScriptOut}
+				(anhängend)
+|-W|	-W {ScriptOut}	    schreibe getippte Zeichen in Datei {ScriptOut}
+				(überschreibend)
+|-T|	-T {Terminal}	    setze Namen des Terminals
+|-d|	-d {Gerät}	     Amiga: öffne {Gerät} als zu benutzende Konsole
+|-u|	-u {vimrc}	    lese Einstellungen aus {vimrc} anstelle von anderen
+				Einstellungsdateien
+|-U|	-U {gvimrc}	    ebenso, beim Starten der GUI
+|---|	--		    Ende der Optionen, übrige Argumente sind Dateinamen
+|--help|    --help	    Liste der Argumente zeigen und beenden
+|--version| --version	    Versions-Info zeigen und beenden
+|--|	-		    Datei von der Standardeingabe lesen
+------------------------------------------------------------------------------
+*Q_ed*		Eine Datei editieren
+
+	      Ohne !: Abbrechen, wenn im aktuellen Puffer Änderungen
+		      vorgenommen wurden.
+	       Mit !: Alle Änderungen im aktuellen Puffer löschen.
+|:edit_f|  :e[dit][!] {Datei}	Editiere {Datei}.
+|:edit|	   :e[dit][!]		Aktuelle Datei erneut laden.
+|:enew|	   :ene[w][!]		Einen neuen, unbenannten Puffer editieren.
+|:find|    :fin[d][!] {Datei}	{Datei} in 'path' finden und editieren.
+
+|CTRL-^|   N   CTRL-^		Editiere alternative Datei N
+				    (entspricht »:e #N«).
+|gf|	       gf oder ]f	Editiere Datei, deren Namen unter dem Cursor ist
+|:pwd|	   :pwd			gebe Namen des aktuellen Verzeichnis aus
+|:cd|	   :cd [path]		ändere das aktuelle Verzeichnis in [Pfad]
+|:cd-|	   :cd -		gehe zum vorigen aktuellen Verzeichnis zurück
+|:file|	   :f[ile]		gebe aktuellen Dateinamen und die
+				     Cursor-Position aus
+|:file|	   :f[ile] {Name}	setze aktuellen Dateinamen auf {Name}
+|:files|   :files		zeige alternative Dateinamen
+------------------------------------------------------------------------------
+*Q_fl*		Die Argumenten-Liste benutzen		|argument-list|
+
+|:args|	   :ar[gs]		gebe die Argumenten-Liste aus, mit der aktuellen
+				   Datei in »[]«
+|:all|	   :all oder :sall	öffne ein Fenster für jede Datei in der
+				   Argumenten-Liste
+|:wn|	   :wn[ext][!]		schreibe Datei und editiere nächste Datei
+|:wn|	   :wn[ext][!] {Datei}	schreibe in {Datei} und editiere nächste Datei,
+				   außer {Datei} existiert; »!« überschreibt
+				   existierende Datei
+|:wN|	   :wN[ext][!] [Datei]	schreibe Datei und editiere vorige Datei
+
+	     im aktuellen Fenster in neuem Fenster	~
+|:argument|  :argu[ment] N	  :sar[gument] N
+|:next|	     :n[ext]		  :sn[ext]		editiere nächste Datei
+|:next_f|    :n[ext] {ArgListe}	  :sn[ext] {ArgListe}	definiere neue Argu-
+							   menten-Liste und
+							   editiere die erste
+							   Datei
+|:Next|	     :N[ext]		  :sN[ext]		editiere vorige Datei
+|:first|     :fir[st]		  :sfir[st]		editiere erste Datei
+|:last|	     :la[st]		  :sla[st]		editiere letzte Datei
+------------------------------------------------------------------------------
+*Q_wq*		Schreiben und schließen
+
+|:w|	  :[Bereich]w[rite][!]		schreibe in die aktuelle Datei
+|:w_f|	  :[Bereich]w[rite] {Datei}	schreibe in {Datei}, außer sie
+					   existiert bereits
+|:w_f|	  :[Bereich]w[rite]! {Datei}	schreibe in {Datei}; überschreibe eine
+					   existierende Datei
+|:w_a|	  :[Bereich]w[rite][!] >>		hänge an aktuelle Datei an
+|:w_a|	  :[Bereich]w[rite][!] >> {Datei}	hänge an {Datei} an
+|:w_c|	  :[Bereich]w[rite] !{Befehl}	führe {Befehl} mit [Bereich] als
+					   Standardeingabe aus
+|:up|	  :[Bereich]up[date][!]		schreibe, wenn modifiziert, in
+					   aktuelle Datei
+|:wall|	  :wa[ll][!]			schreibe alle geänderten Puffer
+
+|:q|	  :q[uit]		schließe aktuellen Puffer, außer es wurden
+				   Änderungen gemacht; schließe Vim, wenn es
+				   keine anderen Puffer gibt, die nicht eine
+				   Hilfe enthalten
+|:q|	  :q[uit]!		schließe stets aktuellen Puffer; schließe Vim,
+				   wenn es keine anderen Puffer gibt, die nicht
+				   eine Hilfe enthalten
+|:qa|	  :qa[ll]		schließe Vim, außer es wurden Änderungen gemacht
+|:qa|	  :qa[ll]!		schließe Vim stets, verwerfe alle Änderungen
+|:cq|	  :cq			schließen ohne Schreiben unter Rückgabe eines
+				   Fehlerkodes
+
+|:wq|	  :wq[!]		aktuelle Datei schreiben und beenden
+|:wq|	  :wq[!] {Datei}	in {Datei} schreiben und beenden
+|:xit|	  :x[it][!] [Datei]	wie »:wq«, schreibt aber nur, wenn es
+				   Änderungen gibt
+|ZZ|	     ZZ			dasselbe wie »:x«
+|ZQ|	     ZQ			dasselbe wie »:q!«
+|:xall|	  :xa[ll][!] oder :wqall[!]
+				alle geänderten Puffer schreiben und beenden
+
+|:stop|	  :st[op][!]		VIM suspendieren oder eine neue Shell starten;
+				   falls die Option 'aw' gesetzt und [!] nicht
+				   gegeben ist, schreibe den Puffer
+|CTRL-Z|     CTRL-Z		dasselbe wie »:stop«
+------------------------------------------------------------------------------
+*Q_ac*		Automatische Befehle
+
+|viminfo-file|	Register, Markierungen, Befehlsgeschichte beim Starten lesen,
+beim Beenden sichern
+
+|:rviminfo|	:rv[iminfo] [Datei]	Lese Info aus VimInfo-Datei [Datei]
+|:rviminfo|	:rv[iminfo]! [Datei]	ebenso, überschreibe bestehende Info
+|:wviminfo|	:wv[iminfo] [Datei]	füge Info zu VimInfo-Datei [Datei] hinzu
+|:wviminfo|	:wv[iminfo]! [Datei]	schreibe Info in VimInfo-Datei [Datei]
+
+
+|modeline|	automatisches Setzen von Optionen beim Editieren einer Datei
+
+|modeline|	vim:{set-arg}: ...	in den ersten und letzten Zeilen (siehe
+					Option 'ml') der Datei wird {set-arg}
+					als ein Argument an »:set« gegeben
+
+|autocommand|	automatische Ausführung von Befehlen bei bestimmten
+Ereignissen
+
+|:autocmd|	:au			liste alle automatischen Befehle auf
+|:autocmd|	:au {Ereignis}		liste alle automatischen Befehle für
+					   {Ereignis} auf
+|:autocmd|	:au {Ereignis} {Muster}	liste alle automatischen Befehle für
+					   {Ereignis} mit dem {Muster} auf
+|:autocmd|	:au {Ereignis} {Muster} {Befehl}
+					gebe neuen automatischen Befehl für
+					   {Ereignis} mit {Muster}
+|:autocmd|	:au!			entferne alle automatischen Befehle
+|:autocmd|	:au! {Ereignis}		entferne alle automatischen Befehle für
+					   {Ereignis}
+|:autocmd|	:au! * {Muster}		entferne alle automatischen Befehle für
+					   {Muster}
+|:autocmd|	:au! {Ereignis} {Muster}
+					entferne alle automatischen Befehle für
+					   {Ereignis} mit {Muster}
+|:autocmd|	:au! {Ereignis} {Muster} {Befehl}
+					entferne alle automatischen Befehle für
+					   {Ereignis} mit {Muster} und gebe
+					   einen neuen
+------------------------------------------------------------------------------
+*Q_wi*		Befehle für mehrere Fenster
+
+|CTRL-W_s|	CTRL-W s oder :split	Teile Fenster in zwei Hälften
+|:split_f|	:split {Datei}		Teile Fenster und editiere {Datei} in
+					   einer Hälfte
+|:vsplit|	:vsplit {Datei}		dasselbe, aber vertikal teilen
+|:vertical|	:vertical {Befehl}	Lasse {Befehl} vertikal teilen
+
+|:sfind|	:sf[ind] {Datei}	teile Fenster, finde {Datei} im Pfad in
+					   'path' und editiere sie
+|CTRL-W_]|	CTRL-W ]		teile Fenster und springe zum Tag unter
+					   dem Cursor
+|CTRL-W_f|	CTRL-W f		teile Fenster und editiere Dateinamen
+					   unter dem Cursor
+|CTRL-W_^|	CTRL-W ^		teile Fenster und editiere alternative
+					   Datei
+|CTRL-W_n|	CTRL-W n oder :new	erzeuge neues leeres Fenster
+|CTRL-W_q|	CTRL-W q oder :q[uit]	beende Editieren und schließe Fenster
+|CTRL-W_c|	CTRL-W c oder :cl[ose]	verstecke Puffer und schließe Fenster
+|CTRL-W_o|	CTRL-W o oder :on[ly]	mache aktuelles Fenster zum einzigen
+					   auf dem Bildschirm
+
+|CTRL-W_j|	CTRL-W j		bewege Cursor ins Fenster unterhalb
+|CTRL-W_k|	CTRL-W k		bewege Cursor ins Fenster oberhalb
+|CTRL-W_CTRL-W|	CTRL-W CTRL-W		bewege Cursor ins Fenster unterhalb
+					   (umbrechen)
+|CTRL-W_W|	CTRL-W W		bewege Cursor ins Fenster oberhalb
+					   (umbrechen)
+|CTRL-W_t|	CTRL-W t		bewege Cursor in oberstes Fenster
+|CTRL-W_b|	CTRL-W b		bewege Cursor in unterstes Fenster
+|CTRL-W_p|	CTRL-W p		bewege Cursor in vorher aktives Fenster
+
+|CTRL-W_r|	CTRL-W r		rotiere Fenster nach unten
+|CTRL-W_R|	CTRL-W R		rotiere Fenster nach oben
+|CTRL-W_x|	CTRL-W x		vertausche nächstes und aktuelles
+					   Fenster
+
+|CTRL-W_=|	CTRL-W =		mache alle Fenster gleich hoch
+|CTRL-W_-|	CTRL-W -		verringere Höhe des aktuellen Fensters
+|CTRL-W_+|	CTRL-W +		vergrößere Höhe des aktuellen Fensters
+|CTRL-W__|	CTRL-W _		setze Höhe des aktuellen Fensters
+					   (Voreinstellung: sehr hoch)
+------------------------------------------------------------------------------
+*Q_bu*		Pufferlistenbefehle
+
+|:buffers|	:buffers oder :files	liste alle bekannten Puffer und
+					   Dateinamen auf
+
+|:ball|		:ball oder :sball	editiere alle Argumente/Puffer
+|:unhide|	:unhide oder :sunhide	editiere alle geladenen Puffer
+
+|:badd|		:badd {Datei}		füge Dateinamen {Datei} zu der Liste
+					   hinzu
+|:bunload|	:bunload[!] [N]		entlade Puffer [N] aus dem Speicher
+|:bdelete|	:bdelete[!] [N]		entlade Puffer [N] und lösche ihn aus
+					   der Pufferliste
+
+	      im aktuellen Fenster in neuem Fenster	~
+|:buffer|     :[N]buffer [N]	  :[N]sbuffer [N]     zu Argument/Puffer N
+|:bnext|      :[N]bnext [N]	  :[N]sbnext [N]      zum N-ten nächsten
+							   Argument/Puffer
+|:bNext|      :[N]bNext [N]	  :[N]sbNext [N]      zum N-ten vorigen
+							   Argument/Puffer
+|:bprevious|  :[N]bprevious [N]   :[N]sbprevious [N]  zum N-ten vorigen
+							   Argument/Puffer
+|:bfirst|     :bfirst		  :sbfirst	      zum ersten Argument/Puffer
+|:blast|      :blast		  :sblast	      zum letzten
+							   Argument/Puffer
+|:bmodified|  :[N]bmod [N]	  :[N]sbmod [N]	      zum N-ten modifizierten
+							   Puffer
+------------------------------------------------------------------------------
+*Q_sy*		Syntaxhervorhebung
+
+|:syn-on|	:syntax on		beginne Benutzung von Syntaxhervorhebung
+|:syn-off|	:syntax off		beende Benutzung von Syntaxhervorhebung
+
+
+|:syn-keyword|	:syntax keyword {Gruppenname} {Schlüsselwort} ...
+					füge ein Syntax-Schlüsselwort-Element
+					   hinzu
+|:syn-match|	:syntax match {Gruppenname} {Muster} ...
+					füge Syntax-Übereinstimmungs-Element
+					   hinzu
+|:syn-region|	:syntax region {Gruppenname} {Muster} ...
+					füge Syntax-Bereichs-Element hinzu
+|:syn-sync|	:syntax sync [ccoment | lines {N} | ... ]
+					sage Syntax, wie synchronisiert werden
+					  soll
+|:syntax|	:syntax [list]		liste aktuelle Syntax-Elemente auf
+|:syn-clear|	:syntax clear		lösche alle Syntax-Info
+
+|:highlight|	:highlight clear	lösche alle Hervorhebungs-Info
+|:highlight|	:highlight {Gruppenname} {Schlüssel}={Argument} ...
+					setze Hervorhebung für {Gruppenname}
+
+|:filetype|	:filetype on		schalte Dateityperkennung ein, ohne
+					   Syntaxhervorhebung
+|:filetype|	:filetype plugin indent on
+					schalte Dateityperkennung ein, mit
+					  automatischer Einrückung und
+					  Einstellungen
+------------------------------------------------------------------------------
+*Q_qu*		GUI Befehle
+
+|:gui|		:gui			UNIX: GUI starten
+|:gui|		:gui {Datei} ...	ebenso, und editiere {Datei} ...
+
+|:menu|		:menu			liste alle Menüs auf
+|:menu|		:menu {MPfad}		liste Menüs auf, die mit {MPfad}
+					   beginnen
+|:menu|		:menu {MPfad} {rechteSeite}
+					füge Menü {MPfad} hinzu, {linkeSeite}
+					   gebend
+|:menu|		:menu {Pri} {MPfad} {rechteSeite}
+					ebenso, mit Prioritäten {Pri}
+|:menu|		:menu ToolBar.{Name} {rechteSeite}
+					füge Werkzeugleistenelement hinzu,
+					   {linkeSeite} gebend
+|:tmenu|	:tmenu {MPfad} {Text}	füge Menü {MPfad} eine Textblase hinzu
+|:unmenu|	:unmenu {MPfad}		entferne Menü {MPfad}
+------------------------------------------------------------------------------
+*Q_fo*		Falten
+
+|'foldmethod'|	set foldmethod=manual	Falten von Hand
+		set foldmethod=indent	Falten nach Einrückung
+		set foldmethod=expr	Falten nach 'foldexpr'
+		set foldmethod=syntax	Falten nach Syntax-Bereichen
+		set foldmethod=marker	Falten nach 'foldmarkers'
+
+|zf|		zf{Bewegung}		Operator: Definiere eine Faltung von
+					   Hand
+|:fold|		:{Bereich}fold		definiere eine Faltung über {Bereich}
+					   Zeilen
+|zd|		zd			lösche eine Faltung unter dem Cursor
+|zD|		zD			lösche alle Faltungen unter dem Cursor
+
+|zo|		zo			öffne eine Faltung unter dem Cursor
+|zO|		zO			öffne alle Faltungen unter dem Cursor
+|zc|		zc			schließe eine Faltung unter dem Cursor
+|zC|		zC			schließe alle Faltungen unter dem Cursor
+
+|zm|		zm			mehr falten: setze 'foldlevel' herunter
+|zM|		zM			schließe alle Faltungen: setze
+					   'foldlevel' auf null
+|zr|		zr			reduziere Faltungen: erhöhe 'foldlevel'
+|zR|		zR			öffne alle Faltungen: setze 'foldlevel'
+					   aufs Maximum
+
+|zn|		zn			nichts falten: lösche 'foldenable'
+|zN|		zN			normal falten: setze 'foldenable'
+|zi|		zi			invertiere 'foldenable'
+
+ vim:tw=78:ts=8:ft=help:norl:

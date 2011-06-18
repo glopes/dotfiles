@@ -1,0 +1,298 @@
+*usr_06.txt*	Für Vim Version 7.2.  Letzte Änderung: 2006-Apr-24
+
+		     VIM BENUTZERHANDBUCH - von Bram Moolenaar
+
+			  Syntax-Hervorhebung benutzen
+
+
+Schwarz-weißer Text ist langweilig.  Mit Farben erwacht Ihre Datei zum
+Leben.  Dies sieht nicht nur nett aus, es beschleunigt auch Ihre Arbeit.
+Ändern Sie die für verschiedene Arten Text benutzten Farben.  Drucken Sie
+Ihren Text mit den Farben, die Sie auf dem Bildschirm sehen.
+
+|06.1|	Sie einschalten
+|06.2|	Keine oder die falschen Farben?
+|06.3|	Verschiedene Farben
+|06.4|	Mit Farben oder ohne Farben
+|06.5|	Mit Farben drucken
+|06.6|	Weiterlesen
+
+
+Nächstes Kapitel: |usr_07.txt|  Mehr als eine Datei editieren
+ Voriges Kapitel: |usr_05.txt|  Eigene Einstellungen setzen
+Inhaltsübersicht: |usr_toc.txt|
+
+==============================================================================
+*06.1*	Sie einschalten
+
+Alles beginnt mit einem einfachen Befehl: >
+
+	:syntax enable
+
+Das sollte in den meisten Situationen funktionieren, um Farbe in Ihre
+Dateien zu bekommen.  Vim erkennt den Dateityp automatisch und lädt die
+richtige Syntax-Hervorhebung.  Plötzlich sind Kommentare blau,
+Schlüsselwörter braun und Zeichenketten rot.  Dies ergibt eine einfache
+Übersicht der Datei.  Nach einer Weile merken Sie, dass schwarz-weißer
+Text Sie bremst.
+
+Falls Sie immer Syntax-Hervorhebung benutzen wollen, setzen Sie den Befehl
+»:syntax enable« in Ihre |vimrc|-Datei.
+
+Falls Sie Syntax-Hervorhebung nur benutzen wollen, wenn das Terminal Farben
+unterstützt, können Sie dies in Ihre |vimrc|-Datei schreiben: >
+
+	if &t_Co > 1
+	   syntax enable
+	endif
+
+Falls Sie Syntax-Hervorhebung nur in der GUI-Version benutzen wollen,
+schreiben Sie den Befehl »:syntax enable« in Ihre |gvimrc|-Datei.
+
+==============================================================================
+*06.2*	Keine oder die falschen Farben?
+
+Es kann einige Gründe geben, warum Sie keine Farben sehen:
+
+- Ihr Terminal unterstützt keine Farben.
+	Vim benutzt fetten, kursiven und unterstrichenen Text, aber dies sieht
+	nicht sehr gut aus.  Wahrscheinlich wollen Sie versuchen, ein Terminal
+	mit Farben zu bekommen.  Für Unix empfehle ich das XTerm aus dem
+	XFree86-Projekt.
+
+- Ihr Terminal unterstützt Farben, aber Vim weiß es nicht.
+	Stellen Sie sicher, das die Einstellung $TERM korrekt ist.  Wenn Sie
+	zum Beispiel ein XTerm benutzen, das Farben unterstützt: >
+
+		setenv TERM xterm-color
+<
+	oder (abhängig von Ihrer Shell): >
+
+		TERM=xterm-color; export TERM
+
+<	Der Name des Terminals muss mit dem Terminal, das Sie benutzen,
+	übereinstimmen.  Falls es immer noch nicht funktioniert, siehe
+	|xterm-color|, wo einige Wege gezeigt werden, Vim Farben anzeigen zu
+	lassen (nicht nur in einem XTerm)
+
+- Der Dateityp wird nicht erkannt.
+	Vim kennt nicht alle Dateitypen, und manchmal ist es fast unmöglich zu
+	sagen, welche Sprache eine Datei benutzt.  Versuchen Sie diesen
+	Befehl: >
+
+		:set filetype
+<
+	Falls das Ergebnis »filetype=« ist, dann ist das Problem tatsächlich,
+	dass Vim nicht weiß von welchem Typ diese Datei ist.  Sie können den
+	Typ von Hand setzen: >
+
+		:set filetype=fortran
+
+<	Um zu sehen, welche Typen verfügbar sind, schauen Sie in das
+	Verzeichnis $VIMRUNTIME/syntax.  In der GUI-Version können Sie das
+	Menü »Syntax« benutzen.  Das Setzen des Dateityps kann auch mit einer
+	|modeline| erledigt werden, so dass die Datei jedesmal richtig
+	hervorgehoben wird, wenn Sie sie editieren.  Zum Beispiel kann diese
+	Zeile in einem Makefile benutzt werden (Schreiben Sie sie an den
+	Anfang oder das Ende der Datei): >
+
+		# vim: syntax=make
+
+<	Sie selbst könnten wissen, wie man den Dateityp erkennt.  Oft kann die
+	Endung des Dateinamens (nach dem Punkt) benutzt werden.  Siehe
+	|new-filetype| darüber, wie Sie Vim diesen neuen Dateityp erkennen
+	lassen.
+
+- Es gibt keine Hervorhebung für Ihren Dateityp.
+	Sie könnten versuchen, einen ähnlichen Dateityp zu benutzen, indem Sie
+	ihn von Hand setzen, wie oben erwähnt.  Wenn das nicht gut genug ist,
+	können Sie Ihre eigene Syntax-Datei schreiben, siehe |mysyntaxfile|.
+
+
+Oder die Farben könnten falsch sein:
+
+- Der eingefärbte Text ist sehr schwer zu lesen.
+	Vim bestimmt, welche Hintergrundfarbe Sie benutzen.  Falls es Schwarz
+	(oder eine andere dunkle Farbe) ist, benutzt er helle Farben für den
+	Text.  Falls es weiß (oder eine andere helle Farbe) ist, benutzt er
+	dunkle Farben für den Text.  Falls sich Vim verschätzt, ist der Text
+	schwer zu lesen.  Um dies zu beheben, setzen Sie die Option
+	'background'.  Bei dunklem Hintergrund: >
+
+		:set background=dark
+
+<	Und bei hellem Hintergrund: >
+
+		:set background=light
+
+<	Stellen Sie sicher, dass Sie dies _vor_ dem Befehl »:syntax enable«
+	schreiben, anderenfalls werden die Farben schon gesetzt sein.  Sie
+	könnten »:syntax reset« nach dem Setzen von 'background' geben, um Vim
+	wieder die voreingestellten Farben setzen zu lassen.
+
+- Die Farben sind beim Rollen von unten nach oben falsch.
+	Vim liest nicht die ganze Datei, um den Text zu parsen.  Er beginnt
+	das Parsen woimmer Sie die Datei lesen.  Dies spart eine Menge Zeit,
+	aber manchmal sind die Farben falsch.  Ein einfacher Weg zur Behebung
+	ist es, CTRL-L zu drücken.  Oder rollen Sie ein Stück zurück und dann
+	wieder vorwärts.
+	Für eine echte Lösung siehe |:syn-sync|.  Einige Syntax-Dateien haben
+	einen Weg, um Vim weiter zurück blicken zu lassen, siehe die Hilfe für
+	die betreffende Syntax-Datei.  Zum Beispiel |tex.vim| für die
+	TeX-Syntax.
+
+==============================================================================
+*06.3*	Verschiedene Farben			*:syn-default-override*
+
+Falls Sie die voreingestellten Farben nicht mögen, können Sie ein anderes
+Farbschema wählen.  In der GUI benutzen Sie das Menü »Editieren ->
+Farbschema ...«.  Sie können auch folgenden Befehl benutzen: >
+
+	:colorscheme evening
+
+»evening« ist der Name des Farbschemas.  Es gibt einige andere, die Sie
+ausprobieren wollen mögen.  Schauen Sie in das Verzeichnis
+$VIMRUNTIME/colors.
+
+Wenn Sie ein Farbschema gefunden haben, das Sie mögen, fügen Sie den
+entsprechenden Befehl ihrer |vimrc|-Datei hinzu.
+
+Sie könnten auch Ihr eigenes Farbschema schreiben.  So machen Sie es:
+
+1. Wählen Sie ein Farbschema, das Ihren Vorstellungen nahe kommt.  Kopieren
+   Sie diese Datei in Ihr eigenes Vim-Verzeichnis.  Unter Unix sollte dies
+   funktionieren: >
+
+	!mkdir ~/.vim/colors
+	!cp $VIMRUNTIME/colors/morning.vim ~/.vim/colors/meins.vim
+<
+   Dies wird in Vim gemacht, weil er den Wert von $VIMRUNTIME kennt.
+
+2. Editieren Sie die Farbschema-Datei.  Diese Einträge sind nützlich:
+
+	term		Attribute in einem schwarz-weißen Terminal
+	cterm		Attribute in einem farbigen Terminal
+	ctermfg		Vordergrundfarbe in einem farbigen Terminal
+	ctermbg		Hintergrundfarbe in einem farbigen Terminal
+	gui		Attribute in der GUI
+	guifg		Vordergrundfarbe in der GUI
+	guibg		Hintergrundfarbe in der GUI
+
+   Um zum Beispiel Kommentare grün zu machen: >
+
+	:highlight Comment ctermfg=green guifg=green
+<
+   Die Attribute, die Sie für »cterm« und »gui« benutzen können, sind »bold«
+   (fett) und »underline« (unterstrichen).  Falls Sie beide benutzen wollen,
+   benutzen Sie »bold,underline«.  Für Details siehe den Befehl |:highlight|.
+
+3. Sagen Sie Vim, dass er immer Ihr Farbschema benutzen soll.  Schreiben Sie
+   diese Zeile in Ihre |vimrc|-Datei: >
+
+	colorscheme meins
+
+Falls Sie sehen möchten, wie die am häufigsten benutzten
+Farb-Kombinationen aussehen, benutzen Sie diesen Befehl: >
+
+	:runtime syntax/colortest.vim
+
+Sie sehen Text in verschiedenen Farb-Kombinationen.  Sie können prüfen,
+welche lesbar sind und nett ausschauen.
+
+==============================================================================
+*06.4*	Mit Farben oder ohne Farben
+
+Text in Farben anzuzeigen erfordert viel Arbeit.  Falls Sie die Anzeige zu
+langsam finden, mögen Sie die Syntax-Hervorhebung für einen Moment
+deaktivieren wollen: >
+
+	:syntax clear
+
+Wenn Sie eine andere Datei editieren (oder dieselbe), kommen die Farben
+zurück.
+
+							*:syn-off*
+Falls Sie die Hervorhebung komplett stoppen wollen, benutzen Sie: >
+
+	:syntax off
+
+Dies deaktiviert Syntax-Hervorhebung komplett und entfernt sie unmittelbar
+aus allen Puffern.
+
+							*:syn-manual*
+Falls Sie Syntax-Hervorhebung nur für besondere Dateien wollen, benutzen Sie
+dies: >
+
+	:syntax manual
+
+Dies aktiviert die Syntax-Hervorhebung, aber schaltet sie nicht automatisch
+an, wenn das Editieren eines Puffers begonnen wird.  Um für den aktuellen
+Puffer Hervorhebung anzuschalten, setzen Sie die Option 'syntax': >
+
+	:set syntax=ON
+<
+==============================================================================
+*06.5*	Mit Farben drucken	*syntax-printing* *syntax-drucken*
+
+In der MS-Windows-Version können Sie die aktuelle Datei mit diesem Befehl
+drucken: >
+
+	:hardcopy
+
+Sie bekommen den gewöhnlichen Druckdialog, wo Sie den Drucker und einige
+Einstellungen wählen können.  Falls Sie einen Farbdrucker haben, sollte
+die Papier-Ausgabe genauso wie das aussehen, was Sie in Vim sehen.  Aber
+wenn Sie einen dunklen Hintergrund benutzen, werden die Farben angepasst, um
+auf weißem Papier gut auszusehen.
+
+Es gibt einige Optionen, die die Art und Weise ändern, wie Vim druckt:
+	'printdevice'
+	'printheader'
+	'printfont'
+	'printoptions'
+
+Um nur einen Bereich von Zeilen zu drucken, benutzen Sie den visuellen Modus
+um die Zeilen auszuwählen und dann geben Sie den Befehl: >
+
+	v100j:hardcopy
+
+»v« geht in den visuellen Modus.  »100j« geht hundert Zeilen nach unten,
+sie werden hervorgehoben.  Dann druckt »:hardcopy« diese Zeilen.  Sie
+können natürlich andere Befehle benutzen, um im visuellen Modus zu
+bewegen.
+
+Dies funktioniert auch unter Unix, falls Sie einen PostScript-Drucker
+haben.  Ansonsten haben Sie ein wenig mehr Arbeit.  Sie müssen den Text
+zunächst nach HTML wandeln, und dann aus einem Webbrowser wie Netscape
+drucken.
+
+Wandeln Sie mit diesem Befehl die aktuelle Datei nach HTML: >
+
+	:source $VIMRUNTIME/syntax/2html.vim
+
+Sie sehen die Datei verschwinden, dies kann bei einer großen Datei eine Weile
+dauern.  Einige Zeit später zeigt ein anderes Fenster den HTML-Kode.  Nun
+speichern Sie diesen irgendwo (nicht entscheidend wo, Sie werfen ihn später
+weg):
+>
+	:write main.c.html
+
+Öffnen Sie diese Datei in Ihrem Lieblingsbrowser und drucken Sie sie von
+dort.  Wenn alles gut geht, sollte die Ausgabe genauso aussehen wie in Vim.
+Siehe |2html| für Einzelheiten.  Vergessen Sie nicht, die HTML-Datei zu
+löschen, wenn Sie fertig sind.
+
+Statt zu drucken, könnten Sie die HTML-Datei auch auf einen Web-Server
+stellen und andere auf den farbigen Text schauen lassen.
+
+==============================================================================
+*06.6*	Weiterlesen
+
+|usr_44.txt|  Eigene Syntax-Hervorhebungen
+|syntax|      Alle Einzelheiten
+
+==============================================================================
+
+Nächstes Kapitel: |usr_07.txt| Mehr als eine Datei editieren
+
+Copyright: siehe |manual-copyright| vim:tw=78:ts=8:ft=help:norl:

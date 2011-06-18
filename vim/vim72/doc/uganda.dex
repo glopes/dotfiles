@@ -1,0 +1,323 @@
+*uganda.txt*    Für Vim Version 7.2.  Letzte Änderung: 2008-Jun-21
+
+
+		  VIM REFERENZ-HANDBUCH   von Bram Moolenaar
+
+
+*uganda* *Uganda* *copying* *kopieren* *copyright* *license* *licence* *Lizenz*
+ZUSAMMENFASSUNG
+								*iccf* *ICCF*
+Vim ist Charityware.  Sie können ihn benutzen und kopieren soviel Sie
+mögen, aber Sie sind aufgefordert, eine Spende für bedürftige Kinder
+in Uganda zu machen.  Siehe bitte unten |kcc|, oder besuchen Sie die
+Webseite der ICCF, verfügbar unter diesen URLs:
+
+	http://iccf-holland.org/
+	http://www.vim.org/iccf/
+	http://www.iccf.nl/
+
+Sie können auch die Entwicklung von Vim sponsern.  Vim-Sponsoren können
+für Features stimmen.  Siehe |sponsor|.  Das Geld geht auf jeden Fall nach
+Uganda.
+
+Die Open Publication License gilt für die Vim-Dokumentation, siehe
+|manual-copyright|.
+
+=== Beginn der Lizenz ===
+
+VIM LIZENZ
+
+I)  Es gibt keine Beschränkungen unmodifizierte Kopien von Vim zu
+    verteilen, außer dass sie den englischen Lizenz-Text enthalten müssen.
+    Sie können auch unmodifizierte Teile von Vim verteilen, ebenso
+    unbeschränkt, außer dass sie den englischen Lizenz-Text enthalten
+    müssen.  Sie dürfen auch ausführbare Dateien, die Sie aus den
+    unveränderten Vim-Quellen erzeugt haben, einschließen, und weiter
+    ihre eigenen Nutzungsbeispiele und Vim-Skripte.
+
+II) Es ist erlaubt, eine modifizierte (oder erweiterte) Version von Vim,
+    einschließlich ausführbarer Dateien und/oder Quellkode, zu verteilen,
+    wenn die folgenden vier Bedingungen erfüllt sind:
+    1) Der englische Lizenztext muss unverändert enthalten sein.
+    2) Der modifizierte Vim muss auf eine der folgenden fünf Arten 
+       verteilt werden:
+       a) Falls Sie selbst Änderungen an Vim vornehmen, müssen Sie in der
+	  der Verteilung klar beschreiben, wie man Sie erreicht.  Wenn Sie der
+	  Maintainer (auf jegliche Weise) um eine Kopie des von Ihnen
+	  verteilten Vim bittet, müssen Sie Ihre Änderungen, einschließlich
+	  Quellkode, dem Maintainer ohne Gebühr zugänglich machen.  Der
+	  Maintainer behält sich das Recht vor, Ihre Änderungen in die
+	  offizielle Version von Vim aufzunehmen.  Was der Maintainer mit
+	  Ihren
+	  Änderungen tut und unter welcher Lizenz sie verteilt werden ist
+	  verhandelbar.  Wenn es keine Verhandlung gab, dann gilt die
+	  englische Version dieser Lizenz, oder eine spätere Version, auch für
+	  Ihre Änderungen.  Der aktuelle Maintainer ist Bram Moolenaar
+	  <Bram@vim.org>.  Falls sich dies ändert, wird es an passenden Orten
+	  angekündigt (höhst wahrscheinlich vim.sf.net, www.vim.org und/oder
+	  comp.editors).  Wenn es vollkommen unmöglich ist, den Maintainer
+	  zu kontaktieren, erlischt die Verpflichtung, ihm Ihre
+	  Änderungen zu schicken.  Sobald der Maintainer bestätigt hat, dass
+	  er Ihre Änderungen empfangen hat, müssen sie ihm nicht noch einmal
+	  gesandt werden.
+       b) Falls Sie einen modifizierten Vim empfangen haben, der
+	  verteilt wurde, wie unter a) erwähnt, ist Ihnen erlaubt, ihn
+	  unmodifiziert weiter zu verteilen, wie in I) erwähnt.  Wenn Sie
+	  weitere Änderungen vornehmen, gilt für diese Änderungen der
+	  Text unter a).
+       c) Liefern Sie alle Änderungen, einschließlich Quellkode, mit
+	  jeder Kopie des modifizierten Vim, den Sie verteilen.  Dies kann in
+	  Form eines Kontext-Diffs geschehen.  Sie können wählen, welche
+	  Lizenz sie für den neuen Kode benutzen, den Sie hinzufügen.  Die
+	  Änderungen und deren Lizenz dürfen andere nicht darin beschränken,
+	  ihre eigenen Änderungen an der offiziellen Version von Vim
+	  vorzunehmen.
+       d) Wenn Sie einen modifizierten Vim haben, der Änderungen wie in
+	  c) erwähnt enthält, können Sie Ihn ohne den Quellkode für die
+	  Änderungen verteilen, falls die folgenden drei Bedingungen erfüllt
+	  sind:
+	  - Die Lizenz, von denen die Änderungen betroffen sind, erlaubt 
+	    Ihnen die Änderungen ohne Gebühr oder Einschränkung an den Vim-
+	    Maintainer zu verteilen, und erlaubt dem Vim-Maintainer, die
+	    Änderungen ohne Gebühr oder Einschränkungen in die offizielle
+	    Version von Vim aufzunehmen.
+	  - Sie halten die Änderungen für mindestens drei Jahre nachdem
+	    Sie den entsprechenden modifizierten Vim verteilt haben.
+	    Wenn Sie der Maintainer oder jemand, dem Sie den modifizierten
+	    Vim verteilt haben, sie (auf jegliche Weise) innerhalb dieser
+	    Zeitspanne um die Änderungen bittet, müssen Sie ihm diese
+	    verfügbar machen.
+	  - Sie beschreiben in der Verteilung klar, wie Sie zu kontaktieren
+	    sind.  Diese Kontaktinformation muss für mindestens drei Jahre
+	    gültig bleiben, nachdem der entsprechende modifizierte Vim
+	    verteilt wurde, oder so lange wie möglich.
+       e) Wenn die GNU General Public License (GPL) für die Änderungen
+	  gilt, können Sie den modifizierten Vim unter der GNU GPL Version 2
+	  oder später verteilen.
+    3) Eine Nachricht muss hinzugefügt werden, zu mindest in der Ausgabe
+       des Befehls »:version« und im Startbildschirm, so dass der Benutzer
+       des modifizierten Vim sehen kann, dass er modifiziert wurde.  Wenn
+       wie unter 2)e) erwähnt verteilt wird, ist das Hinzufügen der
+       Nachricht nur erforderlich, so weit dies nicht mit der für die
+       Änderungen benutzten Lizenz kollidiert.
+    4) Die Kontakt-Informationen wie unter 2)a) und 2)d) gefordert,
+       dürfen nicht entfernt oder geändert werden, außer dass die
+       Person selbst Korrekturen vornehmen kann.
+
+III) Wenn Sie eine modifizierte Version von Vim verteilen, sind Sie
+     ermuntert, die Vim-Lizenz für ihre Änderungen zu benutzen und
+     letztere dem Maintainer verfügbar zu machen, einschließlich dem
+     Quellkode.  Der bevorzugte Weg, dies zu tun, ist per Email oder
+     die Dateien auf einen Server zu laden und die URL zu mailen.  Falls
+     die Zahl der Änderungen klein ist (z.B. ein modifiziertes Makefile)
+     reicht es, ein Kontext-Diff zu mailen.  Die zu benutzende Email-
+     Adresse ist <maintainer@vim.org>.
+
+IV)  Es ist nicht erlaubt, den englischen Text dieser Lizenz von der
+     Verteilung der Vim-Quellen zu entfernen, von Teilen von ihnen oder
+     von einer modifizierten Version.  Sie können nach Ihrer Wahl diese
+     Lizenz für vorige Vim-Releases verwenden, statt der Lizenz, mit der
+     sie gekommen sind.
+
+=== Ende der Lizenz ===
+
+Anmerkung:
+
+- Wenn Sie glücklich mit Vim sind, drücken Sie dies bitte durch Lesen des
+  Rests dieser Datei aus und überlegen Sie sich, hilfsbedürftigen Kindern
+  in Uganda zu helfen.
+
+- Wenn Sie die weitere Entwicklung von Vim unterstützen wollen, überlegen
+  Sie ein |sponsor| zu werden.  Das Geld geht trotzdem nach Uganda.
+
+- Richard Stallman gemäß ist die Vim-Lizenz GNU-GPL-kompatibel.  Wenige
+  kleinere Änderungen wurden vorgenommen, seit er sie geprüft hat, aber
+  das sollte keinen Unterschied machen.
+
+- Wenn Sie Vim mit einer Bibliothek binden, die unter der GNU GPL steht,
+  beschränkt dies die Verteilung auf die GNU GPL.  Auch wenn Sie
+  tatsächlich nichts in Vim verändert haben.
+
+- Wenn einmal eine Änderung aufgenommen wurde, die unter der GNU GPL steht,
+  erzwingt dies, dass alle weiteren Änderungen auch unter der GNU GPL oder
+  einer kompatiblen Lizenz gemacht werden.
+
+- Falls Sie eine modifizierte Version von Vim verteilen, können Sie Ihren
+  Namen und Kontaktinformation einfügen mit dem »--with-modified-by«
+  Konfigurationsargument oder der Definition MODFIED_BY.
+
+==============================================================================
+Kibaale Kinderzentrum		*kcc* *Kibaale* *charity*
+
+Das Kibaale Kinderzentrum (KCC) liegt in Kibaale, einer kleinen Stadt im
+Süden Ugandas, nahe Tansania, in Ostafrika.  Die Gegend ist als der
+Rakai-Bezirk bekannt.  Die Bevölkerung besteht hauptsächlich aus Bauern.
+Aber dieser Bezirk leidet mehr unter AIDS als jeder andere Teil der Welt.
+Manche sagen, es fing hier an.  Schätzungen besagen, dass 10 bis 30% der
+Ugander mit dem HIV infiziert sind.  In diesem Bezirk haben etwa 60.000
+Kinder einen oder beide Elternteile verloren, bei einer Bevölkerung von
+350.000.  Und dies geht immer noch weiter.
+
+Die Kinder brauchen eine Menge Hilfe.  Das KCC arbeitet schwer, um die
+Bedürftigen mit Nahrung, medizinischer Pflege und Ausbildung zu versorgen.
+Nahrung und medizinische Pflege, um sie jetzt gesund zu halten, und
+Ausbildung, dass sie in der Zukunft für sich selbst sorgen können.  Das
+KCC arbeitet auf einer christlichen Basis, aber Hilfe wird Kindern jeglicher
+Religion gegeben.
+
+Der Schlüssel, die Probleme in diesem Bereich zu lösen, ist Ausbildung.
+Die wurde in den vergangen Jahren mit Präsident Idi Amin und den folgenden
+Bürgerkriegen vernachlässigt.  Nun ist die Regierung wieder stabil, Kinder
+und Eltern müssen lernen, für sich selbst zu sorgen, und wie man
+Infektionen vermeiden kann.  Es gibt auch Hilfe für kranke und hungrige
+Leute, aber das primäre Ziel ist es, zu verhindern, dass Leute krank werden
+und ihnen zu lehren, wie man gesunde Nahrung anbaut.
+
+Die meisten Waisen leben in einer erweiterten Familie.  Ein Onkel oder eine
+ältere Schwester kümmert sich um sie.  Weil diese Familien groß sind, und
+das Einkommen (wenn überhaupt) gering ist, ist ein Kind glücklich, wenn es
+gesunde Nahrung bekommt.  Kleidung, medizinische Pflege und Beschulung ist
+außer Reichweite.  Um diesen bedürftigen Kindern zu helfen, wurde ein
+Sponsorenschaften-Programm eingerichtet.  Ein Kind kann finanziell adoptiert
+werden.  Für ein paar Dollar im Monat kümmert sich das KCC darum, dass das
+Kind unentbehrliche Sachen bekommt, gesund ist, zur Schule geht, und das KCC
+kümmert sich um alles andere, das für das Kind und die Familie, die es
+unterstützt, getan werden muss.
+
+Neben dem Kind direkt zu helfen muss die Umgebung, wo das Kind aufwächst,
+verbessert werden.  KCC hilft Schulen, ihre Lehrmethoden zu verbessern.  Es
+gibt eine Demonstrationsschule in dem Zentrum, und Lehrer-Kurse werden
+gegeben.  Gesundheitsarbeiter werden geschult, Hygiene-Erziehung findet
+statt, und Haushalte werden angehalten, eine richtige Latrine zu bauen.  Ich
+half eine Produktionsstelle einzurichten für Betonstraßen.  Diese werden
+benutzt, um eine gute Latrine zu bauen.  Sie werden unter Kostenpreis
+verkauft.
+
+Es gibt eine kleine Klinik auf dem Projekt, die Kinder und ihre Familie
+mit medizinischer Hilfe versorgt.  Wenn erforderlich, wird Transport in
+ein Krankenhaus angeboten.  Immunisierungsprojekte werden ausgetragen
+und Hilfe wird angeboten, wenn eine Epidemie ausbricht (Masern und
+Cholera waren ein Problem).
+					*donate* *spenden*
+Von Sommer 1994 bis Sommer 1995 habe ich ein ganzes Jahr in dem Zentrum
+verbracht, arbeiten als Freiwilliger.  Ich half das Zentrum zu erweitern
+und arbeitete in den Bereichen Wasser und Abwasser.  Ich lernte, dass das
+KCC wirkliche Hilfe anbietet.  Als ich nach Holland zurückkam, wollte
+ich das KCC gerne weiter unterstützen.  Um dies zu tun, treibe ich
+Geldmittel auf und organisiere das Sponsorenschaft-Programm.  Bitte
+erwägen Sie eine dieser Möglichkeiten:
+
+1.  Ein Kind in der Grundschule sponsern: 17 Euro pro Monat (oder mehr).
+2.  Ein Kind in der weiterführenden Schule sponsern: 25 Euro im Monat (oder
+    mehr).
+3.  Die Klinik sponsern: Jeder monatliche oder vierteljährliche Betrag
+4.  Eine einmalige Spende
+
+Verglichen mit anderen Organisationen, die Kinder-Sponsorenschaften
+anbieten, sind diese Beträge sehr niedrig.  Dies ist, weil das Geld direkt
+an das Zentrum geht.  Weniger als 5% wird für Verwaltung benutzt.  Dies ist
+möglich, weil dies eine kleine Organisation ist, die mit Freiwilligen
+arbeitet.  Wenn Sie ein Kind sponsern möchten, sollten Sie die Absicht
+haben, dies für mindestens ein Jahr zu tun.
+
+Wie können Sie wissen, dass das Geld richtig ausgegeben wird?  Zuerst haben
+Sie meine persönliche Garantie als Autor von Vim.  Ich vertraue den Leuten,
+die in dem Zentrum arbeiten.  Ich kenne sie persönlich.  Weiterhin wird das
+Zentrum von World Vision, Save the Children Fund und International Child
+Care Fund co-gesponsert und inspiziert.  Das Zentrum wird einmal im Jahr
+besucht (auf unsere eigenen Kosten), um den Fortschritt zu überprüfen.
+Ich habe das Zentrum 1996, 1998, 2000, 2001 und 2003 selbst besucht.  Die
+Besuchsberichte sind auf der Webseite der ICCF.
+
+Falls Sie weitere Fragen haben, senden Sie mir Email: <Bram@vim.org>.
+
+Die Adresse des Zentrums ist:
+			Kibaale Children's Centre
+			p.o. box 1658
+			Masaka, Uganda, Ostafrika
+
+Geld schicken:			*iccf-donations* *iccf-spenden*
+
+Überprüfen sie die Webseite der ICCF für die neuesten Informationen!
+Siehe für die URL |iccf|.
+
+
+USA:		Die unten genannten Methoden können benutzt werden.
+		Es ist leider nicht mehr möglich, einen Scheck an die Nehemiah
+		Group Outreach Society (NGOS) zu schicken.  Wir suchen nach
+		einer anderen Möglichkeit, Ihnen eine IRS-Steuerquittung zu
+		verschaffen.
+		Um ein Kind zu sponsern, treten Sie mit KCF in Kanada in
+		Kontakt (siehe unten).  US-Schecks können ihnen geschickt
+		werden, um Verbuchungskosten zu veringern.
+
+Kanada:		Kontaktieren Sie den Kibaale Children's Fund (KCF) in Surrey.
+		Sie kümmern sich um kanadische Sponsoren für die Kinder in
+		Kibaale. KCF leitet 100% des Geldes an das Projekt in Uganda.
+		Sie können ihnen direkt eine einmalige Spende senden.  Bitte
+		senden Sie mir eine Nachricht, so dass ich weiß, was wegen Vim
+		gespendet wurde.  Fragen Sie KCF nach Informationen über
+		Sponsorenschaften.
+			Kibaale Children's Fund c/o Pacific Academy
+			10238-168 Street
+			Surrey, B.C. V4N 1Z4
+			Kanada
+			Telefon: 604-581-5353
+		Falls Sie eine Spende an KCF machen, bekommen Sie eine Steuer-
+		bescheinigung, die für Ihre Steuerrückzahlung eingereicht
+		werden kann.
+
+Niederlande:	Transferieren Sie auf das Konto von »Stichting ICCF Holland«
+		in Venlo.  Dies erlaubt steuerliche Absetzung, falls Sie in
+		den Niederlanden leben.
+			Postbank, Nr. 4548774
+
+Deutschland:	Es ist möglich, Spenden zu machen, die eine Steuerrückzahlung
+		erlauben.  Prüfen Sie die Webseite der ICCF für neueste
+		Informationen:
+			http://iccf-holland.org/germany.html
+
+Welt:		Benutzen Sie eine Post-Zahlungs-Anweisung.  Das sollt von
+		jedem Land aus möglich sein, hauptsächlich vom Postamt.
+		Benutzen Sie diesen Namen (der in meinem Ausweis steht):
+		»Abraham Moolenaar«.  Benutzen Sie Euro falls möglich.
+
+Europa:		Benutzen Sie einen Banktransfer falls möglich.  Ihre Bank
+		sollte ein Formular haben, das Sie hierfür benutzen können.
+		Siehe unten »Andere« für den Swift Kode und die IBAN Nummer.
+		Jede andere Methode sollte es tun.  Fragen Sie nach
+		Informationen über Sponsorenschaft.
+
+Kreditkarte:	Sie können PayPal benutzen, um Geld mit einer Kreditkarte zu
+		schicken.  Dies ist das am weitesten benutze Internet-basierte
+		Zahlungssystem.  Es ist wirklich einfach zu benutzen.
+		Benutzen Sie diesen Link, um mehr Info zu finden:
+		    https://www.paypal.com/en_US/mrb/pal=XAC62PML3GF8Q
+		Die Email-Adresse, an die das Geld zusenden ist, ist:
+		    Bram@iccf-holland.org
+		Für Beträge über 400 Euro (500 US$) wird das Senden eines
+		Schecks bevorzugt.
+
+Andere:		Überweisen Sie auf eines dieser Konten, falls möglich:
+		    Postbank, Konto 4548774
+				Swift Kode: INGB NL 2A
+				IBAN: NL47 PSTB 0004 5487 74
+			unter dem Namen »Stichting ICCF Holland«, Venlo
+		    Falls das nicht funktioniert:
+		    Rabobank Venlo, Konto 3765.05.117
+				Swift Kode: RABO NL 2U
+			unter dem Namen »Bram Moolenaar«, Venlo
+		Ansonsten, schicken Sie einen Scheck in Euro oder US-Dollar an
+		die Adresse unten.  Minimaler Betrag: $70 (meine Bank
+		akzeptiert keine kleineren Beträge für Auslandsschecks, Sorry)
+
+Adresse, um Schecks zu schicken:
+			Stichting ICCF Holland
+			Bram Moolenaar
+			Finsterruetihof 1
+			8134 Adliswil
+			Switzerland
+
+Ich erwarte, dass diese Adresse lange Zeit gültig sein wird.
+
+ vim:tw=78:ts=8:ft=help:norl:

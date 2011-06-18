@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd vim
+export VIM_SRC=`pwd`
+cd
+ln -nfs $VIM_SRC .vim
+ln -nfs $VIM_SRC/vimrc.vim .vimrc
+ln -nfs $VIM_SRC/gvimrc.vim .gvimrc
+

@@ -1,0 +1,679 @@
+*usr_05.txt*	Für Vim Version 7.2.  Letzte Änderung: 2007-Mai-11
+
+		     VIM BENUTZERHANDBUCH - von Bram Moolenaar
+
+			      Eigene Einstellungen setzen
+
+
+Vim kann manipuliert werden, dass er so arbeitet, wie Sie wollen.  Dieses
+Kapitel zeigt Ihnen, wie Sie beim Start von Vim Optionen auf verschiedene
+Werte setzen.  Fügen Sie Plugins hinzu, um Vims Fähigkeiten zu erweitern.
+Oder definieren Sie Ihre eigenen Makros.
+
+|05.1|	Die vimrc-Datei
+|05.2|	Die Beispiel-vimrc-Datei erklärt
+|05.3|	Einfache Tastenbelegungen
+|05.4|	Ein Plugin hinzufügen
+|05.5|	Eine Hilfedatei hinzufügen
+|05.6|	Das Optionen-Fenster
+|05.7|	Häufig benutzte Optionen
+
+
+Nächstes Kapitel: |usr_06.txt|  Syntax-Hervorhebung benutzen
+ Voriges Kapitel: |usr_04.txt|  Kleine Änderungen machen
+Inhaltsübersicht: |usr_toc.txt|
+
+==============================================================================
+*05.1*	Die vimrc-Datei					*vimrc-intro*
+
+Sie werden es sicherlich müde, Befehle zu tippen, die Sie sehr oft
+benutzen.  Um Vim mit allen Ihren Lieblings-Optionseinstellungen und
+-Belegungen zu starten, schreiben Sie sie in die sogenannte vimrc-Datei.
+Vim führt beim Starten die Befehle in dieser Datei aus.
+
+Falls Sie bereits eine vimrc-Datei haben (wenn z.B. Ihr Systemadministrator
+eine für Sie aufgesetzt hat), können Sie sie so editieren: >
+
+	:edit $MYVIMRC
+
+Falls Sie noch keine vimrc-Datei haben, siehe |vimrc|, um herauszufinden, wo
+Sie eine vimrc-Datei erzeugen können.  Auch der Befehl »:version«
+erwähnt den Namen der »Benutzer-vimrc-Datei«, nach der Vim sucht.
+
+Für Unix und Macintosh wird immer diese Datei benutzt und empfohlen:
+
+	~/.vimrc ~
+
+Bei MS-DOS und MS-Windows können Sie eine von diesen benutzen:
+
+	$HOME/_vimrc ~
+	$VIM/_vimrc ~
+
+Die vimrc-Datei kann alle die Befehle enthalten, die Sie nach einem
+Doppelpunkt tippen.  Falls Sie zum Beispiel wollen, dass Vim immer mit der
+Option 'incsearch' gesetzt startet, fügen Sie diese Zeile Ihrer vimrc-Datei
+hinzu: >
+
+	set incsearch
+
+Damit diese neue Zeile aktiv wird, müssen Sie Vim schließen und von neuem
+starten.  Später lernen Sie, wie man dies macht, ohne Vim zu schließen.
+
+Dieses Kapitel erklärt nur die grundlegendensten Dinge.  Für weitere
+Informationen darüber, wie man ein Vim-Skript schreibt siehe |usr_41.txt|.
+
+==============================================================================
+*05.2*	Die Beispiel-vimrc-Datei erklärt		*vimrc_example.vim*
+
+Im ersten Kapitel wird erklärt, wie die Beispiel-vimrc (enthalten im
+Vim-Paket) benutzt werden kann, um Vim im nicht-kompatiblen Modus starten zu
+lassen (siehe |not-compatible|).  Die Datei kann hier gefunden werden:
+
+	$VIMRUNTIME/vimrc_example.vim ~
+
+In diesem Abschnitt erklären wir die verschiedenen Befehle, die in dieser
+Datei benutzt werden.  Dies soll Ihnen Hinweise geben, wie sie Ihre eigenen
+Voreinstellungen setzen.  Allerdings wird nicht alles erklärt.  Benutzen
+Sie den Befehl »:help«, um mehr herauszufinden.
+
+>
+	set nocompatible
+
+Wie im ersten Kapitel erwähnt, erklären diese Handbücher die Arbeitsweise
+von Vim in einer verbesserten Version, also nicht voll Vi-kompatibel.  Das
+Deaktivieren der Option 'compatible', also 'nocompatible', berücksichtigt
+dies.
+
+>
+	set backspace=indent,eol,start
+
+Dies gibt an, wo im Einfügemodus ein <BS> erlaubt ist, um das Zeichen vor
+dem Cursor zu löschen.  Die drei kommagetrennten Werte sagen Vim, dass er
+Freiraum am Zeilenanfang, einen Zeilenumbruch und das Zeichen vor der
+Stellen, wo der Einfügemodus begann, löschen soll.  >
+
+	set autoindent
+
+Dies lässt Vim die Einrückung der vorigen Zeile für eine neu erzeugte
+Zeile benutzen.  Also gibt es vor der neuen Zeile denselben Freiraum.  Wenn
+zum Beispiel <Enter> im Einfügemodus gedrückt wird, und wenn der Befehl
+»o« benutzt wird, um eine neue Zeile zu öffnen.  >
+
+	if has("vms")
+	  set nobackup
+	else
+	  set backup
+	endif
+
+Dies lässt Vim eine Sicherheitskopie einer Datei halten, wenn er sie
+überschreibt.  Aber nicht auf dem System VMS, da dies bereits alte
+Versionen von Dateien hält.  Die Sicherheitskopie erhält denselben Namen
+wie die Original-Datei mit einem angefügten »~«.  Siehe |07.4| >
+
+	set history=50
+
+Halte 50 Befehle und 50 Suchmuster im Verlauf.  Benutzen Sie eine andere
+Zahl, wenn sich Vim mehr oder weniger Zeilen merken soll.  >
+
+	set ruler
+
+Zeige immer die aktuelle Cursor-Position in der unteren rechten Ecke des
+Vim-Fensters an.
+
+>
+	set showcmd
+
+Zeige einen unvollständigen Befehl in der unteren rechten Ecke des
+Vim-Fensters an, links von der Cursorposition.  Wenn Sie zum Beispiel »2f«
+tippen, wartet Vim auf das zu findende Zeichen und zeigt »2f« an.  Wenn
+Sie als nächstes »w« tippen, wird der Befehl »2fw« ausgeführt und das
+angezeigte »2f« entfernt.
+
+	+-------------------------------------------------+
+	|Text im Vim-Fenster				  |
+	|~						  |
+	|~						  |
+	|-- VISUELL --			2f     43,8   17% |
+	+-------------------------------------------------+
+	 ^^^^^^^^^^^		      ^^^^^^^^ ^^^^^^^^^^
+	  'showmode'		     'showcmd'	'ruler'
+
+>
+	set incsearch
+
+Zeige die Übereinstimmung für ein Suchmuster, noch während es getippt
+wird.
+
+>
+	map Q gq
+
+Dies definiert eine Tastenbelegung.  Mehr darüber im nächsten Abschnitt.
+Dies definiert den Befehl »Q«, mit dem Operator »gq« zu formatieren.  So
+arbeitete es vor Vim 5.0.  Ansonsten startet der Befehl »Q« den Ex-Modus,
+aber Sie werden ihn nicht brauchen.
+
+>
+	vnoremap _g y:exe "grep /" . escape(@", '\\/') . "/ *.c *.h"<CR>
+
+Diese Belegung kopiert den visuell ausgewählten Bereich und sucht ihn in C
+Dateien.  Dies ist eine komplizierte Belegung.  Sie können sehen, dass
+Belegungen benutzt werden können, um komplizierte Dinge zu tun.  Dennoch
+ist dies nur eine Folge von Befehlen, die ausgeführt werden, wie sie
+getippt wurden.
+
+>
+	if &t_Co > 2 || has("gui_running")
+	  syntax on
+	  set hlsearch
+	endif
+
+Dies aktiviert die Syntax-Hervorhebung, aber nur wenn Farben verfügbar
+sind.  Und die Option 'hlsearch' sagt Vim, dass er Übereinstimmungen mit
+dem zuletzt benutzten Suchmuster hervorheben soll.  Der Befehl »if« ist
+sehr nützlich, um Optionen nur dann zu setzen, wenn bestimmte Bedingungen
+erfüllt sind.  Mehr darüber in |usr_41.txt|.
+
+							*vimrc-filetype*  >
+	filetype plugin indent on
+
+Dies aktiviert drei sehr klevere Mechanismen:
+1. Dateityperkennung.
+   Wann immer Sie mit dem Editieren einer Datei beginnen, versucht Vim
+   herauszufinden, um welche Art von Datei es sich handelt.  Wenn Sie »main.c«
+   editieren, sieht Vim die Dateiendung ».c« und erkennt dies als
+   »c«-Dateityp.  Wenn Sie eine Datei editieren, die mit »#!/bin/sh« beginnt,
+   erkennt dies Vim als »sh«-Dateityp.  Die Dateityperkennung wird für die
+   Syntaxhervorhebung und die anderen beiden Dinge unten benutzt.  Siehe
+   |filetypes|.
+
+2. Dateityp-Plugin-Dateien benutzen
+   Viele verschiedene Dateitypen werden mit unterschiedlichen Optionen
+   editiert.  Wenn Sie zum Beispiel eine »c«-Datei editieren, ist es sehr
+   nützlich, die Option 'cindent' zu setzen, um die Zeilen automatisch
+   einzurücken.  Diese gewöhnlicherweise nützlichen Optionseinstellungen
+   enthält Vim in Dateityp-Plugins.  Sie können auch Ihre eigenen
+   schreiben, siehe |write-filetype-plugin|.
+
+3. Einrückungsdateien benutzen
+   Beim Editieren von Programmen kann die Einrückung einer Zeile häufig
+   automatisch berechnet werden.  Vim enthält diese Einrückungsregeln für
+   eine Anzahl von Dateitypen.  Siehe |:filetype-indent-on| und
+   'indentexpr'.
+
+>
+	autocmd FileType text setlocal textwidth=78
+
+Dies lässt Vim Text umbrechen, um zu vermeiden, dass Zeilen länger als 78
+Zeichen werden.  Aber nur für Dateien, die als Klartext erkannt wurden.
+Dies sind tatsächlich zwei Teile.  »autocmd FileTyp text« ist ein
+automatischer Befehl.  Dies definiert, dass wenn der Dateityp auf »text«
+gesetzt ist, der folgende Befehl automatisch ausgeführt wird. »setlocal
+textwidth=78« setzt die Option 'textwidth' auf 78, aber nur lokal für eine
+Datei.
+
+				*restore-cursor* *cursor-wiederherstellen* >
+	autocmd BufReadPost *
+	    \ if line("'\"") > 0 && line("'\"") <= line("$") |
+	    \   exe "normal g`\"" |
+	    \ endif
+
+Noch ein automatischer Befehl.  Diesmal wird er nach dem Lesen jeder Datei
+benutzt.  Der komplizierte Teil danach prüft, ob die Marke »'"« definiert
+ist, und springt sie an wenn ja.  Der Backslash am Zeilenanfang wird
+benutzt, um den Befehl von der vorigen Zeile fortzusetzen.  Dies
+funktioniert nur in einem Vim-Skript, nicht wenn man Befehle auf der
+Befehlszeile tippt.
+
+==============================================================================
+*05.3*	Einfache Tastenbelegungen
+
+Eine Belegung ermöglicht Ihnen, einen Satz von Vim-Befehlen an eine
+einzelne Taste zu binden.  Stellen Sie sich zum Beispiel vor, dass Sie um
+gewisse Wörter geschwungene Klammern setzen müssen.  Sie müssen mit
+anderen Worten ein Wort wie »Anzahl« in »{Anzahl}« ändern.  Mit dem
+Befehl »:map« können Sie Vim sagen, dass die F5-Taste dies erledigt.  Der
+Befehl ist wie folgt: >
+
+	:map <F5> i{<Esc>ea}<Esc>
+<
+	Anmerkung:
+	Beim Eingeben dieses Befehls müssen Sie »<F5>« eingeben, indem Sie
+	vier Zeichen tippen.  Analog wird <Esc> nicht durch das Drücken der
+	<Esc>-Taste eingegeben, sondern indem man fünf Zeichen tippt.
+	Beachten Sie diesen Unterschied, wenn Sie das Handbuch lesen!
+
+Betrachten wir dies Stück für Stück:
+    <F5>	Die Funktionstaste F5.  Dies ist die Auslösetaste, die
+		veranlasst, dass der Befehl ausgeführt wird, wenn die Taste
+		gedrückt wird.
+
+    i{<Esc>	Füge das Zeichen »{« ein.  Die Taste <Esc> beendet den
+		Einfügemodus.
+
+    e		Gehe zum Ende des Wortes.
+
+    a}<Esc>	Hänge »}« an das Wort an.
+
+Nachdem Sie den »:map«-Befehl ausgeführt haben, ist alles, was Sie tun
+müssen, um um ein Wort »{...}« zu setzen, den Cursor auf das erste
+Zeichen zu setzen und F5 zu setzen.
+
+In diesem Beispiel ist der Auslöser eine einzelne Taste; er kann jede
+Zeichenkette sein.  Aber wenn Sie einen existierenden Vim-Befehl benutzen, ist
+dieser Befehl nicht mehr verfügbar.  Vermeiden Sie dies besser.
+   Eine Taste, die mit Belegungen benutzt werden kann, ist der Backslash.  Da
+Sie wahrscheinlich mehr als eine Belegung definieren wollen, fügen Sie ein
+anderes Zeichen hinzu.  Sie könnten zum Beispiel »\r« belegen, um runde
+Klammern um ein Wort zu setzen, und »\s« für geschwungene Klammern: >
+
+	:map \r i(<Esc>ea)<Esc>
+	:map \s i{<Esc>ea}<Esc>
+
+Sie müssen »\« und »r« schnell hintereinander tippen, so dass Vim
+weiß, dass sie zusammen gehören.
+
+Der Befehl »:map« listet ohne Argumente Ihre aktuellen Belegungen auf.
+Zumindest die für den Normal-Modus.  Mehr über Belegungen in Abschnitt
+|40.1|
+
+==============================================================================
+*05.4*	Ein Plugin hinzufügen	*add-plugin* *plugin* *plugin-hinzufuegen*
+
+Vims Funktionalität kann durch das Hinzufügen von Plugins erweitert
+werden.  Ein Plugin ist nicht mehr als ein Vim-Skript, das automatisch
+geladen wird, wenn Vim startet.  Sie können ein Plugin sehr leicht
+hinzufügen, indem Sie es in Ihr Plugin-Verzeichnis legen.
+{nicht verfügbar, wenn Vim ohne das Feature |+eval| kompiliert wurde}
+
+Es gibt zwei Arten von Plugins:
+
+   globales Plugin: Benutzt für alle Arten von Dateien
+   Dateityp-Plugin: Nur für einen bestimmten Typ von Dateien benutzt
+
+Die globalen Plugins werden zuerst besprochen, dann die Dateityp-Plugins,
+siehe |add-filetype-plugin|.
+
+
+GLOBALE PLUGINS						*standard-plugin*
+
+Wenn Sie Vim starten, lädt er automatisch eine Anzahl globaler Plugins.
+Dafür brauchen Sie nichts zu tun.  Sie fügen Funktionalitäten hinzu, die
+die meisten Leute wollen, aber die als Vim-Skript implementiert wurden,
+statt in Vim hineinkompiliert zu werden.  Sie können Sie im Hilfe-Index
+|standard-plugin-list| finden.  Siehe auch |load-plugins|.
+
+			*add-global-plugin* *globales-plugin-hinzufuegen*
+Sie können ein globales Plugin hinzufügen, um Funktionalität hinzuzufügen, die
+immer da ist, wenn Sie Vim benutzen.  Es sind nur zwei Schritte, um ein
+globales Plugin hinzuzufügen.
+1. Eine Kopie des Plugins besorgen.
+2. Es in das richtige Verzeichnis legen.
+
+
+EIN GLOBALES PLUGIN BEKOMMEN
+
+Wo können Sie Plugins finden?
+- Einige kommen mit Vim.  Sie können sie im Verzeichnis $VIMRUNTIME/macros und
+  seinen Unterverzeichnissen finden.
+- Aus dem Internet herunterladen.  Auf http://www.vim.org/ gibt es eine große
+  Auswahl.
+- Manchmal werden Sie auf einer Vim- |maillist| veröffentlicht.
+- Sie könnten selbst eines schreiben, siehe |write-plugin|.
+
+Einige Plugins kommen als Vimball-Archive, siehe |vimball|.  Einige Plugins
+können automatisch aktualisiert werden, siehe |getscript|.
+
+
+EIN GLOBALES PLUGIN BENUTZEN
+
+Zuerst lesen Sie den Text in dem Plugin selbst, um es auf irgendwelche
+besonderen Bedingungen zu prüfen.  Dann kopieren Sie die Datei in Ihr
+Plugin-Verzeichnis:
+
+	System		Plugin-Verzeichnis ~
+	Unix		~/.vim/plugin/
+	PC and OS/2	$HOME/vimfiles/plugin or $VIM/vimfiles/plugin
+	Amiga		s:vimfiles/plugin
+	Macintosh	$VIM:vimfiles:plugin
+	Mac OS X	~/.vim/plugin/
+	RISC-OS		Choices:vimfiles.plugin
+
+Bespiel für Unix (wir nehmen an, dass Sie noch kein Plugin-Verzeichnis
+haben): >
+
+	mkdir ~/.vim
+	mkdir ~/.vim/plugin
+	cp /usr/local/share/vim/vim60/macros/justify.vim ~/.vim/plugin
+
+Das ist alles!  Nun können Sie die Befehle, die in diesem Plugin definiert
+werden, benutzen, um Text auszurichten.
+
+Statt alle Plugins direkt in das Verzeichnis »plugin/« zu legen, mögen
+Sie Sie besser organisieren, indem Sie sie in Unterverzeichnisse unter
+»plugin/« legen.  Erwägen Sie zum Beispiel »~/.vim/plugin/perl/*.vim«
+für alle Ihre Perl-Plugins.
+
+
+DATEITYP-PLUGINS			*add-filetype-plugin* *ftplugins*
+						*dateityp-plugin-hinzufuegen*
+
+Das Vim-Paket kommt mit einer Reihe von Plugins für verschiedene
+Dateitypen, die Sie mit diesem Befehl benutzen können: >
+
+	:filetype plugin on
+
+Das ist alles!  Siehe |vimrc-filetype|.
+
+Falls Sie ein Plugin für einen Dateityp, den Sie benutzen, vermissen, oder
+Sie finden ein besseres, können Sie es hinzufügen.  Es gibt zwei Schritte
+für das Hinzufügen eines Dateityp-Plugins:
+1. Eine Kopie des Plugins beziehen.
+2. Sie in das richtige Verzeichnis legen.
+
+
+EIN DATEITYP-PLUGIN BEZIEHEN
+
+Sie können sie an denselben Stellen finden, wie die globalen Plugins.
+Achten Sie darauf, ob der Dateityp erwähnt wird, dann wissen Sie, ob das
+Plugin ein globales oder ein Dateityp-Plugin ist.  Die Skripte in
+$VIMRUNTIME/macros sind globale, die Dateityp-Plugins sind in
+$VIMRUNTIME/ftplugin.
+
+
+EIN DATEITYP-PLUGIN BENUTZEN				*ftplugin-name*
+
+Sie können ein Dateityp-Plugin hinzufügen, indem Sie es in das richtige
+Verzeichnis legen.  Der Name dieses Verzeichnisses ist dasselbe wie oben
+für globale Plugins, aber der letzte Teil ist »ftplugin«.  Nehmen Sie an,
+Sie haben ein Plugin für den Dateityp »zeug« gefunden und Sie sind unter
+Unix.  Dann können Sie diese Datei in das Verzeichnis »ftplugin«
+verschieben: >
+
+	mv datei ~/.vim/ftplugin/zeug.vim
+
+Falls die Datei bereits existiert, haben Sie bereits ein Plugin für
+»zeug«.  Sie mögen prüfen wollen, ob das existierende Plugin nicht mit
+dem hinzuzufügenden kollidiert.  Falls es in Ordnung ist, können Sie dem
+neuen einen anderen Namen geben: >
+
+	mv datei ~/.vim/ftplugin/zeug_mehr.vim
+
+Der Unterstrich wird benutzt, um den Namen des Dateityps vom Rest zu
+trennen, was alles sein kann.  Falls Sie »auchzeug.vim« benutzen, würde
+es nicht funktionieren, es würde für den Dateityp »auchzeug« geladen.
+
+Unter MS-DOS können Sie keine langen Dateinamen benutzen.  Sie würden in
+Probleme geraten, falls Sie ein zweites Plugin hinzufügen, und der Dateityp
+mehr als sechs Zeichen hat.  Sie können ein extra Verzeichnis benutzen, um
+dem beizukommen: >
+
+	mkdir $VIM/vimfiles/ftplugin/fortran
+	copy thefile $VIM/vimfiles/ftplugin/fortran/too.vim
+
+Die generischen Namen für Dateityp-Plugins sind: >
+
+	ftplugin/<dateityp>.vim
+	ftplugin/<dateityp>_<name>.vim
+	ftplugin/<dateityp>/<name>.vim
+
+Hier kann »<name>« jeder Name sein, den Sie bevorzugen.  Beispiele für
+den Dateityp »zeug« unter Unix: >
+
+	~/.vim/ftplugin/zeug.vim
+	~/.vim/ftplugin/zeug_def.vim
+	~/.vim/ftplugin/zeug/header.vim
+
+Der Teil <dateityp> ist der Name des Dateityps, für den das Plugin benutzt
+werden soll.  Nur Dateien dieses Dateityps benutzen die Einstellungen aus
+dem Plugin.  Der Teil <name> der Plugin-Datei ist nicht entscheidend, Sie
+können ihn benutzen, um mehrere Plugins für denselben Dateityp zu haben.
+Beachten Sie, dass der Dateiname auf ».vim« enden muss.
+
+
+Weiterlesen:
+|filetype-plugins|	Dokumentation für Dateityp-Plugin und Informationen
+			darüber, wie man vermeidet, dass Belegungen Probleme
+			verursachen.
+|load-plugins|		Wann die globalen Plugins während des Startens geladen
+			werden.
+|ftplugin-overrule|	Die Einstellungen aus einem globalen Plugin aufheben.
+|write-plugin|		Wie man ein Plugin-Skript schreibt.
+|plugin-details|	Für mehr Informationen über die Benutzung von Plugins
+			oder wenn Ihr Plugin nicht läuft.
+|new-filetype|		Wie einen neuen Dateityp erkennen.
+
+==============================================================================
+*05.5*	Eine Hilfedatei hinzufügen	*add-local-help* *matchit-install*
+						*lokale-hilfe-hinzufuegen*
+
+Falls Sie Glück haben, kommt das Plugin, das Sie installieren, auch mit einer
+Hilfe-Datei.  Wir erklären, wie die Hilfe-Datei zu installieren ist, so dass
+Sie einfach Hilfe für Ihr neues Plugin finden können.
+   Lassen Sie uns das Plugin »matchit.vim« als Beispiel benutzen (es ist Vim
+beigefügt).  Dieses Plugin lässt den Befehl »%« auf übereinstimmende
+HTML-Tags, if/else/endif in Vim-Skripten, usw. springen.  Sehr nützlich,
+obwohl es nicht rückwärtskompatibel ist (deshalb wird es nicht von vorneherein
+aktiviert).
+   Dieses Plugin hat Dokumentation: »matchit.txt«.  Lassen Sie uns zuerst das
+Plugin in das richtige Verzeichnis kopieren.  Diesmal machen wir es aus Vim
+heraus, so dass wir $VIMRUNTIME benutzen können.  (Sie mögen einige der
+»mkdir« Befehle überspringen, wenn Sie das Verzeichnis bereits haben.) >
+
+	:!mkdir ~/.vim
+	:!mkdir ~/.vim/plugin
+	:!cp $VIMRUNTIME/macros/matchit.vim ~/.vim/plugin
+
+Der Befehl »cp« ist für Unix, unter MS-DOS benutzen Sie »copy«.
+
+Erzeugen Sie nun ein Verzeichnis »doc« in einem der Verzeichnisse in
+'runtimepath'. >
+
+	:!mkdir ~/.vim/doc
+
+Kopieren Sie die Hilfe-Datei in das Verzeichnis »doc«. >
+
+	:!cp $VIMRUNTIME/macros/matchit.txt ~/.vim/doc
+
+Jetzt kommt der Trick, der es Ihnen erlaubt, in die Themen in der neuen
+Hilfedatei zu springen:  Erzeugen Sie die lokale Tag-Datei mit dem Befehl
+|:helptags|. >
+
+	:helptags ~/.vim/doc
+
+Nun können Sie den Befehl >
+
+	:help g%
+
+benutzen, um in der gerade hinzugefügten Hilfedatei die Hilfe für »g%«
+zu finden.  Sie können für die lokale Hilfedatei einen Eintrag sehen, wenn
+Sie dies machen: >
+
+	:help local-additions
+
+Die Titelzeilen der lokalen Hilfedateien werden automatisch zu diesem
+Abschnitt hinzugefügt.  Dort können Sie sehen, welche lokalen Hilfedateien
+hinzugefügt wurden und über das Tag in sie springen.
+
+Um eine lokale Hilfedatei zu schreiben, siehe |write-local-help|.
+
+==============================================================================
+*05.6*	Das Optionen-Fenster
+
+Falls Sie nach einer Option suchen, die nicht tut, was Sie wollen, können
+Sie hier in den Hilfe-Dateien suchen: |options|.  Ein anderer Weg ist diesen
+Befehl zu benutzen: >
+
+	:options
+
+Dies öffnet ein neues Fenster mit einer Liste von Optionen mit einer
+einzeiligen Erklärung.  Die Optionen sind nach Themen gruppiert.  Bewegen
+Sie den Cursor auf ein Thema und drücken Sie <Enter> um dorthin zu
+springen.  Drücken Sie erneut <Enter> um zurückzuspringen.  Oder benutzen
+Sie CTRL-O.
+
+Sie können den Wert einer Option ändern.  Gehen Sie zum Beispiel zum Thema
+»displaying text«.  Dann bewegen Sie den Cursor runter auf diese Zeile:
+
+	set wrap	nowrap ~
+
+Wenn Sie <Enter> drücken, ändert sich die Zeile in:
+
+	set nowrap	wrap ~
+
+Die Option ist nun ausgeschaltet.
+
+Genau über dieser Zeile ist eine kurze Beschreibung der Option 'wrap'.
+Gehen Sie mit dem Cursor eine Zeile nach oben, um ihn auf dieser Zeile zu
+positionieren.  Nun drücken Sie <Enter> und Sie springen in die volle Hilfe
+zur Option 'wrap'.
+
+Bei Optionen, die eine Zahl oder eine Zeichenkette als Argument nehmen
+können Sie den Wert editieren.  Drücken Sie dann <Enter>, um den neuen
+Wert anzuwenden.  Gehen Sie zum Beispiel mit dem Cursor wenige Zeilen nach
+oben zu dieser Zeile:
+
+	set so=0 ~
+
+Setzen Sie den Cursor mit »$« auf die Null.  Ändern Sie sie mit »r5« in
+eine fünf.  Dann drücken Sie <Enter>, um den neuen Wert anzuwenden.  Wenn
+Sie nun den Cursor umherbewegen, bemerken Sie, dass der Text rollt, bevor
+Sie den Rand erreichen.  Das ist, was die Option 'scrolloff' tut, sie gibt
+einen Offset vom Rand des Fensters an, ab dem das Rollen beginnt.
+
+==============================================================================
+*05.7*	Häufig benutzte Optionen
+
+Es gibt unglaublich viele Optionen.  Viele von Ihnen werden Sie kaum jemals
+benutzen.  Einige der nützlicheren werden hier erwähnt.  Vergessen Sie
+nicht, dass Sie mehr Hilfe zu diesen Optionen mit dem Befehl »:help«
+bekommen können, mit einfachen Zitatzeichen vor und nach dem Namen der
+Option.  Zum Beispiel: >
+
+	:help 'wrap'
+
+Falls Sie den Wert einer Option verstellt haben, können Sie ihn zurück auf
+die Voreinstellung setzen, indem Sie ein »&« (kaufmännisches Und) hinter
+den Namen der Option setzen.  Beispiel: >
+
+	:set iskeyword&
+
+
+ZEILEN NICHT UMBRECHEN
+
+Vim bricht normalerweise lange Zeilen um, so dass Sie den ganzen Text sehen
+können.  Manchmal ist es besser, den Text rechts des Fensters weiterlaufen
+zu lassen.  Dann müssen Sie den Text von links nach rechts rollen, um alles
+von einer langen Zeile zu sehen.  Schalten Sie mit diesem Befehl den Umbruch
+aus: >
+
+	:set nowrap
+
+Vim rollt den Text automatisch, wenn Sie auf Text gehen, der nicht angezeigt
+wird.  Tun Sie dies, um einen Kontext von zehn Zeichen zu sehen: >
+
+	:set sidescroll=10
+
+Dies ändert nicht den Text in der Datei, nur die Art, wie er angezeigt
+wird.
+
+
+UM DAS ZEILENEDE UMBRECHENDE BEWEGUNGSBEFEHLE
+
+Die meisten Befehle zum Umherbewegen enden die Bewegung am Anfang und Ende
+einer Zeile.  Sie können dies mit der Option 'whichwrap' ändern.  Dies
+setzt sie auf die Voreinstellung: >
+
+	:set whichwrap=b,s
+
+Dies erlaubt der Rückschritttaste (<BS>), wenn sie auf der ersten Position
+einer Zeile benutzt wird, den Cursor auf das Ende der vorigen Zeile zu
+bewegen.  Und die Leerzeichentaste geht vom Ende einer Zeile zum Anfang der
+nächsten.
+
+Um es den Cursortasten <Links> und <Rechts> zu erlauben, ebenfalls dem
+Umbruch zu folgen, benutzen Sie diesen Befehl: >
+
+	:set whichwrap=b,s,<,>
+
+Dies ist immernoch nur für den Normalmodus.  Um <Links> und <Rechts> dies
+auch im Einfüge-Modus tun zu lassen: >
+
+	:set whichwrap=b,s,<,>,[,]
+
+Es gibt noch weitere Flags, die hinzugefügt werden können, siehe
+'whichwrap'.
+
+
+TABULATOREN ANZEIGEN
+
+Wenn es Tabulatoren in einer Datei gibt, kann man nicht sehen, wo sie sind.
+Um sie sichtbar zu machen: >
+
+	:set list
+
+Nun wird jeder Tabulator als ^I angezeigt, und am Ende jeder Zeile wird ein
+»$« angezeigt, so dass Sie nachlaufende Leerzeichen erkennen können, die sonst
+unerkannt blieben.
+   Ein Nachteil ist, dass dies hässlich aussieht, wenn in einer Datei viele
+Tabulatoren sind.  Wenn Sie ein farbiges Terminal haben oder die GUI benutzen,
+kann Vim Tabulatoren und Leerzeichen als hervorgehobene Zeichen anzeigen.
+Benutzen Sie die Option 'listchars': >
+
+	:set listchars=tab:>-,trail:-
+
+Nun wird jeder Tabulator als »>---« angezeigt (mit mehr oder weniger
+»-«) und nachlaufe Leerzeichen als »-«.  Sieht viel besser aus, oder
+nicht?
+
+
+SCHLüSSELWöRTER
+
+Die Option 'iskeyword' gibt an, welche Zeichen in einem Wort vorkommen
+können: >
+
+	:set iskeyword
+<	  iskeyword=@,48-57,_,192-255 ~
+
+Das »@« steht für alle Buchstaben des Alphabets.  »48-57« steht für die
+ASCII-Zeichen 48 bis 57, dies sind die Ziffern 0 bis 9.  »192-255« sind die
+druckbaren lateinischen Sonderzeichen.
+   Manchmal wollen Sie einen Bindestrich in Schlüsselwörter einbeziehen, so
+dass Befehle wie »w« »upper-case« als ein Wort betrachten.  Sie können dies
+folgendermaßen tun: >
+
+	:set iskeyword+=-
+	:set iskeyword
+<	  iskeyword=@,48-57,_,192-255,- ~
+
+Falls Sie auf den neuen Wert schauen, sehen Sie, dass Vim ein Komma für Sie
+hinzugefügt hat.
+   Um ein Zeichen zu entfernen, benutzen Sie »-=«.  Um zum Beispiel den
+Unterstrich zu entfernen: >
+
+	:set iskeyword-=_
+	:set iskeyword
+<	  iskeyword=@,48-57,192-255,- ~
+
+Diesmal wird das Komma automatisch gelöscht.
+
+
+PLATZ FüR NACHRICHTEN
+
+Wenn Vim startet, gibt es eine Zeile am Bildschirmende, die für Nachrichten
+benutzt wird.  Wenn eine Nachricht lang ist, wird sie entweder abgeschnitten,
+also können Sie nur einen Teil von ihr sehen, oder der Text rollt und Sie
+müssen <Enter> drücken, um fortzufahren.
+   Sie können die Option 'cmdheight' auf die für Nachrichten zu benutzende
+Anzahl Zeilen setzen.  Beispiel: >
+
+	:set cmdheight=3
+
+Dies bedeutet, dass dort weniger Platz ist, um Text zu editieren, also ist
+es ein Kompromiss.
+
+==============================================================================
+
+Nächstes Kapitel: |usr_06.txt| Syntax-Hervorhebung benutzen
+
+
+Copyright: siehe |manual-copyright| vim:tw=78:ts=8:ft=help:norl:

@@ -1,0 +1,230 @@
+*help.txt*	Für Vim Version 7.2.  Letzte Änderung: 2008-Jul-21
+
+			VIM - Haupt-Hilfe-Datei
+									 k
+    Umher bewegen:  Benutzen Sie die Cursor-Tasten,		       h   l
+		    oder »h«, um nach links zu gehen,			 j
+		    »j«, um nach unten zu gehen, »k«, um nach oben zu gehen,
+		    »l«, um nach rechts zu gehen.
+Dieses Fenster schließen: Benutzen Sie »:q<Eingabe>«.
+           Vim verlassen: Benutzen Sie »:qa!<Eingabe>«
+		    (Vorsicht, alle Änderungen gehen verloren!).
+
+Zu einem Thema springen: Positionieren Sie den Cursor auf einem Tag (z.B.
+		    |bars|) und tippen Sie CTRL-].
+     Mit der Maus:  »:set mouse=a« um die Maus zu aktivieren (XTerm oder GUI).
+		    Machen Sie einen Doppelklick mit dem linken Mausknopf auf
+		    einem Tag, z.B |bars|.
+   Zurückspringen:  Tippen Sie CTRL-T oder CTRL-O (wiederholen, um weiter
+		    zurück zu gehen).
+
+Gezielte Hilfe bekommen:  Es ist möglich, direkt dahin zu gehen, worüber
+		    Sie Hilfe möchten, indem Sie dem Befehl |:help| ein
+		    Argument geben. Es ist möglich, den Kontext näher
+		    anzugeben:
+							*help-context*
+			  WAS			VORANSTELLEN BEISPIEL	~
+		      Befehl im Normalen Modus    (nichts)  :help x
+		      Befehl im Visuellen Modus	  v_	    :help v_u
+		      Befehl im Einfüge-Modus	  i_	    :help i_<Esc>
+		      Befehl auf der Befehlszeile :	    :help :quit
+		      Editieren der Befehlszeile  c_	    :help c_<Del>
+		      Vim Befehlsargument	  -	    :help -r
+		      Option			  '	    :help 'textwidth'
+  Nach Hilfe suchen:  Tippen Sie »:help Wort«, dann drücken Sie CTRL-D um
+		    passende Hilfeeinträge für »Wort« zu sehen.
+
+VIM steht für Vi IMproved (verbesserter Vi).  Das meiste in VIM wurde von Bram
+Moolenaar gemacht, aber nur durch die Hilfe vieler Anderer.  Siehe |credits|.
+------------------------------------------------------------------------------
+						*doc-file-list* *Q_ct*
+GRUNDLEGEND:
+|quickref|	Übersicht der gewöhnlichsten Befehle, die Sie benutzen werden
+|tutor|		30 Minuten Training-Kurs für Anfänger
+|copying|	Über Copyrights
+|iccf|		Armen Kindern in Uganda helfen
+|sponsor|	Vim-Entwicklung sponsern, ein registrierter Vim-Benutzer werden
+|www|		Vim im Welt-Weiten Web
+|bugs|		Wohin Fehlerberichte gesendet werden sollen
+
+BENUTZERHANDBUCH: Diese Dateien erklären, wie man eine Editieraufgabe
+		    vollbringt
+
+|usr_toc.txt|	Inhaltsübersicht
+
+Beginnen ~
+|usr_01.txt| Über die Handbücher
+|usr_02.txt| Die ersten Schritte in Vim
+|usr_03.txt| Umherbewegen
+|usr_04.txt| Kleine Änderungen machen
+|usr_05.txt| Eigene Einstellungen setzen
+|usr_06.txt| Syntax-Hervorhebung benutzen
+|usr_07.txt| Mehr als eine Datei editieren
+|usr_08.txt| Fenster aufteilen
+|usr_09.txt| Die GUI benutzen
+|usr_10.txt| Große Änderungen machen
+|usr_11.txt| Nach einem Absturz retten
+|usr_12.txt| Klevere Tricks
+
+Effektives Editieren ~
+|usr_20.txt| Befehle auf der Befehlszeile schnell tippen
+|usr_21.txt| Weggehen und wiederkommen
+|usr_22.txt| Die zu editierende Datei finden
+|usr_23.txt| Andere Dateien editieren
+|usr_24.txt| Schnelles Einfügen
+|usr_25.txt| Formatierten Text editieren
+|usr_26.txt| Wiederholen
+|usr_27.txt| Suchbefehle und -Muster
+|usr_28.txt| Faltungen
+|usr_29.txt| Durch Programme bewegen
+|usr_30.txt| Programme editieren
+|usr_31.txt| Die GUI ausnutzen
+|usr_32.txt| Der Undo-Baum
+
+Vim anpassen ~
+|usr_40.txt| Neue Befehle machen
+|usr_41.txt| Ein Vim-Skript schreiben
+|usr_42.txt| Neue Menüs hinzufügen
+|usr_43.txt| Dateitypen (filetypes) benutzen
+|usr_44.txt| Eigene Syntax-Hervorhebungen
+|usr_45.txt| Die Sprache wählen
+
+Vim zum Laufen bringen ~
+|usr_90.txt| Vim installieren
+
+
+REFERENZ-HANDBUCH: Diese Dateien beschreiben jedes Detail von
+Vim. *reference_toc*
+
+Generelle Themen ~
+|intro.txt|	Generelle Einführung in Vim; in den Hilfe-Dateien benutzte
+		Notation
+|help.txt|	Übersicht und Schnellreferenz (diese Datei)
+|index.txt|	Alphabetischer Index aller Befehle
+|help-tags|	Alle Tags zu denen Sie springen können (Index der Tags)
+|howto.txt|	Wie die häufigsten Editieraufgaben erledigen
+|tips.txt|	Verschiedene Tipps zur Benutzung von Vim
+|message.txt|	(Fehler-)Ausgaben und Erklärungen
+|quotex.txt|	Anmerkungen von Vim-Benutzern
+|todo.txt|	Bekannte Probleme und gewünschte Erweiterungen
+|develop.txt|	Entwicklung von Vim
+|debug.txt|	Fehlersuche im Vim selbst
+|uganda.txt|	Bedingungen zur Verteilung von Vim und was Sie mit Ihrem Geld
+		tun können
+
+Grundlegendes Editieren ~
+|starting.txt|	Vim starten, Vims Befehlsargumente, Initialisierung
+|editing.txt|	Dateien editieren und schreiben
+|motion.txt|	Befehle zum Umherbewegen
+|scroll.txt|	Den Text im Fenster scrollen
+|insert.txt|	Einfügen- und Ersetzen-Modus
+|change.txt|	Text löschen und ersetzen
+|indent.txt|	Automatisches Einrücken für C und andere Sprachen
+|undo.txt|	Undo und Redo
+|repeat.txt|	Wiederholende Befehle, Vim-Skripte und Fehlersuche
+|visual.txt|	Den Visuellen Modus benutzen (einen Textbereich auswählen)
+|various.txt|	Verschiedene übrig bleibende Befehle
+|recover.txt|	Nach einem Absturz retten
+
+Fortgeschrittenes Editieren ~
+|cmdline.txt|	Editieren der Befehlszeile
+|options.txt|	Beschreibung aller Optionen
+|pattern.txt|	Regexp-Muster und Such-Befehle
+|map.txt|	Tasten-Mapping und Abkürzungen
+|tagsrch.txt|	Tags und besonderes Suchen
+|quickfix.txt|	Befehle für einen schnellen Editieren-Kompilieren-Fixen
+Kreis
+|windows.txt|	Befehle, um mehrere Fenster und Puffer zu benutzen
+|tabpage.txt|	Befehle, um mehrere Reiter-Seiten zu benutzen
+|syntax.txt|	Syntax-Hervorhebung
+|spell.txt|	Rechtschreibüberprüfung
+|diff.txt|	Mit zwei bis vier Versionen derselben Datei arbeiten
+|autocmd.txt|	Bei einem Ereignis automatisch Befehle ausführen
+|filetype.txt|	Einstellungen speziell für einen Dateityp
+|eval.txt|	Auswerten von Ausdrücken, bedingte Befehle
+|fold.txt|	Zeilenbereiche verstecken (falten)
+
+Besondere Probleme ~
+|print.txt|	Drucken
+|remote.txt|	Vim als Server oder Client benutzen
+|term.txt|	Verschiedene Terminals und Mäuse benutzen
+|digraph.txt|	Liste verfügbarer Digraphen
+|mbyte.txt|	Unterstützung von Multi-Byte Text
+|mlang.txt|	Unterstützung nicht-englischer Sprache
+|arabic.txt|	Unterstützung und Editieren arabischer Sprache
+|farsi.txt|	Farsi (Persisch) editieren
+|hebrew.txt|	Unterstützung und Editieren hebräischer Sprache
+|russian.txt|	Unterstützung und Editieren russischer Sprache
+|ft_ada.txt|	Unterstützung für (die Programmiersprache) Ada
+|hangulin.txt|	Hangul (Koreanisch) Eingabemodus
+|rileft.txt|	Editiermodus von rechts nach links
+
+GUI ~
+|gui.txt|	Grafische Benutzerschnittstelle (GUI)
+|gui_w16.txt|	Windows 3.1
+|gui_w32.txt|	Win32 GUI
+|gui_x11.txt|	X11 GUI
+
+Schnittstellen ~
+|if_cscop.txt|	Cscope mit Vim benutzen
+|if_mzsch.txt|	MzScheme Schnittstelle
+|if_perl.txt|	Perl Schnittstelle
+|if_pyth.txt|	Python Schnittstelle
+|if_sniff.txt|	SNiFF+ Schnittstelle
+|if_tcl.txt|	Tcl Schnittstelle
+|if_ole.txt|	OLE Automatisierungsschnittstelle für Win32
+|if_ruby.txt|	Ruby Schnittstelle
+|debugger.txt|	Schnittstelle mit einem Programm zur Fehlersuche
+|workshop.txt|	Schnittstelle für Sun Visual Workshop
+|netbeans.txt|	Schnittstelle als NetBeans Externer Editor
+|sign.txt|	Zeichen zur Fehlersuche
+
+Versionen ~
+|vi_diff.txt|	Hauptunterschiede zwischen Vim und Vi
+|version4.txt|	Unterschiede zwischen Vim Version 3.0 und 4.x
+|version5.txt|	Unterschiede zwischen Vim Version 4.6 und 5.x
+|version6.txt|	Unterschiede zwischen Vim Version 5.7 und 6.x
+|version7.txt|	Unterschiede zwischen Vim Version 6.4 und 7.x
+						*sys-file-list*
+Anmerkungen über besondere Systeme ~
+|os_390.txt|	OS/390 Unix
+|os_amiga.txt|	Amiga
+|os_beos.txt|	BeOS und BeBox
+|os_dos.txt|	Gemeinsamkeiten zwischen MS-DOS und MS-Windows NT/95
+|os_mac.txt|	Macintosh
+|os_mint.txt|	Atari MiNT
+|os_msdos.txt|	MS-DOS (reines DOS und DOS-Box unter Windows)
+|os_os2.txt|	OS/2
+|os_qnx.txt|	QNX
+|os_risc.txt|	RISC-OS
+|os_unix.txt|	Unix
+|os_vms.txt|	VMS
+|os_win32.txt|	MS-Windows 95/98/NT
+						*standard-plugin-list*
+Standard Plugins ~
+|pi_getscript.txt| Die neueste Version von Vim-Skripten herunterladen
+|pi_gzip.txt|	   Komprimierte Dateien lesen und schreiben
+|pi_netrw.txt|	   Dateien über ein Netzwerk lesen und schreiben
+|pi_paren.txt|	   Übereinstimmende Klammern hervorheben
+|pi_tar.txt|	   Tar-Datei-Explorer
+|pi_vimball.txt|   selbstinstallierende Vim-Skripte erzeugen
+|pi_zip.txt|	   Zip-Archiv-Explorer
+
+LOKALE ERGÄNZUNGEN:				*local-additions*
+
+------------------------------------------------------------------------------
+*bars*		Balken-Beispiel
+
+Nun, da Sie mit CTRL-] oder einem Doppelklick hierher gesprungen sind,
+können Sie CTRL-T, CTRL-O, g<RechteMaustaste> oder <C-RechteMaustaste>
+benutzen, um dahin zurück zu gehen, wo Sie waren.
+
+Beachten Sie, dass Tags innerhalb |-Zeichen sind, diese aber bei aktivierter
+Hervorhebung versteckt werden.  Dies macht es einfacher, einen Befehl zu
+lesen.
+
+Sie können CTRL-] auf jedem Wort benutzen, auch wenn es nicht innerhalb |
+ist, und Vim versucht dafür Hilfe zu finden.
+
+------------------------------------------------------------------------------
+ vim:tw=78:fo=tcq2:isk=!-~,^*,^\|,^\":ts=8:ft=help:norl:

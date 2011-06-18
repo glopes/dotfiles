@@ -1,0 +1,699 @@
+*usr_03.txt*	Für Vim Version 7.2.  Letzte Änderung: 2007-Jun-21
+
+		     VIM BENUTZERHANDBUCH - von Bram Moolenaar
+
+			     Umherbewegen
+
+
+Bevor Sie Text einfügen oder löschen können, muss der Cursor an die
+richtige Stelle bewegt werden.  Vim hat eine große Zahl an Befehlen, um den
+Cursor zu positionieren.  Dieses Kapitel zeigt Ihnen, wie Sie die
+wichtigsten benutzen.  Sie können unter |Q_lr| eine Liste dieser Befehle
+finden.
+
+|03.1|	Wortweises Bewegen
+|03.2|	Zum Anfang oder Ende einer Zeile bewegen
+|03.3|	Zu einem Zeichen bewegen
+|03.4|	Die passende Klammer finden
+|03.5|	Zu einer bestimmten Zeile bewegen
+|03.6|	Sagen, wo Sie sind
+|03.7|	Umherrollen
+|03.8|	Einfache Suchen
+|03.9|	Einfache Suchmuster
+|03.10|	Markierungen benutzen
+
+
+Nächstes Kapitel: |usr_04.txt|  Kleine Änderungen machen
+ Voriges Kapitel: |usr_02.txt|  Die ersten Schritte in Vim
+Inhaltsübersicht: |usr_toc.txt|
+
+==============================================================================
+*03.1*	Wortweises Bewegen
+
+Um den Cursor ein Wort vorwärts zu bewegen, benutzen Sie den Befehl »w«.
+Wie bei den meisten Vim-Befehlen können Sie ein nummerisches Präfix
+benutzen, um sich über mehrere Wörter zu bewegen.  Zum Beispiel bewegt
+»3w« über drei Wörter.  Diese Darstellung zeigt wie:
+
+	This is a line with example text ~
+	  --->-->->----------------->
+	   w  w  w    3w
+
+Beachten Sie, dass »w« zum Beginn des nächsten Wortes geht, wenn es bereits
+auf dem Beginn eines Wortes ist.
+   Der Befehl »b« bewegt sich rückwärts zum Beginn des vorigen Wortes:
+
+	This is a line with example text ~
+	<----<--<-<---------<---
+	   b   b b    2b      b
+
+Auch gibt es den Befehl »e«, der zum nächsten Ende eines Wortes bewegt,
+und »ge«, der zum vorigen Ende eines Wortes bewegt:
+
+	This is a line with example text ~
+	   <-   <--- ----->   ---->
+	   ge    ge     e       e
+
+Falls Sie auf dem letzten Wort einer Zeile sind, bringt Sie der Befehl »w«
+zum ersten Wort der nächsten Zeile.  So können Sie dies benutzen, um sich
+durch einen Absatz zu bewegen, viel schneller als mit »l«.  »b«
+funktioniert analog in die andere Richtung.
+
+Ein Wort endet an einem Zeichen, das nicht zu einem Wort gehört, so wie ».«,
+»-« oder »)«.  Um zu ändern, was Vim als Wort betrachtet, siehe die Option
+'iskeyword'.
+   Es ist auch möglich, sich nach Weißzeichen-getrennten WÖRTERN zu bewegen.
+Dies ist kein Wort im normalen Sinne, deshalb die Großschreibung.  Die Befehle
+für WORT-weises Bewegen sind ebenfalls Großbuchstaben, wie diese Darstellung
+zeigt:
+
+	       ge      b	  w				e
+	       <-     <-	 --->			       --->
+	This is-a line, with special/separated/words (and some more). ~
+	   <----- <-----	 -------------------->	       ----->
+	     gE      B			 W			 E
+
+Mit diesem Mix aus klein- und großbuchstabigen Befehlen können Sie sich
+schnell vorwärts und rückwärts durch einen Absatz bewegen.
+
+==============================================================================
+*03.2	Zum Anfang oder Ende eine Zeile bewegen
+
+Der Befehl »$« bewegt den Cursor zum Ende einer Zeile.  Falls Ihre
+Tastatur eine Taste <Ende> hat, tut diese dasselbe.
+
+Der Befehl »^« bewegt auf das erste nicht-leere Zeichen der Zeile.  Der
+Befehl »0« (Null) bewegt auf das allererste Zeichen der Zeile.  Die Taste
+<Home> bzw. <Pos1> tut dasselbe.  In einer Darstellung:
+
+		  ^
+	     <------------
+	.....This is a line with example text ~
+	<-----------------   --------------->
+		0		   $
+
+(hier geben die ».....« Leerzeichen an)
+
+Der Befehl »$« akzeptiert eine Anzahl, wie die meisten Bewegungsbefehle.  Aber
+mehrmals zum Ende einer Zeile bewegen ergibt keinen Sinn.  Daher veranlasst
+sie den Editor, zum Ende einer weiteren Zeile zu gehen.  Zum Beispiel bewegt
+Sie »1$« zum Ende der ersten Zeile (der, auf der Sie sich befinden), »2$« zum
+Ende der nächsten Zeile, und so weiter.
+   Der Befehl »0« akzeptiert keine Anzahl-Argument, weil die Null Teil der
+Anzahl wäre.  Unerwarteterweise hat das Benutzen einer Anzahl bei »^« keine
+Auswirkung.
+
+==============================================================================
+*03.3*	Zu einem Zeichen bewegen
+
+Einer der nützlichsten Bewegungsbefehle ist der Ein-Zeichen-Suchbefehl.  Der
+Befehl »fx« sucht vorwärts nach einem einzelnen Zeichen »x«.  »f« wie »finden«.
+   Sie sind zum Beispiel am Anfang der Zeile in der folgenden Darstellung.
+Nehmen Sie an, Sie wollen auf das »h« von »human« gehen.  Führen Sie einfach
+den Befehl »fh« aus, und der Cursor wird auf dem »h« positioniert sein:
+
+	To err is human.  To really foul up you need a computer. ~
+	---------->--------------->
+	    fh		 fy
+
+Dies zeigt auch, dass der Befehl »fy« auf das Ende des Wortes »really« bewegt.
+   Sie können eine Anzahl angeben; somit können Sie auf das »l« in »foul« mit
+»3fl« gehen:
+
+	To err is human.  To really foul up you need a computer. ~
+		  --------------------->
+			   3fl
+
+Der Befehl »F« sucht nach links:
+
+	To err is human.  To really foul up you need a computer. ~
+		  <---------------------
+			    Fh
+
+Der Befehl »tx« arbeitet wie der Befehl »fx«, außer dass er ein Zeichen
+vor dem gesuchten Zeichen anhält.  »t« steht für »to« (zu).  Die
+Rückwärts-Version dieses Befehls ist »Tx«.
+
+	To err is human.  To really foul up you need a computer. ~
+		   <------------  ------------->
+			Th		tn
+
+Diese vier Befehle können mit »;« (Semikolon) wiederholt werden.  »,«
+(Komma) wiederholt in die andere Richtung.  Der Cursor wird nie in eine
+andere Zeile bewegt.  Nicht mal wenn der Satz weitergeht.
+
+Manchmal werden Sie eine Suche beginnen, nur um zu erkennen, dass Sie den
+falschen Befehl getippt haben.  Zum Beispiel wollen Sie rückwärts suchen
+und tippen »f«, nur um zu merken, dass Sie eigentlich »F« meinten.  Um
+eine Suche abzubrechen, drücken Sie <Esc>.  Also ist »f<Esc>« eine
+abgebrochene Vorwärtssuche und macht nichts.  Anmerkung: <Esc> bricht die
+meisten Operationen ab, nicht nur Suchen.
+
+==============================================================================
+*03.4*	Die passende Klammer finden
+
+Wenn Sie ein Programm schreiben, landen Sie oft bei Konstrukten aus
+geschachtelten ().  Dann ist der Befehl »%« sehr nützlich: Er geht zu der
+übereinstimmenden Klammer.  Falls der Cursor auf einer »(« ist, geht er
+zu der entsprechenden »)«.  Falls er auf einer »)« ist, geht er zu der
+passenden »(«.
+
+			    %
+			 <----->
+		if (a == (b * c) / d) ~
+		   <---------------->
+			    %
+
+Dies funktioniert auch für Paare von [] und {}.  (Dies kann mit der Option
+'matchpairs' definiert werden.)
+
+Wenn der Cursor auf keinem sinnvollen Zeichen ist, sucht »%« vorwärts, um
+eines zu finden.  Wenn der Cursor im vorigen Beispiel auf dem Anfang der
+Zeile ist, sucht »%« vorwärts und findet die erste »(«.  Dann geht er
+zu ihrer Übereinstimmung:
+
+		if (a == (b * c) / d) ~
+		---+---------------->
+			   %
+
+==============================================================================
+*03.5*	Zu einer bestimmten Zeile gehen
+
+Falls Sie ein C- oder C++-Programmierer sind, sind Sie mit Fehlermeldungen
+wie der folgenden vertraut:
+
+	prog.c:33: j   undeclared (first use in this function) ~
+
+Dies sagt Ihnen, dass Sie wahrscheinlich etwas in Zeile 33 reparieren wollen.
+Wie nun finden Sie Zeile 33?  Ein Weg ist es mit »9999k« in die erste Zeile
+der Datei zu gehen und mit »32j« zweiunddreißig Zeilen nach unten.  Kein guter
+Weg, aber funktioniert.  Ein viel besserer Weg ist es, den Befehl »G« zu
+benutzen.  Mit einer Anzahl bringt Sie dieser Befehl zur gegebenen
+Zeilennummer.  Zum Beispiel bringt Sie »33G« in Zeile 33.  (Siehe |usr_30.txt|
+für einen besseren Weg, um durch die Fehlerliste eines Compilers zu gehen, für
+Informationen über den Befehl »:make«.)
+   Ohne Argument bringt Sie »G« in die letzte Zeile der Datei.  Ein schneller
+Weg, um zum Beginn einer Datei zu gehen, ist »gg«.  »1G« tut dasselbe, ist
+aber ein wenig mehr zu tippen.
+
+	    |	first line of a file   ^
+	    |	text text text text    |
+	    |	text text text text    |  gg
+	7G  |	text text text text    |
+	    |	text text text text
+	    |	text text text text
+	    V	text text text text    |
+		text text text text    |  G
+		text text text text    |
+		last line of a file    V
+
+Ein anderer Weg, zu einer Zeile zu gehen, ist den Befehl »%« mit einer
+Anzahl zu benutzen.  Zum Beispiel bringt Sie 50% zur Mitte einer Datei.
+»90%« geht kurz vor das Ende.
+
+Das vorige nimmt an, dass Sie zu einer Zeile in der Datei gehen wollen, egal
+ob aktuell sichtbar oder nicht.  Was, wenn Sie zu einer der Zeilen gehen
+wollen, die Sie sehen können?  Diese Darstellung zeigt Ihnen drei Befehle,
+die Sie benutzen können:
+
+			+---------------------------+
+		H -->	| text sample text	    |
+			| sample text		    |
+			| text sample text	    |
+			| sample text		    |
+		M -->	| text sample text	    |
+			| sample text		    |
+			| text sample text	    |
+			| sample text		    |
+		L -->	| text sample text	    |
+			+---------------------------+
+
+»H« wie »Heimat«, »M« wie »Mitte« und »L« wie »letzte«.
+
+==============================================================================
+*03.6*	Sagen, wo Sie sind
+
+Um zu sehen, wo in einer Datei Sie sind, gibt es drei Möglichkeiten:
+
+1.  Benutzen Sie den Befehl CTRL-G.  Sie bekommen eine Mitteilung wie diese
+    (angenommen, die Option 'ruler' ist ungesetzt):
+
+	"usr_03.txt" Zeile 233 von 650 --35%-- Spalte 45-52 ~
+
+    Dies zeigt den Namen der Datei, die Sie editieren, die Zeilennummer des
+    Cursors, die Gesamtanzahl der Zeilen, die Prozentzahl, wo Sie sich im Text
+    befinden, und die Spalte des Cursors.
+       Manchmal sehen Sie eine geteilte Spaltennummer.  Zum Beispiel »Spalte
+    2-9«.  Dies gibt an, dass der Cursor auf dem zweiten Zeichen positioniert
+    ist, aber weil Zeichen eins ein Tabulator ist, der acht Zeichen einnimmt,
+    ist die Bildschirmspalte 9.
+
+2.  Setzen Sie die Option 'number'.  Dies zeigt die Zeilennummer am Anfang
+    jeder Zeile an: >
+
+	:set number
+<
+    Um dies wieder auszuschalten: >
+
+	:set nonumber
+<
+    Weil 'number' eine boolesche Option ist, hat das Voranstellen von »no« vor
+    ihren Namen die Auswirkung sie auszuschalten.  Eine boolesche Option hat
+    nur diese zwei Werte, sie ist entweder an oder aus.
+       Vim hat viele Optionen.  Neben den booleschen gibt es Optionen mit
+    nummerischen Werten und Zeichenketten-Optionen.  Wo diese benutzt werden,
+    werden Sie Beispiele sehen.
+
+3.  Setzen Sie die Option 'ruler'.  Dies zeigt die Cursor-Position in der
+    unteren rechten Ecke des Vim-Fensters an: >
+
+	:set ruler
+
+Die Option 'ruler' zu benutzen hat den Vorteil, dass sie nicht viel Platz
+nimmt, so dass da mehr Raum für Ihren Text ist.
+
+==============================================================================
+*03.7*	Umherrollen
+
+Der Befehl CTRL-U rollt einen halben Bildschirm an Text nach unten.  Denken
+Sie an das Schauen durch ein Sichtfenster auf den Text und daran, dieses
+Fenster um die halbe Höhe des Fenster nach oben (up) zu schieben.  Somit
+bewegt sich das Fenster nach oben über den Text, was rückwärts in der Datei
+ist.  Machen Sie sich keine Sorgen, falls Sie ein wenig Probleme haben, dies
+zu erinnern.  Die meisten Benutzer haben dasselbe Problem.
+   Der Befehl CTRL-D bewegt das Sichtfenster einen halben Bildschirm in der
+Datei nach unten (down), rollt somit den Text einen halben Bildschirm nach
+oben.
+
+				       +----------------+
+				       | some text	|
+				       | some text	|
+				       | some text	|
+	+---------------+	       | some text	|
+	| some text	|  CTRL-U  --> |		|
+	|		|	       | 123456		|
+	| 123456	|	       +----------------+
+	| 7890		|
+	|		|	       +----------------+
+	| example	|  CTRL-D -->  | 7890		|
+	+---------------+	       |		|
+				       | example	|
+				       | example	|
+				       | example	|
+				       | example	|
+				       +----------------+
+
+Um eine Zeile auf einmal zu rollen benutzen Sie CTRL-E (nach oben rollen)
+und CTRL-Y (nach unten rollen).  Denken Sie bei CTRL-E an eine Zeile extra.
+(Falls Sie die MS-Windows-kompatible Tastenbelegung benutzen, stellt CTRL-Y
+eine Änderung wieder her (redo) statt zu rollen.)
+
+Um einen ganzen (bis auf zwei Zeilen) Bildschirm vorwärts zu rollen,
+benutzen Sie CTRL-F.  Die andere Richtung ist rückwärts, hier ist CTRL-B
+der zu benutzende Befehl.  Glücklicherweise steht CTRL-F für »forward«
+und CTRL-B für »backward«, das kann man sich leicht merken.
+
+Ein häufiges Problem ist, dass, nachdem man viele Zeile mit »j« nach
+unten gegangen ist, der Cursor in der letzten Zeile des Bildschirms steht.
+Man würde gern den Kontext der Cursor-Zeile sehen.  Das geht mit dem Befehl
+»zz«.
+
+	+------------------+		 +------------------+
+	| some text	   |		 | some text	    |
+	| some text	   |		 | some text	    |
+	| some text	   |		 | some text	    |
+	| some text	   |   zz  -->	 | line with cursor |
+	| some text	   |		 | some text	    |
+	| some text	   |		 | some text	    |
+	| line with cursor |		 | some text	    |
+	+------------------+		 +------------------+
+
+Der Befehl »zt« macht die Cursorzeile zur ersten Zeile (top), »zb« zur
+letzten (bottom).  Es gibt ein Paar Rollbefehle mehr, siehe |Q_sc|.  Um
+immer ein Paar Zeilen Kontext um die Cursorzeile zu haben, benutzen Sie die
+Option 'scrolloff'.
+
+==============================================================================
+*03.8*	Einfache Suchen
+
+Um nach einer Zeichenkette zu suchen, benutzen Sie den Befehl
+»/zeichenkette«.  Um zum Beispiel das Wort »include« zu finden, benutzen
+Sie den Befehl: >
+
+	/include
+
+Sie bemerken, dass der Cursor in die letzte Zeile des Vim-Fensters springt,
+wie bei bei :-Befehlen, wenn Sie das »/« tippen.  Hier tippen Sie das Wort.
+Sie können die Rückschritttaste drücken um Korrekturen zu machen.  Benutzen
+Sie <links> und <rechts> wenn nötig.
+   Das Drücken von <Enter> führt den Befehl aus.
+
+	Anmerkung:
+	Die Zeichen .*[]^%/\?~$ haben eine besondere Bedeutung.  Falls Sie sie
+	in einer Suche verwenden wollen, müssen Sie Ihnen einen »\«
+	voranstellen.  Siehe unten.
+
+Um das nächste Auftreten derselben Zeichenkette zu finden, benutzen Sie den
+Befehl »n«.  Benutzen Sie dies, um das erste »#include« nach dem Cursor
+zu finden: >
+
+	/#include
+
+Und dann tippen sie mehrere Male »n«.  Sie gehen zu jedem »#include« im
+Text.  Sie können auch eine Anzahl verwenden, falls Sie wissen, welchen
+Treffer Sie wollen.  Somit findet »3n« die dritte Übereinstimmung.  Eine
+Anzahl mit »/« benutzen, funktioniert nicht.
+
+Der Befehl »?« funktioniert wie »/«, aber sucht rückwärts: >
+
+	?word
+
+Der Befehl »N« wiederholt die letzte Suche in die entgegengesetzte
+Richtung.  Somit sucht »N« nach einem »/« rückwärts, nach einem »?«
+vorwärts.
+
+
+GROß-/KLEINSCHREIBUNG IGNORIEREN
+
+Normalerweise müssen Sie exakt tippen, was Sie finden wollen.  Falls Sie
+sich nicht um Groß-/Kleinschreibung in einem Wort sorgen wollen, setzen Sie
+die Option 'ignorecase': >
+
+	:set ignorecase
+
+Falls Sie nun nach »wort« suchen, trifft er auch »Wort« und »WORT«.
+Um wieder nach Groß-/Kleinschreibung zu suchen: >
+
+	:set ignorecase
+
+
+GESCHICHTE
+
+Nehmen Sie an, Sie haben drei Suchen: >
+
+	/eins
+	/zwei
+	/drei
+
+Nun beginnen wir das Suchen, indem wir einfach »/« tippen, ohne <Enter> zu
+drücken.  Falls Sie (die Cursortaste) <hoch> drücken, setzt Vim »drei« auf die
+Befehlszeile.  Nun <Enter> drücken sucht nach »drei«.  Falls Sie nicht <Enter>
+drücken, sondern <hoch>, ändert Vim die Eingabeaufforderung in »zwei«.  Noch
+ein <hoch> bringt Sie zu »eins«.
+   Sie können auch die Cursortaste <runter> benutzen, um sich in der anderen
+Richtung durch die Geschichte der Suchbefehle zu bewegen.
+
+Falls Sie wissen, womit ein vorher benutztes Suchmuster beginnt, und sie
+wollen es nochmals benutzen, tippen Sie jenes Zeichen, bevor Sie <hoch>
+drücken.  Im vorigen Beispiel können Sie »e<hoch>« tippen und Vim setzt
+»eins« in die Befehlszeile.
+
+Die mit »:« beginnenden Befehle haben ebenfalls eine Geschichte.  Das
+erlaubt Ihnen, einen vorigen Befehl zurückzuholen und nochmals
+auszuführen.  Diese beiden Geschichten sind unabhängig voneinander.
+
+
+NACH EINEM WORT IM TEXT SUCHEN
+
+Nehmen Sie an, Sie sehen das Wort »EinLangerFunktionsName« im Text und Sie
+wollen sein nächstes Auftreten finden.  Sie könnten »EinLangerFunktionsName«
+tippen, aber das ist eine Menge zu tippen.  Und wenn Sie einen Fehler machen,
+findet Vim es nicht.
+   Es gibt einen einfacheren Weg: Setzen Sie den Cursor auf das Wort und
+benutzen Sie den Befehl »*«.  Vim nimmt das Wort unter dem Cursor und
+benutzt es als Suchzeichenkette.
+   Der Befehl »#« macht dasselbe in die andere Richtung.  Sie können eine
+Anzahl voranstellen: »3*« sucht nach dem dritten Auftreten des Wortes unter
+dem Cursor.
+
+
+NACH GANZEN WÖRTERN SUCHEN
+
+Falls Sie »/the« tippen, wird auch »there« gefunden.  Um nur Wörter zu
+finden, die in »the« enden, benutzen Sie: >
+
+	/the\>
+
+Das Element »\>« ist eine besondere Markierung, die nur mit dem Ende eines
+Wortes übereinstimmt.  Analog stimmt »\<« nur mit dem Anfang eines Wortes
+überein.  Um also nur nach dem Wort »the« zu suchen: >
+
+	/\<the\>
+
+Dies findet nicht »there« oder »soothe«.  Beachten Sie, dass die Befehle
+»*« und »#« diese Markierungen für Wortanfang und -ende benutzen, um
+nur ganze Wörter zu finden (Sie können »g*« und »g#« benutzen, um
+Teile von Worten zu treffen).
+
+
+ÜBEREINSTIMMUNGEN HERVORHEBEN
+
+Während Sie ein Programm editieren, sehen Sie eine »nr« benannte Variable.
+Sie wollen überprüfen, wo sie benutzt wird.  Sie könnten den Cursor auf »nr«
+bewegen, den Befehl »*« benutzen und mit »n« durch alle Treffer gehen.
+   Es gibt einen anderen Weg.  Tippen Sie diesen Befehl: >
+
+	:set hlsearch
+
+Falls Sie nun nach »nr« suchen, hebt Vim alle Treffer hervor.  Dies ist ein
+sehr guter Weg, um zu sehen, wo die Variable benutzt wird, ohne Befehle tippen
+zu müssen.
+   Um dies auszuschalten: >
+
+	:set nohlsearch
+
+Dann müssen Sie es wieder anschalten, falls Sie es für den nächsten
+Suchbefehl benutzen wollen.  Falls Sie nur die Hervorhebung entfernen
+möchten, benutzen Sie diesen Befehl: >
+
+	:nohlsearch
+
+Dies löscht nicht die Option.  Stattdessen deaktiviert es die
+Hervorhebung.  Sobald Sie einen Suchbefehl ausführen, wird die Hervorhebung
+wieder benutzt.  Auch bei den Befehlen »n« und »N«.
+
+
+SUCHEN TUNEN
+
+Es gibt einige Optionen, die beeinflussen, wie das Suchen arbeitet.  Dies sind
+die essenziellen:
+>
+	:set incsearch
+
+Dies lässt Vim den Treffer für die Zeichenkette anzeigen, noch während Sie sie
+tippen.  Benutzen Sie dies, um zu überprüfen, ob der richtige Treffer gefunden
+wird.  Dann drücken Sie <Enter>, um wirklich dorthin zu springen.  Oder Sie
+tippen weiter, um die Such-Zeichenkette zu ändern.
+>
+	:set nowrapscan
+
+Dies hält die Suche am Ende der Datei an.  Oder, wenn Sie rückwärts
+suchen, am Anfang der Datei.  Die Option 'wrapscan' ist standardmäßig an,
+so dass Suchen am Ende der Datei neu starten.
+
+
+INTERMEZZO
+
+Falls Sie eine der genannten Optionen mögen, und sie jedesmal setzen, wenn Sie
+Vim benutzen, können Sie den Befehl in Ihre Vim-Start-Datei setzen.
+   Editieren Sie die Datei, wie unter |not-compatible| beschrieben.  Oder
+benutzen Sie diesen Befehl, um herauszufinden, wo sie ist: >
+
+	:scriptnames
+
+Editieren Sie die Datei, zu Beispiel mit: >
+
+	:edit ~/.vimrc
+
+Dann fügen Sie eine Zeile hinzu mit dem Befehl, um die Option zu setzen,
+genau wie Sie sie in Vim tippen.  Beispiel: >
+
+	Go:set hlsearch<Esc>
+
+»G« bringt Sie ans Ende der Datei.  »o« beginnt eine neue Zeile, in der
+Sie den »:set«-Befehl tippen.  Mit <Esc> verlassen Sie den
+Einfüge-Modus.  Dann schreiben Sie die Datei: >
+
+	ZZ
+
+Wenn Sie nun Vim neu starten, ist die Option 'hlsearch' bereits gesetzt.
+
+==============================================================================
+*03.9*	Einfache Suchmuster
+
+Der Editor Vim benutzt reguläre Ausdrücke, um anzugeben, wonach gesucht werden
+soll.  Reguläre Ausdrücke sind ein extrem mächtiger und kompakter Weg, ein
+Suchmuster anzugeben.  Unglücklicherweise hat diese Macht einen Preis, da
+reguläre Ausdrücke ein wenig schwierig anzugeben sind.
+   In diesem Abschnitt erwähnen wir nur wenige essenzielle.  Mehr über
+Suchmuster und -befehle in Kapitel 27 |usr_27.txt|.  Sie können die volle
+Erklärung hier finden: |pattern|.
+
+
+ZEILENANFANG UND -ENDE
+
+Das Zeichen »^« trifft den Anfang einer Zeile.  Auf einer amerikanischen
+Tastatur finden Sie es auf der 6.  Das Muster »include« findet das Wort
+»include« überall auf einer Zeile.  Aber das Muster »^include« findet das Wort
+»include« nur, wenn es am Anfang einer Zeile steht.
+   Das Zeichen »$« findet das Zeilenende.  Daher findet »was$« das Wort »was«
+nur, wenn es an einem Zeilenende steht.
+
+Markieren wir in dieser Beispielzeile die Stellen, wo »the« gefunden wird
+mit »x«en:
+
+	the solder holding one of the chips melted and the ~
+	xxx			  xxx		       xxx
+
+Mit »the$« finden wir dies:
+
+	the solder holding one of the chips melted and the ~
+						       xxx
+
+Und mit »^the« finden wir dies:
+
+	the solder holding one of the chips melted and the ~
+	xxx
+
+Sie können versuchen, nach »^the$« zu suchen; es wird nur eine einzelne
+Zeile finden, auf der nur »the« steht.  Hier zählen weiße Zeichen, wenn
+also eine Zeile nach dem Wort ein Leerzeichen enthält, wie »the «, wird
+dieses Muster nicht passen.
+
+
+JEGLICHES EINZELNE ZEICHEN FINDEN
+
+Das Zeichen ».« (Punkt) passt auf jegliches existierende Zeichen.  Zum
+Beispiel passt das Muster »c.m« auf eine Zeichenkette, deren erstes
+Zeichen ein »c« ist, deren zweites Zeichen irgendwas und deren drittes
+Zeichen ein »m« ist.  Beispiel:
+
+	We use a computer that became the cummin winter. ~
+		 xxx		 xxx	  xxx
+
+
+SONDERZEICHEN FINDEN
+
+Falls Sie wirklich einen Punkt finden wollen, müssen Sie seine Sonderbedeutung
+durch einen vorangestellten Backslash aufheben.
+   Falls Sie nach »ter.« suchen, bekommen Sie diese Übereinstimmungen:
+
+	We use a computer that became the cummin winter. ~
+		      xxxx			    xxxx
+
+Nach »ter\.« suchen findet nur die zweite Übereinstimmung.
+
+==============================================================================
+*03.10*	Markierungen benutzen
+
+Wenn Sie mit dem Befehl »G« an eine Position springen, merkt sich Vim die
+Position vor diesem Sprung.  Diese Position wird Markierung (mark) genannt.
+Um dorthin zurück zu gehen, woher Sie gekommen sind, benutzen Sie diesen
+Befehl: >
+
+	``
+
+Dies »`« ist ein Backtick oder Accent grave.
+   Falls Sie denselben Befehl ein zweites Mal benutzen, springen Sie wieder
+zurück.  Das kommt daher, dass der Befehl »`« selbst ein Sprung ist, und Vim
+sich die Position vor diesem Sprung merkt.
+
+Im allgemeinen nennt es sich jedesmal Sprung, wenn Sie einen Befehl geben, der
+den Cursor weiter als innerhalb derselben Zeile bewegen kann.  Dies schließt
+die Suchbefehle »/« und »n« ein (es ist egal, wie weit entfernt der Treffer
+ist).  Aber weder die Zeichensuchen mit »fx« und »tx« noch die wortweisen
+Bewegungen »w« und »e«.
+   Auch »j« und »k« werden nicht als Sprung betrachtet.  Selbst wenn Sie sich
+mit einer Anzahl über eine ziemlich große Distanz bewegen.
+
+Der Befehl »``« springt zwischen zwei Punkten hin und her.  Der Befehl
+CTRL-O springt zu älteren Positionen (»O« wie »older«).  CTRL-I springt
+dann zurück zu neueren Positionen (»I« und »O« sind auf der Tastatur
+direkt nebeneinander).  Betrachten Sie diese Befehlsfolge: >
+
+	33G
+	/^The
+	CTRL-O
+
+Sie springen zuerst in Zeile 33, dann suchen Sie eine Zeile, die mit »The«
+beginnt.  Dann springen Sie mit CTRL-O zurück in Zeile 33.  Ein weiteres
+CTRL-O bringt Sie dorthin, wo Sie begonnen haben.  Falls Sie nun CTRL-I
+benutzen, springen Sie wieder in Zeile 33.  Und zum Treffer »The« mit
+einem weiteren CTRL-I.
+
+
+	     |	example text   ^	     |
+	33G  |	example text   |  CTRL-O     | CTRL-I
+	     |	example text   |	     |
+	     V	line 33 text   ^	     V
+	     |	example text   |	     |
+       /^The |	example text   |  CTRL-O     | CTRL-I
+	     V	There you are  |	     V
+		example text
+
+	Anmerkung:
+	CTRL-I ist dasselbe wie <Tab>.
+
+Der Befehl »:jumps« gibt Ihnen eine Liste der Positionen, zu denen Sie
+gesprungen sind.  Der zuletzt benutzte Eintrag wird mit einem »>«
+markiert.
+
+
+BENANNTE MARKIERUNGEN					*bookmark*
+
+Vim ermöglicht Ihnen, Ihre eigenen Markierungen im Text zu platzieren.  Der
+Befehl »ma« markiert die Stelle unter dem Cursor als Markierung a.  Sie können
+in Ihrem Text 26 Markierungen (a bis z) setzen.  Sie können sie nicht sehen,
+sie sind nur Positionen, die sich Vim merkt.
+   Um zu einer Markierung zu springen, benutzen Sie den Befehl »`{mark}«,
+wobei {mark} für den Buchstaben der Markierung steht.  Um also zur Markierung
+a zu springen:
+>
+	`a
+
+Der Befehl »'{mark}« (einfaches Anführungszeichen oder Apostroph) bringt
+Sie zu Anfang der Zeile, die die Markierung {mark} enthält.  Dies
+unterscheidet ihn vom Befehl »`{mark}«, der Sie zu der markierten Spalte
+bringt.
+
+Markierungen können sehr nützlich sein, wenn Sie an zwei verwandten Teilen
+einer Datei arbeiten.  Nehmen wir an, Sie haben einigen Text nahe dem
+Anfang der Datei, den Sie im Auge behalten müssen, während Sie an etwas Text
+nahe dem Ende der Datei arbeiten.
+   Gehen Sie zu dem Text am Anfang und platzieren Sie dort die Marke a wie
+Anfang: >
+
+	ma
+
+Dann gehen Sie zu dem Text, an dem Sie arbeiten wollen, und setzen dort die
+Marke e wie Ende: >
+
+	me
+
+Nun können Sie umherbewegen, und wenn Sie den Anfang der Datei betrachten
+wollen, können Sie dies benutzen, um dorthin zu springen: >
+
+	'a
+
+Dann können sie »''« benutzen, um dorthin zurück zu springen, wo Sie waren,
+oder »'e«, um zu dem Text am Ende zu springen, den Sie bearbeiten.
+   Es ist nichts besonderes daran, a für den Anfang und e für das Ende zu
+verwenden, es ist nur leicht zu merken.
+
+Um eine Liste der Markierungen zu bekommen, können Sie diesen Befehl
+benutzen: >
+
+	:marks
+
+Sie bemerken einige Sondermarkierungen; einschließlich:
+
+	'	Die Cursorposition vor dem letzten Sprung
+	"	Die Cursorposition beim letzten Editieren der Datei
+	[	Beginn der letzten Änderung
+	]	Ende der letzten Änderung
+
+==============================================================================
+
+Nächstes Kapitel: |usr_04.txt| Kleine Änderungen machen
+
+Copyright: siehe |manual-copyright| vim:tw=78:ts=8:ft=help:norl:

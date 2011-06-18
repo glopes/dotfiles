@@ -1,0 +1,2636 @@
+*usr_41.txt*	Für Vim version 7.2.  Letzte Änderung: 2008-Jun-21
+
+		     VIM BENUTZERHANDBUCH - von Bram Moolenaar
+
+			      Ein Vim-Skript schreiben
+
+
+Vims Skriptsprache wird für die Startup-Datei vimrc, Syntax-Dateien und
+viele andere Dinge verwendet.  Dieses Kapitel erklärt die Elemente, die in
+einem Vim-Skript benutzt werden können.  Davon gibt es eine Menge, daher
+ist dies ein langes Kapitel.
+
+|41.1|	Einführung
+|41.2|	Variablen
+|41.3|	Ausdrücke
+|41.4|	Bedingungen
+|41.5|	Einen Ausdruck ausführen
+|41.6|	Funktionen benutzen
+|41.7|	Eine Funktion definieren
+|41.8|	Listen und Wörterbücher
+|41.9|	Ausnahmen
+|41.10|	Verschiedene Anmerkungen
+|41.11|	Ein Plugin schreiben
+|41.12|	Ein Dateityp-Plugin schreiben
+|41.13|	Ein Kompiler-Plugin schreiben
+|41.14|	Ein Plugin so schreiben, dass es schnell lädt
+|41.15|	Bibliotheksskripte schreiben
+|41.16|	Vim-Skripte verteilen
+
+Nächstes Kapitel: |usr_42.txt|  Neue Menüs hinzufügen
+ Voriges Kapitel: |usr_40.txt|  Neue Befehle machen
+Inhaltsübersicht: |usr_toc.txt|
+
+==============================================================================
+*41.1*	Einführung				*vim-script-intro* *script*
+
+Ihre erste Erfahrung mit Vim-Skripten ist die Datei vimrc.  Vim liest sie beim
+Start und führt die Befehle aus.  Sie können Optionen auf Werte setzen, die
+Sie bevorzugen.  Und Sie können jeden Doppelpunkt-Befehl in ihr benutzen
+(Befehle, die mit »:« starten, diese werden manchmal Ex-Befehle oder
+Befehlszeilen-Befehle genannt.
+   Syntax-Dateien sind ebenfalls Vim-Skripte. So wie Dateien, die für einen
+bestimmten Dateityp Optionen setzen.  Ein kompliziertes Makro kann in einer
+eigenen Vim-Skript-Datei definiert werden.  Sie können sich nun weitere
+Möglichkeiten ausmalen.
+
+Lassen Sie uns mit einem einfachen Beispiel beginnen: >
+
+	:let i = 1
+	:while i < 5
+	:  echo "Zähler ist" i
+	:  let i += 1
+	:endwhile
+<
+	Anmerkung:
+	Die »:« werden hier nicht wirklich gebraucht.  Sie brauchen sie nur,
+	wenn Sie einen Befehl in Vim tippen.  In einer Vim-Skript-Datei können
+	sie ausgelassen werden.  Wir benutzen Sie hier dennoch, um klar zu
+	machen, dass dies Doppelpunkt-Befehle sind, und um sie sich von den
+	Befehlen des Normalmodus abheben zu lassen.
+	Anmerkung:
+	Sie können die Beispiele ausprobieren, indem Sie die Zeilen von hier
+	in ein Register kopieren und sie mit :@" ausführen.
+
+Die Ausgabe des Beispielcodes ist:
+
+	Zähler ist 1 ~
+	Zähler ist 2 ~
+	Zähler ist 3 ~
+	Zähler ist 4 ~
+
+In der ersten Zeile verknüpft der Befehl »:let« einen Wert mit einer
+Variablen.  Die generische Form ist: >
+
+	:let {variable} = {ausdruck}
+
+In diesem Falle ist der Variablenname »i« und der Ausdruck ist ein einfacher
+Wert, die Zahl eins.
+    Der Befehl »:while« beginnt eine Schleife.  Die generische Form ist: >
+
+	:while {bedingung}
+	:  {anweisungen}
+	:endwhile
+
+Die Anweisungen bis zum entsprechenden »:endwhile« werden so lange ausgeführt,
+wie die Bedingung wahr ist.  Die hier benutzte Bedingung ist der Ausdruck
+»i < 5«.  Dies ist wahr, wenn die Variable i kleiner als fünf ist.
+	Anmerkung:
+	Falls Sie versehentlich eine While-Schleife schreiben, die nicht
+	abbricht, können Sie sie durch Drücken von CTRL-C (CTRL-Pause unter
+	MS-Windows) unterbrechen.
+
+Der Befehl »:echo« gibt seine Argumente aus.  In diesem Falle die
+Zeichenkette »Zähler ist« und den Wert der Variablen i. Weil i eins ist,
+wird folgendes ausgegeben:
+
+	Zähler ist 1 ~
+
+Dann kommt der Befehl »:let i += 1«.  Dies macht dasselbe wie »:let i = i
++1«.  Dies addiert eins zu der Variablen i und verknüpft den neuen Wert
+mit derselben Variablen.
+
+Das Beispiel wurde aufgeführt, um die Befehle zu erläutern, aber wenn Sie
+wirklich solch eine Schleife bauen wollen, kann dies viel kompakter
+geschrieben werden: >
+
+	:for i in range(1, 4)
+	:  echo "Zähler ist" i
+	:endfor
+
+Wir erklären |:for| und |range()| zunächst nicht.  Folgen Sie den
+Verweisen, wenn Sie ungeduldig sind.
+
+
+DREI ARTEN VON ZAHLEN
+
+Zahlen können dezimal, hexadezimal oder oktal sein.  Eine hexadezimale Zahl
+beginnt mir »0x« oder »0X«.  »0x1f« ist zum Beispiel dezimal 31.  Eine oktale
+Zahl beginnt mit einer Null.  »017« ist dezimal 15.  Achtung: setzen Sie keine
+Null vor eine dezimale Zahl, sie wird dann als oktale Zahl interprätiert!
+   Der Befehl »:echo« gibt immer dezimale Zahlen aus.  Beispiel: >
+
+	:echo 0x7f 036
+<	127 30 ~
+
+Eine Zahl wird mit einem Minus-Zeichen negativ gemacht.  Dies funktioniert
+auch für hexadezimale und oktale Zahlen.  Das Minus-Zeichen wird auch für die
+Substraktion verwandt.  Vergleichen Sie dies mit dem vorigen Beispiel: >
+
+	:echo 0x7f -036
+<	97 ~
+
+Whitespace in einem Ausdruck wird ignoriert.  Dennoch empfiehlt es sich, ihn
+zu benutzen, um Elemente zu trennen, um den Ausdruck leichter lesbar zu
+machen.  Um zum Beispiel oben die Verwechslung mit einer negativen Zahl zu
+vermeiden, setzen Sie ein Leerzeichen zwischen das Minus-Zeichen und die
+darauf folgende Zahl: >
+
+	:echo 0x7f - 036
+
+==============================================================================
+*41.2*	Variablen
+
+Ein Variablenname besteht aus ASCII-Buchstaben, Ziffern und dem
+Unterstrich.  Er kann nicht mit einer Ziffer beginnen.  Gültige
+Variablennamen sind:
+
+	counter
+	_aap3
+	very_long_variable_name_with_underscores
+	FuncLength
+	LENGTH
+
+Ungültige Namen sind »foo+bar« und »6var«.
+   Diese Variablen sind global.  Um eine Liste aktuell definierter Variablen
+zu sehen, benutzen Sie diesen Befehl: >
+
+	:let
+
+Sie können überall globale Variablen verwenden.  Dies bedeutet auch, dass,
+wenn eine Variable »zaehler« in einer Skript-Datei benutzt wird, sie auch
+in einer andereren Datei benutzt werden könnte.  Dies führt bestenfalls zu
+Verwirrung, schlimmstenfalls zu wirklichen Problemen.  Um dies zu vermeiden,
+können Sie eine Variable lokal zu einem Skript verwenden, indem Sie »s:«
+voranstellen.  Ein Skript enthält zum Beispiel diesen Code: >
+
+	:let s:count = 1
+	:while s:count < 5
+	:  source other.vim
+	:  let s:count += 1
+	:endwhile
+
+Weil »s:count« lokal zu diesem Skript ist, können Sie sicher sein, dass
+das Einlesen von »other.vim« diese Variable nicht verändert.  Falls
+»other.vim« ebenfalls eine Variable »s:count« enthält, ist dies eine
+andere Einheit, lokal zu diesem Skript.  Mehr über Variablen, die lokal zu
+einem Skript sind, unter: |script-variable|
+
+Es gibt noch mehr Arten von Variablen, siehe |internal-variables|.  Die am
+häufigsten gebrauchten sind:
+
+	b:name		Variable lokal zu einem Puffer
+	w:name		Variable lokal zu einem Fenster
+	g:name		globale Variable (auch in einer Funktion)
+	v:name		von Vim vordefinierte Variable
+
+
+VARIABLEN LöSCHEN
+
+Variablen belegen Speicher und erscheinen in der Ausgabe des Befehls
+»:let«. Um eine Variable zu löschen, benutzen Sie den Befehl »:unlet«.
+Beispiel: >
+
+	:unlet s:count
+
+Dies löscht die skript-lokale Variable »s:count« um den Speicher
+freizugeben, den sie belegt.  Wenn Sie nicht sicher sind, ob die Variable
+existiert und Sie keine Fehlermeldung wollen, wenn sie es nicht tut, hängen
+Sie »!« an: >
+
+	:unlet! s:count
+
+Wenn ein Skript terminiert, werden die in ihm benutzten lokalen Variablen
+nicht automatisch freigegeben.  Das nächste Mal, wenn das Skript
+ausgeführt wird, kann es immernoch den alten Wert benutzen.  Beispiel: >
+
+	:if !exists("s:aufruf_zaehler")
+	:  let s:aufruf_zaehler = 0
+	:endif
+	:let s:aufruf_zaehler = s:aufruf_zaehler + 1
+	:echo s:aufruf_zaehler "Male aufgerufen"
+
+Die Funktion »exists()« prüft, ob eine Variable bereits definiert wurde.
+Ihr Argument ist der Name der Variablen, die man überprüfen will.  Nicht
+die Variable selbst!  Falls Sie dies tun würden: >
+
+	:if !exists(s:aufruf_zaehler)
+
+Dann wird der Wert von s:aufruf_zaehler als der Name der Variablen, die
+exists() überprüft, genommen.  Das ist nicht, was Sie wollen.
+   Das Ausrufezeichen ! negiert einen Wert.  Wenn der Wert wahr war, wird er
+falsch.  Wenn er falsch war, wird er wahr.  Sie können es als »nicht« lesen.
+Also kann »if !exists()« als »if not exists()« gelesen werden.
+   Was Vim als wahr betrachtet, ist alles, was nicht Null ist.  Null ist
+falsch.
+	Anmerkung:
+	Vim konvertiert eine Zeichenkette automatisch zu einer Zahl, wenn er
+	nach einer Zahl sucht.  Bei einer Zeichenkette, die nicht mit einer
+	Ziffer beginnt, ist die resultierende Zahl Null.  Also geben Sie
+	hierauf acht: >
+		:if "true"
+>	Das »true« wird als Null interprätiert, also als falsch!
+
+
+ZEICHENKETTENVARIABLEN UND -KONSTANTEN
+
+So weit wurden nur Zahlen für den Variablenwert benutzt.  Zeichenketten können
+auch benutzt werden.  Zahlen und Zeichenketten sind die Grundtypen von
+Variablen, die Vim unterstützt.  Der Typ ist dynamisch, er wird jedes Mal
+gesetzt, wenn der Variablen mit »:let« ein Wert zugewiesen wird.  Mehr zu
+Typen in |41.8|.
+   Um einer Variablen einen Zeichenkettenwert zuzuweisen, müssen Sie eine
+Zeichenkettenkonstante benutzen.  Davon gibt es zwei Typen.  Zuerst die
+Zeichenkette in doppelten Zitatzeichen: >
+
+	:let name = "peter"
+	:echo name
+<	peter ~
+
+Falls Sie ein doppeltes Zitatzeichen in die Zeichenkette einbeziehen wollen,
+stellen Sie ihm einen Rückwärtsschrägstrich voran: >
+
+	:let name = "\"peter\""
+	:echo name
+<	"peter" ~
+
+Um den Rückwärtsschrägstrich zu vermeiden, können Sie eine Zeichenkette
+in einfachen Zitatzeichen verwenden: >
+
+	:let name = '"peter"'
+	:echo name
+<	"peter" ~
+
+In einer Zeichenkette mit einfachen Zitatzeichen sind alle Zeichen wie sie
+sind.  Nur das einzelne Zitatzeichen selbst ist besonders: Sie müssen zwei
+verwenden, um eins zu bekommen.  Ein Rückwärtsschrägstrich wird wörtlich
+genommen, also können Sie ihn nicht benutzen, um die Bedeutung des Zeichens
+danach zu verändern.
+   In Zeichenketten mit doppelten Zitatzeichen ist es möglich, besondere
+Zeichen zu verwenden.  Hier sind ein Paar nützliche:
+
+	\t		<Tab>
+	\n		<NL>, Zeilenumbruch
+	\r		<CR>, <Enter>
+	\e		<Esc>		\b		<BS>, Backspace
+	\"		"
+	\\		\. Rückwärtsschrägstrich
+	\<Esc>		<Esc>
+	\<C-W>		CTRL-W
+
+Die letzten zwei sind nur Beispiele.  Die Form »\<name>« kann benutzt werden,
+um die Sondertaste »name« einzubeziehen.
+   Siehe |expr-quote| für die volle Liste besonderer Elemente in einer
+Zeichenkette.
+
+==============================================================================
+*41.3*	Ausdrücke
+
+Vim hat eine reichhaltige, aber dennoch einfache Weise, um Ausdrücke zu
+behandeln.  Sie können die Definition hier lesen: |expression-syntax|. Hier
+werden wir die gebräuchlichsten zeigen.
+   Die oben erwähnten Zahlen, Zeichenketten und Variablen sind selbst
+Ausdrücke.  Also können Sie überall, wo ein Ausdruck erwartet wird, eine Zahl,
+Zeichenkette oder Variable verwenden.  Andere Grundelemente in einem Ausdruck
+sind:
+
+	$NAME		Umgebungsvariable
+	&name		Option
+	@r		Register
+
+Beispiele: >
+
+	:echo "Der Wert von 'tabstop' ist" &ts
+	:echo "Ihr Heimverzeichnis ist" $HOME
+	:if @a > 5
+
+Die Form &name kann benutzt werden, um den Wert einer Option zwischen zu
+speichern, sie auf einen neuen Wert zu setzen, etwas zu tun und den alten
+Wert zu restaurieren.  Beispiel: >
+
+	:let save_ic = &ic
+	:set noic
+	:/Der Beginn/,$delete
+	:let &ic = save_ic
+
+Dies stellt sicher, dass das Muster »Der Beginn« mit deaktivierter Option
+'ignorecase' benutzt wird.  Jedoch behält es den Wert, den der Benutzer
+gesetzt hat.  (Eine andere Möglichkeit, dies zu tun, wäre dem Suchmuster
+»\C« hinzuzufügen, siehe |/\C|.)
+
+
+MATHEMATIK
+
+Es wird interessanter, wenn wir diese Grundelemente kombinieren.  Lassen Sie
+uns mit Mathematik auf Zahlen beginnen
+
+	a + b		Addition
+	a - b		Subtraktion
+	a * b		Multiplikation
+	a / b		Division
+	a % b		Modulo
+
+Die gewöhnliche Präzedenz wird benutzt.  Beispiel: >
+
+	:echo 10 + 5 * 2
+<	20 ~
+
+Gruppierung mit Klammern.  Keine Überraschungen hier.  Beispiel: >
+
+	:echo (10 + 5) * 2
+<	30 ~
+
+Zeichenketten können mit ».« verkettet werden.  Beispiel: >
+
+	:echo "foo" . "bar"
+<	foobar ~
+
+Wenn der Befehl »:echo« mehrere Argumente erhält, trennt er sie mit einem
+Leerzeichen.  In diesem Beispiel ist das Argument ein einzelner Ausdruck,
+also wird kein Leerzeichen eingefügt.
+
+Aus der Sprache C entliehen ist der konditionale Ausdruck:
+
+	a ? b : c
+
+Falls »a« wahr ergibt, wird »b« verwandt, ansonsten wird »c« benutzt.
+Beispiel: >
+
+	:let i = 4
+	:echo i > 5 ? "i is big" : "i is small"
+<	i is small ~
+
+Die drei Teile des Konstrukts werden immer zuerst berechnet, also könnten
+Sie als als das Folgende funktionieren sehen:
+
+	(a) ? (b) : (c)
+
+==============================================================================
+*41.4*	Bedingungen
+
+Der Befehl »:if« führt die folgenden Anweisungen aus, bis zum
+übereinstimmenden »:endif«, nur wenn eine Bedingung erfüllt ist.  Die
+generische Form ist:
+
+	:if {bedingung}
+	   {anweisungen}
+	:endif
+
+Nur wenn der Ausdruck {bedingung} wahr (nicht-null) ergibt, werden die
+{anweisungen} ausgeführt.  Dies müssen immer noch gültige Befehle sein.  Falls
+sie Müll enthalten, ist es Vim nicht möglich, das »:endif« zu finden.
+   Sie können auch »:else« verwenden.  Die generische Form hierfür ist:
+
+	:if {bedingung}
+	   {anweisungen}
+	:else
+	   {anweisungen}
+	:endif
+
+Der zweite Block {anweisungen} wird nur ausgeführt, wenn der erste nicht wird.
+   Schließlich gibt es »:elseif«:
+
+	:if {bedingung}
+	   {anweisungen}
+	:elseif {bedingung}
+	   {anweisungen}
+	:endif
+
+Dies funktioniert genauso, wie »:else« und dann »if« zu verwenden, aber ohne
+ein extra »:endif« zu benutzen.
+   Ein nützliches Beispiel für Ihre vimrc ist, die Option 'term' zu prüfen,
+und abhängig von ihrem Wert etwas zu tun: >
+
+	:if &term == "xterm"
+	:  " Mache etwas für xterm
+	:elseif &term == "vt100"
+	:  " Mache etwas für ein VT100-Terminal
+	:else
+	:  " Mache etwas für andere Terminals
+	:endif
+
+
+LOGISCHE OPERATIONEN
+
+Wir haben bereits einige in den Beispielen benutzt.  Dies sind die am
+häufigsten verwandten:
+
+	a == b		gleich
+	a != b		ungleich
+	a >  b		größer als
+	a >= b		größer als oder gleich
+	a <  b		kleiner als
+	a <= b		kleiner als oder gleich
+
+Das Ergebnis ist eins, falls die Bedingung erfüllt ist, sonst null.  Ein
+Beispiel: >
+
+	:if v:version >= 700
+	:  echo "Gratulation"
+	:else
+	:  echo "Sie benutzen eine alte Version.  Aktualisieren Sie!"
+	:endif
+
+Hier ist »v:version« eine von Vim definierte Variable, die den Wert der
+Vim-Version hat.  600 ist für Version 6.0.  Version 6.1 hat den Wert 601.
+Dies ist sehr nützlich beim Schreiben eines Skript, das mit verschiedenen
+Versionen von Vim funktionieren soll.  |v:version|
+
+Die logischen Operatoren funktionieren sowohl für Zahlen wie auch für
+Zeichenketten.  Beim Vergleich zweier Zeichenketten wird der mathematische
+Unterschied benutzt.  Dies vergleicht Byte-Werte, was für manche Sprachen
+eventuell nicht richtig ist.
+   Beim Vergleich einer Zeichenkette mit einer Zahl wird die Zeichenkette
+zuerst in eine Zahl verwandelt.  Dies ist ein wenig verzwickt, wenn eine
+Zeichenkette nicht wie eine Zahl aussieht, wird die Zahl Null verwandt.
+Beispiel: >
+
+	;if 0 == "eins"
+	:  echo "ja"
+	:endif
+
+Dies gibt »ja« aus, weil »eins« nicht wie eine Zahl aussieht, es also
+zur Zahl Null konvertiert wird.
+
+Für Zeichenketten gibt es zwei weitere Elemente:
+
+	a =~ b		stimmt mit überein
+	a !~ b		stimmt nicht mit überein
+
+Das linke Element »a« wird als Zeichenkette verwandt.  Das rechte Element
+»b« wird als Muster benutzt, wie beim Suchen.  Beispiel: >
+
+	:if str =~ " "
+	:  echo "str enthält ein Leerzeichen"
+	:endif
+	:if str !~ '\.$'
+	:  echo "str endet nicht mit einem Punkt"
+	:endif
+
+Beachten Sie den Gebrauch der einfach zitierten Zeichenkette.  Dies ist
+nützlich, weil Rückwärtsschrägstriche in doppelt zitierten Zeichenketten
+verdoppelt werden müssten, und Muster dazu neigen, viele
+Rückwärtsschrägstriche zu enthalten.
+
+Die Option 'ignorecase' wird beim Vergleich von Zeichenketten benutzt.  Wenn
+Sie dies nicht wollen, hängen Sie »#« an, für Übereinstimmung von
+Groß-/Kleinschreibung, und »?«, um dies zu ignorieren.  Also vergleicht
+»==?« zwei Zeichenketten auf Gleichheit, während Groß-/Kleinschreibung
+ignoriert wird.  Und »!~#« prüft, ob ein Muster nicht passt, auch
+Groß-/Kleinschreibung überprüfend.  Für die volle Tabelle siehe
+|expr-==|.
+
+
+MEHR ÜBER SCHLEIFEN
+
+Der Befehl »:while« wurde bereits erwähnt.  Zwei weitere Anweisungen
+können zwischen dem »:while« und dem »:endwhile« benutzt werden:
+
+	:continue		Springe zurück zum Beginn der While-Schleife;
+				die Schleife wird fortgesetzt.
+	:break			Springe vorwärts zum »:endwhile«; die Schleife
+				wird abgebrochen.
+
+Beispiel: >
+
+	:while zaehler < 40
+	:  call tue_etwas()
+	:  if flag_ueberspringen
+	:    continue
+	:  endif
+	:  if flag_beendet
+	:    break
+	:  endif
+	:  sleep 50m
+	:endwhile
+
+Der Befehl »:sleep« lässt Vim ein Nickerchen machen.  »50m« gibt
+fünzig Millisekunden an.  Ein weiteres Beispiel ist »:sleep 4«, was für
+vier Sekunden schläft.
+
+Sogar noch mehr Schleifen können mit dem Befehl »:for« gemacht werden,
+siehe unten in |41.8|.
+
+==============================================================================
+*41.5*	Einen Ausdruck ausführen
+
+So weit wurden die Befehle in dem Skript von Vim direkt ausgeführt.  Der
+Befehl »:execute« erlaubt das Ausführen des Ergebnisses eines Ausdrucks.  Dies
+ist eine sehr mächtige Möglichkeit, Befehle aufzubauen und sie ausführen zu
+lassen.
+   Ein Beispiel ist ein Tag anzuspringen, das in einer Variablen enthalten
+ist: >
+
+	:execute "tag " . tag_name
+
+Der ».« wird verwandt, um die Zeichenkette »tag « mit dem Wert der
+Variablen »tag_name« zu verketten.  Angenommen, »tag_name« hat den Wert
+»get_cmd«, dann ist der ausgeführte Befehl: >
+
+	:tag get_cmd
+
+Der Befehl »:execute« kann nur Doppelpunkt-Befehle ausführen.  Der Befehl
+»:normal« führt Befehl des Normalmodus aus.  Jedoch ist sein Argument
+kein Ausdruck, sondern die wörtlichen Befehlszeichen.  Beispiel: >
+
+	:normal gg=G
+
+Dies springt in die erste Zeile und formatiert alle Zeilen mit dem Operator
+»=«.
+   Damit »:normal« mit einem Ausdruck funktioniert, kombinieren Sie
+»:execute« mit ihm.  Beispiel: >
+
+	:execute "normal " . normal_befehle
+
+Die Variable »normal_befehle« muss die Normal-Modus-Befehle enthalten.
+   Stellen Sie sicher, dass das Argument für »:normal« ein vollständiger
+Befehl ist.  Ansonsten läuft Vim in das Ende des Arguments und führt den
+Befehl nicht aus.  Falls Sie zum Beispiel den Einfüge-Modus starten, müssen
+Sie auch den Einfüge-Modus verlassen.  Dies funktioniert: >
+
+	:execute "normal INeuer Text \<Esc>"
+
+Dies fügt »Neuer Text « in der aktuellen Zeile ein.  Beachten Sie den
+Gebrauch der Sondersequenz »\<Esc>«.  Dies vermeidet, dass sie ein
+wirkliches <Esc>-Zeichen in Ihr Skript einfügen müssen.
+
+Falls Sie eine Zeichenkette nicht ausführen, sondern auswerten möchten, um
+ihren Ausdruckswert zu bekommen, können Sie die Funktion eval() benutzen: >
+
+	:let optname = "path"
+	:let optval = eval('&' . optname)
+
+Ein »&«-Zeichen wird »path« vorangestellt, also ist das Argument für eval()
+»&path«.  Das Ergebnis ist dann der Wert der Option 'path'.
+   Dasselbe kann mit dem folgenden gemacht werden: >
+	:exe 'let optval = &' . optname
+
+==============================================================================
+*41.6*	Funktionen benutzen
+
+Vim definiert viele Funktionen und bietet so einen großen Betrag an
+Funktionalität.  Einige wenige Beispiele werden in diesem Abschnitt
+gegeben.  Sie können die ganze Liste hier finden: |functions|.
+
+Eine Funktion wird mit dem Befehl »:call« aufgerufen.  Die Parameter
+werden in Klammern übergeben, getrennt durch Kommata.  Beispiel: >
+
+	:call search("Date: ", "W")
+
+Dies ruft die Funktion search() auf, mit den Argumenten »Date: « und
+»W«.  Die Funktion search() benutzt ihr erstes Argument als Suchmuster und
+das zweite als Flags.  Das Kennzeichen »W« bedeutet, dass die Suche am
+Ende der Datei nicht an ihrem Beginn fortgesetzt werden soll (wrap around).
+
+Eine Funktion kann in einem Ausdruck aufgerufen werden.  Beispiel: >
+
+	:let zeile = getline(".")
+	:let ersetzt = substitute(zeile, '\a', "*", "g")
+	:call setline(".", ersetzt)
+
+Die Funktion getline() holt eine Zeile aus dem aktuellen Puffer.  Ihr Argument
+ist eine Spezifikation der Zeilennummer.  In diesem Falle wird ».« benutzt,
+was die Zeile meint, wo sich der Cursor befindet.
+   Die Funktion substitute() tut etwas ähnliches wie der Befehl »:substitute«.
+Das erste Argument ist die Zeichenkette, auf der die Ersetzung stattfinden
+soll.  Das zweite Argument ist das Muster, das dritte die
+Ersetzungszeichenkette.  Schließlich sind die letzten Argumente die Flags.
+   Die Funktion setline() setzt die Zeile, die durch das erste Argument
+spezifiziert wird, auf eine neue Zeichenkette, das zweite Argument.  In diesem
+Beispiel wird die Zeile unter dem Cursor ersetzt durch das Ergebnis von
+substitute().  Also ist der Effekt der drei Anweisungen gleich: >
+
+	:substitute/\a/*/g
+
+Die Funktionen benutzen wird interessanter, wenn Sie mehr Arbeit vor und
+nach dem Aufruf von substitute() erledigen.
+
+
+FUNKTIONEN						*function-list*
+
+Es gibt viele Funktionen.  Wir werden Sie hier erwähnen, gruppiert nach
+ihrem Verwendungszweck.  Sie können hier eine alphabetische Liste finden:
+|functions|.  Benutzen Sie CTRL-] auf dem Funktionsnamen, um zu einer
+detailierten Hilfe zu ihr zu springen.
+
+Zeichenketten-Manipulation:
+	nr2char()		gibt ein Zeichen nach seinem ASCII-Wert
+	char2nr()		gibt den ASCII-Wert eines Zeichens
+	str2nr()		konvertiert eine Zeichenkette in eine Zahl
+	str2float()		konvertiert eine Zeichenkette in eine
+				Gleitpunktzahl
+	printf()		formatiert eine Zeichenkette nach %-Elementen
+	escape()		schützt Zeichen in einer Zeichenkette mit
+				einem »\«
+	shellescape()		schützt eine Zeichenkette zum Gebrauch mit
+				einem Shell-Befehl
+	fnameescape()		schützt einen Dateinamen zum Gebrauch mit
+				einem Vim-Befehl
+	tr()			übersetzt Zeichen von einer Menge in eine
+				andere
+	strtrans()		übersetzt eine Zeichenkette, um sie druckbar
+				zu machen
+	tolower()		konvertiert eine Zeichenkette in
+				Kleinbuchstaben
+	toupper()		konvertiert eine Zeichenkette in
+				Großbuchstaben
+	match()			Position, wo ein Muster in einer Zeichenkette
+				übereinstimmt
+	matchend()		Postion, wo eine Musterübereinstimmung in
+				einer Zeichenkette endet
+	matchstr()		Übereinstimmung eines Musters in einer
+				Zeichenkette
+	matchlist()		wie matchstr(), gibt auch
+				Unterübereinstimmungen zurück
+	stridx()		erster Index einer kurzen in einer langen
+				Zeichenkette
+	strridx()		letzter Index einer kurzen in einer langen
+				Zeichenkette
+	strlen()		Länge einer Zeichenkette
+	substitute()		ersetze eine Musterübereinstimmung durch eine
+				Zeichenkette
+	submatch		liefert eine bestimmte Übereinstimmung in
+				einem »:substitute«
+	strpart()		liefert Teil einer Zeichenkette
+	expand()		expandiert besondere Schlüsselwörter
+	iconv()			konvertiert Text von einer Kodierung
+				in eine andere
+	byteidx()		Byte-Index eines Zeichens in einer Zeichenkette
+	repeat()		wiederholt eine Zeichenkette mehrere Male
+	eval()			wertet einen Zeichenkettenausdruck aus
+
+Listen-Manipulation:
+	get()			liefert ein Element ohne Fehler für falschen
+				Index
+	len()			Anzahl Elemente in einer Liste
+	empty()			prüft, ob eine Liste leer ist
+	insert()		fügt ein Element irgendwo in einer Liste ein
+	add()			hängt ein Element an eine Liste an
+	extend()		hängt eine Liste an eine Liste an
+	remove()		entfernt ein oder mehrere Elemente
+				aus einer Liste
+	copy()			macht eine oberflächliche Kopie einer Liste
+	deepcopy()		macht eine volle Kopie einer Liste
+	filter()		entfernt ausgewählte Elemente einer Liste
+	map()			ändert jedes Listenelement
+	sort()			sortiert eine Liste
+	reverse()		kehrt die Reihenfolge einer Liste um
+	split()			spaltet eine Zeichenkette in eine Liste
+	join()			fügt Listenelemente zu einer Zeichenkette
+				zusammen
+	range()			gibt eine Liste mit einer Folge von Zahlen
+				zurück
+	string()		Zeichenkettenrepräsentation einer Liste
+	call()			ruft eine Funktion auf mit Liste als Argumente
+	index()			Index eines Werts in einer Liste
+	max()			maximaler Wert in einer Liste
+	min()			minimaler Wert in einer Liste
+	count()			zählt Anzahl, wie oft ein Wert in einer Liste
+				erscheint
+	repeat()		wiederholt eine Liste mehrere Male
+
+Wörterbuch-Manipulation:
+	get()			liefert einen Eintrag ohne einen Fehler
+				für einen falschen Schlüssel
+	len()			Anzahl von Einträgen in einem Wörterbuch
+	has_key()		prüft, ob ein Schlüssel in einem Wörterbuch
+				erscheint
+	empty()			prüft, ob ein Wörterbuch leer ist
+	remove()		entfernt einen Eintrag aus einem Wörterbuch
+	extend()		kopiert Einträge von einem Wörterbuch
+				in ein anderes
+	filter()		entfernt ausgewählte Einträge
+				aus einem Wörterbuch
+	map()			ändert jeden Wörterbuch-Eintrag
+	keys()			liefert Liste von Wörterbuch-Schlüsseln
+	values()		liefert Liste von Wörterbuch-Werten
+	items()			liefert Liste von
+				Wörterbuch-Schlüssel-Wert-Paaren
+	copy()			macht eine oberflächliche Kopie
+				eines Wörterbuchs
+	deepcopy		macht eine volle Kopie eines Wörterbuchs
+	string()		Zeichenkettenrepräsentation eines Wörterbuchs
+	max()			maximaler Wert in einem Wörterbuch
+	min()			minimaler Wert in einem Wörterbuch
+	count()			Anzahl, wie oft ein Wert erscheint
+
+Gleitpunkt-Berechnung:
+	float2nr()		konvertiert Gleitpunktzahl zu Zahl
+	abs()			Absolut-Wert (funktioniert auch für Zahl)
+	round()			rundet
+	ceil()			rundet auf
+	floor()			rundet ab
+	trunc()			entfernt Wert nach Dezimalpunkt
+	log10()			Logarithmus zur Basis 10
+	pow()			Wert von x hoch y
+	sqrt()			Quadratwurzel
+	sin()			Sinus
+	cos()			Cosinus
+	atan()			Arcustangens
+
+Variablen:
+	type()			Typ einer Variablen
+	islocked()		prüft, ob eine Variable gelockt ist
+	function()		liefert eine Funktionsreferenz für einen
+				Funktionsnamen
+	getbufvar()		liefert einen Variablenwert aus einem
+				bestimmten Puffer
+	setbufvar()		setzt eine Variable in einem bestimmten Puffer
+	getwinvar()		liefert eine Variable aus einem bestimmten
+				Fenster
+	gettabwinvar()		liefert eine Variable für bestimmtes Fenster
+				und Reiterseite
+	setwinvar()		setzt eine Variable in einem bestimmten
+				Fenster
+	settabwinvar()		setzt eine Variable für bestimmtes Fenster und
+				Reiterseite
+	garbagecollect()	gibt möglicherweise Speicher frei
+
+Cursor- und Markierungs-Position:
+	col()			Spaltennummer von Cursor oder einer Markierung
+	virtcol()		Bildschirmspalte von Cursor oder einer
+				Markierung
+	line()			Zeilennummer von Cursor oder einer Markierung
+	wincol()		Fensterspaltennummer des Cursors
+	winline()		Fensterzeilennummer des Cursors
+	cursor()		positioniert den Cursor auf einer Zeile/Spalte
+	getpos()		liefert Position von Cursor, Markierung usw.
+	setpos()		setzt Position von Cursor, Markierung usw.
+	byte2line()		liefert Zeilennummer bei einer bestimmten
+				Byte-Anzahl
+	line2byte()		Byte-Anzahl bei einer bestimmten Zeile
+	diff_filler()		liefert die Anzahl von Füllzeilen über einer
+				Zeile
+
+Arbeiten mit dem Text im aktuellen Puffer:
+	getline()		liefert eine Zeile oder Liste von Zeilen aus
+				dem aktuellen Puffer
+	setline()		ersetzt eine Zeile im Puffer
+	append()		fügt eine Zeile oder Liste von Zeilen im
+				Puffer an
+	indent()		Einrückung einer bestimmten Zeile
+	cindent()		rückt eine Zeile nach Einrückung für C ein
+	lispindent()		rückt eine Zeile nach Einrückung für Lisp ein
+	nextnonblank()		findet nächste nicht-leere Zeile
+	prevnonblank()		findet vorige nicht-leere Zeile
+	search()		findet eine Übereinstimmung für ein Muster
+	searchpos()		findet eine Übereinstimmung für ein Muster
+	searchpair()		findet das andere Ende eines Start/Skip/End
+	searchpairpos()		findet das andere Ende eines Start/Skip/End
+	searchdecl()		sucht nach der Deklaration eines Namens
+
+Systemfunktionen und Manipulation von Dateien:
+	glob()			expandiere Wildcards
+	globpath()		expandiere Wildcards in einer Reihe von
+				Verzeichnissen
+	findfile()		findet eine Datei in einer Liste von
+				Verzeichnissen
+	finddir()		findet ein Verzeichnis in einer Liste von
+				Verzeichnissen
+	resolve()		findet heraus, wohin ein Shortcut zeigt
+	fnamemodify()		modifiziert einen Dateinamen
+	pathshorten()		verkürzt Verzeichnisnamen in einem Pfad
+	simplify()		vereinfacht einen Pfad, ohne seine Bedeutung
+				zu verändern
+	executable()		prüft, ob ein ausführbares Programm existiert
+	filereadable()		prüft, ob eine Datei gelesen werden kann
+	filewritable()		prüft, ob in eine Datei geschrieben werden kann
+	getfperm()		liefert die Zugriffsrechte einer Datei
+	getftype()		liefert die Art einer Datei
+	isdirectory()		prüft, ob ein Verzeichnis existiert
+	getfsize()		liefert die Größe einer Datei
+	getcwd()		liefert das aktuelle Arbeitsverzeichnis
+	haslocaldir()		prüft, ob das aktuelle Fenster |:lcd| benutzt
+				hat
+	tempname()		liefert den Namen einer temporären Datei
+	mkdir()			erzeugt ein neues Verzeichnis
+	delete()		löscht eine Datei
+	rename()		benennt eine Datei um
+	system()		liefert das Ergebnis eines Shell-Befehls
+	hostname()		Rechnername
+	readfile()		lese eine Datei in eine Liste von Zeilen
+	writefile()		schreibe eine Liste von Zeilen in eine Datei
+
+Datum und Zeit:
+	getftime()		liefert Zeit der letzten Modifikation
+				einer Datei
+	localtime()		liefert aktuelle Zeit in Sekunden
+	strftime()		konvertiert Zeit in eine Zeichenkette
+	reltime()		liefert die aktuelle oder vergangene Zeit
+				akkurat
+	reltimestr()		konvertiert Ergebnis von reltime() in eine
+				Zeichenkette
+
+Puffer, Fenster und die Argumentenliste:
+	argc()			Anzahl von Einträgen in der Argumentenliste
+	argidx()		aktuelle Position in der Argumentenliste
+	argv()			liefert einen Eintrag aus der Argumentenliste
+	bufexists()		prüft, ob ein Puffer existiert
+	buflisted()		prüft, ob ein Puffer existiert und gelistet ist
+	bufloaded()		prüft, ob ein Puffer existiert und geladen ist
+	bufname()		liefert den Namen eines bestimmten Puffers
+	bufnr()			liefert die Puffernummer eines bestimmten
+				Puffers
+	tabpagebuflist()	gibt eine Liste der Puffer in einer
+				Reiterseite zurück
+	tabpagenr()		liefert die Nummer einer Reiterseite
+	tabpagewinnr()		wie winnr() für eine bestimmte Reiterseite
+	winnr()			liefert die Fensternummer für das aktuelle
+				Fenster
+	bufwinnr()		liefert die Fensternummer eines bestimmten
+				Puffers
+	winbufnr()		liefert die Puffernummer eines bestimmten
+				Fensters
+	getbufline()		liefert eine Liste von Zeilen aus dem
+				bestimmten Puffer
+
+Befehlszeile:
+	getcmdline()		liefert die aktuelle Befehlszeile
+	getcmdpos()		liefert Position des Cursors in der Befehlszeile
+	setcmdpos()		setzt Position des Cursors in der Befehlszeile
+	getcmdtype()		gibt den Typ der aktuellen Befehlszeile zurück
+
+Quickfix und Lokationslisten:
+	getqflist()		Liste von Quickfix-Fehlern
+	setqflist()		modifiziere eine Quickfix-Liste
+	getloclist()		Liste von Lokationslisten-Elementen
+	setloclist()		modifiziere eine Lokationsliste
+
+Vervollständigung im Einfügemodus:
+	complete()		setzt gefundene Übereinstimmungen
+	complete_add()		fügt zu gefundenen Übereinstimmungen hinzu
+	complete_check()	prüft, ob Vervollständigung abgebrochen werden
+				sollte
+	pumvisible()		prüft, ob das Aufklapp-Menü angezeigt wird
+
+Falten:
+	foldclosed()		prüft auf eine geschlossene Faltung in einer
+				bestimmten Zeile
+	foldclosedend()		wie foldclosed(), aber gibt die letzte Zeile
+				zurück
+	foldlevel()		prüft auf die Faltungsebene in einer
+				bestimmten Zeile
+	foldtext()		erzeugt die für eine geschlossene Faltung
+				angezeigte Zeile
+	foldtextresult()	liefert den für eine geschlossene Faltung
+				angezeigten Text
+
+Syntax und Hervorhebung:
+	clearmatches()		löscht alle von |matchadd()| und den |:match|-
+				Befehlen definierte Übereinstimmungen
+	getmatches()		holt alle von |matchadd()| und den |:match|-
+				Befehlen definierten Übereinstimmungen
+	hlexists()		prüft, ob eine Hervorhebungsgruppe existiert
+	hlID()			liefert ID einer Hervorhebungsgruppe
+	synID()			liefert Syntax-ID an einer bestimmten Position
+	synIDattr()		liefert ein bestimmtes Attribut einer Syntax-ID
+	synIDtrans()		liefert übersetzte Syntax-ID
+	diff_hlID()		liefert Hervorhebungs-ID für den Diff-Modus
+				an einer Position
+	matcharg()		liefert Informationen über Argumente
+				von |:match|
+	matchdelete()		löscht eine von |matchadd()| oder den |:match|-
+				Befehlen definierte Übereinstimmungen
+	setmatches()		stellt eine von |getmatches()| gespeicherte
+				Liste von Übereinstimmungen wieder her
+
+Rechtschreibkontrolle:
+	spellbadword()		lokalisiert falsch geschriebenes Wort am
+				oder nach dem Cursor
+	spellsuggest()		liefert vorgeschlagene Schreibungskorrekturen
+				zurück
+	soundfold()		liefert die ähnlich klingende Entsprechung
+				eines Wortes zurück
+
+Verläufe:
+	histadd()		fügt ein Element einem Verlauf hinzu
+	histdel()		löscht ein Element aus einem Verlauf
+	histget()		liefert ein Element aus einem Verlauf
+	histnr()		liefert den höchsten Index einer Verlaufsliste
+
+Interaktiv:
+	browse()		stellt eine Datei-Anfrage zur Verfügung
+	browsedir()		stellt eine Verzeichnis-Anfrage zur Verfügung
+	confirm()		lässt den Benutzer eine Auswahl machen
+	getchar()		holt ein Zeichen vom Benutzer
+	getcharmod()		liefert die Modifikatoren für das letzte
+				eingegebene Zeichen
+	feedkeys()		stellt Zeichen in die Vorauseingabe-Schleife
+	input()			holt eine Zeile vom Benutzer
+	inputlist()		lässt den Benutzer einen Eintrag aus einer
+				Liste auswählen
+	inputsecret()		holt eine Zeile vom Benutzer ohne sie
+				anzuzeigen
+	inputdialog()		holt eine Zeile vom Benutzer in einem Dialog
+	inputsave()		speichert und löscht Vorauseingabe
+	inputrestore()		stellt die Vorauseingabe wieder her
+
+GUI:
+	getfontname()		liefert den Namen des aktuell benutzten
+				Schriftstils
+	getwinposx()		X-Position des GUI-Vim-Fensters
+	getwinposy()		Y-Position des GUI-Vim-Fensters
+
+Vim-Server:
+	serverlist()		gibt eine Liste von Server-Namen zurück
+	remote_send()		sendet Befehlszeichen an einen Vim-Server
+	remote_expr()		wertet einen Ausdruck in einem Vim-Server aus
+	server2client()		sendet eine Antwort an einen Client eines
+				Vim-Servers
+	remote_peek()		prüft, ob es eine Antwort von einem Vim-Server
+				gibt
+	remote_read()		liest eine Antwort von einem Vim-Server
+	foreground()		bewegt das Vim-Fenster in den Vordergrund
+	remote_foreground()	bewegt das Fenster des Vim-Servers in den
+				Vordergrund
+
+Fenster-Größe und -Position:
+	winheight()		liefert die Höhe eines bestimmten Fensters
+	winwidth()		liefert die Breite eines bestimmten Fensters
+	winrestcmd()		gibt Befehl zurück, um Fenstergrößen
+				wiederherzustellen
+	winsaveview()		liefert Ansicht des aktuellen Fensters
+	winrestview()		stellt gespeicherte Ansicht des aktuellen
+				Fensters wieder her
+
+Verschiedenes:
+	mode()			liefert aktuelle Editiermodus
+	visualmode()		der letzte benutzte visuelle Modus
+	hasmapto()		prüft, ob eine Belegung existiert
+	mapcheck()		prüft, ob eine passende Belegung existiert
+	maparg()		liefert die rechte Seite einer Belegung
+	exists()		prüft, ob eine Variable, Funktion usw.
+				existiert
+	has()			prüft, ob ein Feature von Vim unterstützt wird
+	changenr()		gibt die Nummer der letzten Änderung zurück
+	cscope_connection()	prüft, ob eine CScope-Anbindung existiert
+	did_filetype()		prüft, ob ein automatischer Befehl eines
+				Dateityps benutzt wurde
+	eventhandler()		prüft, ob von einem Ereignis-Behandler
+				aufgerufen wurde
+	getpid()		liefert Prozess-ID von Vim
+
+	libcall()		ruft eine Funktion in einer externen
+				Bibliothek auf
+	libcallnr()		ebenso, gibt eine Zahl zurück
+
+	getreg()		liefert Inhalt eines Registers
+	getregtype()		liefert Typ eines Registers
+	setreg()		setzt Inhalt und Typ eines Registers
+
+	taglist()		liefert Liste passender Tags
+	tagfiles()		liefert Liste von Tag-Dateien
+
+==============================================================================
+*41.7*	Eine Funktion definieren
+
+Vim ermöglicht es Ihnen, eigene Funktionen zu definieren.  Die grundlegende
+Funktions-Deklaration beginnt wie folgt: >
+
+	:function {name}({var1}, {var2}, ...)
+	:  {body}
+	:endfunction
+<
+	Anmerkung:
+	Funktions-Namen müssen mit einem Großbuchstaben beginnen.
+
+Lassen Sie uns eine kurze Funktion definieren, die die kleinere von zwei
+Zahlen zurückgibt.  Sie beginnt mit dieser Zeile: >
+
+	:function Min(num1, num2)
+
+Dies sagt Vim, dass die Funktion »Min« heißt und zwei Argumente nimmt, »num1«
+und »num2«.
+   Als erstes müssen wir überprüfen, welche Zahl kleiner ist:
+   >
+	:  if a:num1 < a:num2
+
+Das besondere Präfix »a:« sagt Vim, dass die Variable ein
+Funktions-Argument ist.  Weisen wir nun der Variablen »smaller« den Wert
+der kleineren Zahl zu: >
+
+	:  if a:num1 < a:num2
+	:    let smaller = a:num1
+	:  else
+	:    let smaller = a:num2
+	:  endif
+
+Die Variable »smaller« ist eine lokale Variable.  In einer Funktion
+benutzte Variablen sind lokal, solange ihnen nicht etwas wie »g:«, »a:«
+oder »s:« vorangestellt wird.
+
+	Anmerkung:
+	Um innerhalb einer Funktion auf eine globale Variable zuzugreifen,
+	müssen Sie ihr »g:« voranstellen.  Also wird innerhalb einer Funktion
+	»g:today« für die globale Funktion »today« verwandt, und ein einfaches
+	»today« ist eine andere Variable, die zur Funktion lokal ist.
+
+Nun benutzen wir die Anweisung »:return« um die kleinere Zahl an den
+Aufrufer zurückzugeben.  Die Funktion endet schließlich: >
+
+	:  return smaller
+	:endfunction
+
+Die vollständige Funktions-Definition ist wie folgt: >
+
+	:function Min(num1, num2)
+	:  if a:num1 < a:num2
+	:    let smaller = a:num1
+	:  else
+	:    let smaller = a:num2
+	:  endif
+	:  return smaller
+	:endfunction
+
+Für Leute, die kurze Funktionen mögen, leistet dies dasselbe: >
+
+	:function Min(num1, num2)
+	:  if a:num1 < a:num2
+	:    return a:num1
+	:  endif
+	:  return a:num2
+	:endfunction
+
+Eine benutzerdefinierte Funktion wird genauso aufgerufen, wie eine
+eingebaute.  Nur der Name ist verschieden.  Die Funktion Min kann so benutzt
+werden: >
+
+	:echo Min(5, 8)
+
+Erst jetzt wird die Funktion ausgeführt, und die Zeilen werden von Vim
+interpretiert.  Falls es Fehler gibt, wie das Nutzen einer undefinierten
+Variablen oder Funktion, erhalten Sie nun eine Fehlermeldung.  Beim
+Definieren der Funktion werden diese Fehler nicht erkannt.
+
+Wenn eine Funktion »:endfunction« erreicht, oder »:return« wird ohne
+Argument benutzt, gibt die Funktion Null zurück.
+
+Um eine bereits existierende Funktion erneut zu definieren, benutzen Sie
+»:function« mit dem !-Modifikator: >
+
+	:function!  Min(num1, num2, num3)
+
+
+EINEN BEREICH BENUTZEN
+
+Dem Befehl »:call« kann ein Zeilenbereich gegeben werden.  Dies kann eine von
+zwei Bedeutungen haben.  Wenn eine Funktion mit dem Schlüsselwort »range«
+definiert wurde, kümmert sie sich selbst um den Zeilenbereich.
+  Der Funktion werden die Variablen »a:firstline« und »a:lastline« übergeben.
+Diese haben die Zeilennummern des Bereiches, mit dem die Funktion aufgerufen
+wurde.  Beispiel: >
+
+	:function Count_words() range
+	:  let lnum = a:firstline
+	:  let n = 0
+	:  while lnum <= a:lastline
+	:    let n = n + Wordcount(getline(lnum))
+	:    let lnum = lnum + 1
+	:  endwhile
+	:  echo "found " . n . " words"
+	:endfunction
+
+Sie können diese Funktion aufrufen mit: >
+
+	:10,30call Count_words()
+
+Sie wird einmal ausgeführt und gibt die Anzahl an Worten aus.
+   Die andere Möglichkeit einen Zeilenbereich zu benutzen ist, eine Funktion
+ohne das Schlüsselwort »range« zu definieren.  Die Funktion wird einmal für
+jede Zeile in dem Bereich aufgerufen, mit dem Cursor in dieser Zeile.
+Beispiel: >
+
+	:function  Number()
+	:  echo "line " . line(".") . " contains: " . getline(".")
+	:endfunction
+
+Falls Sie diese Funktion aufrufen mit: >
+
+	:10,15call Number()
+
+wird die Funktion sechs Mal aufgerufen.
+
+
+VARIABLE ANZAHL VON ARGUMENTEN
+
+Vim ermöglicht Ihnen, Funktionen zu definieren, die eine variable Anzahl
+von Argumenten haben.  Der folgende Befehl zum Beispiel definiert eine
+Funktion, die ein Argument haben muss (start), und die bis zu 20
+zusätzliche Argumente haben kann: >
+
+	:function Show(start, ...)
+
+Die Variable »a:1« enthält das erste optionale Argument, »a:2« das zweite und
+so weiter.  Die Variable »a:0« enthält die Anzahl von zusätzlichen Argumenten
+   Zum Beispiel: >
+
+	:function Show(start, ...)
+	:  echohl Title
+	:  echo "Show is " . a:start
+	:  echohl None
+	:  let index = 1
+	:  while index <= a:0
+	:    echo "  Arg " . index . " is " . a:{index}
+	:    let index = index + 1
+	:  endwhile
+	:  echo ""
+	:endfunction
+
+Dies benutzt den Befehl »:echohl« um die für den nächsten
+»:echo«-Befehl benutzte Hervorhebung anzugeben.  »:echohl None«
+deaktiviert dies.  Der Befehl »:echon« funktioniert wie »:echo«, gibt
+aber keinen Zeilenumbruch aus.
+
+Sie können auch die Variable a:000 benutzen.  Dies ist eine Liste aller
+optionalen Argumente.  Siehe |a:000|.
+
+
+FUNKTIONEN AUFLISTEN
+
+Der Befehl »:function« listet die Namen und Argumente aller
+benutzerdefinierten Funktionen auf: >
+
+	:function
+<	function Show(start, ...) ~
+	function GetVimIndent() ~
+	function SetSyn(name) ~
+
+Um zu sehen, was eine Funktion tut, benutzen Sie ihren Namen als Argument
+für »:function«: >
+
+	:function SetSyn
+<	1     if &syntax == '' ~
+	2       let &syntax = a:name ~
+	3     endif ~
+	   endfunction ~
+
+
+FEHLERSUCHE
+
+Die Zeilennummer ist nützlich, wenn Sie eine Fehlermeldung erhalten, oder bei
+der Fehlersuche.  Siehe |debug-scripts| für den Fehlersuche-Modus.
+   Sie können auch die Option 'verbose' auf 12 oder höher setzen, um alle
+Funktionsaufrufe zu sehen.  Setzen Sie sie auf 15 oder höher um jede
+ausgeführte Zeile zu sehen.
+
+
+EINE FUNKTION LÖSCHEN
+
+Um die Funktion Show() zu löschen: >
+
+	:delfunction Show
+
+Sie erhalten eine Fehlermeldung, wenn die Funktion nicht existiert.
+
+
+FUNKTIONSREFERENZEN
+
+Manchmal kann es nützlich sein, eine Variable auf die eine oder andere
+Funktion zeigen zu lassen.  Dies können Sie mit der Funktion function()
+machen.  Sie verwandelt den Namen einer Funktion in eine Referenz: >
+
+	:let result = 0		" or 1
+	:function! Right()
+	:  return 'Right!'
+	:endfunc
+	:function! Wrong()
+	:  return 'Wrong!'
+	:endfunc
+	:
+	:if result == 1
+	:  let Afunc = function('Right')
+	:else
+	:  let Afunc = function('Wrong')
+	:endif
+	:echo call(Afunc, [])
+<	Wrong! ~
+
+Beachten Sie, dass der Name einer Variablen, die eine Funktionsreferenz
+enthält, mit einem Großbuchstaben beginnen muss.  Andernfalls könnte er mit
+dem Namen einer eingebauten Funktion verwechselt werden.
+   Der Weg, eine Funktion aufzurufen, die eine Variable referenziert, ist es,
+die Funktion call() zu benutzen.  Ihr erstes Argument ist die
+Funktionsreferenz, das zweite Argument ist eine Liste von Argumenten.
+
+Funktionsreferenzen sind am nützlichsten in Kombination mit einem
+Wörterbuch, was im nächsten Abschnitt erklärt wird.
+
+==============================================================================
+*41.8*	Listen und Wörterbücher
+
+Bis jetzt haben wir die Basistypen String (Zeichenkette) und Number (Zahl)
+benutzt.  Vim unterstützt auch zwei zusammengesetzte Typen: Liste und
+Dictionary (Wörterbuch).
+
+Eine Liste ist eine geordnete Folge von Dinge.  Die Dinge können jeglicher
+Art von Wert sein, also können Sie eine Liste von Zahlen machen, eine Liste
+von Listen, und sogar eine Liste von gemischten Elementen.  Um eine Liste
+mit drei Zeichenketten zu erzeugen: >
+
+	:let alist = ['aap', 'mies', 'noot']
+
+Die Listenelemente sind in eckige Klammern eingeschlossen und durch Kommata
+getrennt.  Um eine leere Liste zu erzeugen: >
+
+	:let alist = []
+
+Mit der Funktion add() können Sie einer Liste Elemente hinzufügen: >
+
+	:let alist = []
+	:call add(alist, 'foo')
+	:call add(alist, 'bar')
+	:echo alist
+<	['foo', 'bar'] ~
+
+Listen-Konkatenation wird mit + erledigt: >
+
+	:echo alist + ['foo', 'bar']
+<	['foo', 'bar', 'foo', 'bar'] ~
+
+Oder falls Sie eine Liste direkt erweitern wollen: >
+
+	:let alist = ['one']
+	:call extend(alist, ['two', 'three'])
+	:echo alist
+<	['one', 'two', 'three'] ~
+
+Beachten Sie, dass das Benutzen von add() einen anderen Effekt hat: >
+
+	:let alist = ['one']
+	:call add(alist, ['two', 'three'])
+	:echo alist
+<	['one', ['two', 'three']] ~
+
+Das zweite Argument von add() wird als einzelnes Element hinzugefügt.
+
+
+FOR-SCHLEIFE
+
+Eines der netten Dinge, die Sie mit einer Liste machen können, ist über
+sie zu iterieren: >
+
+	:let alist = ['one', 'two', 'three']
+	:for n in alist
+	:  echo n
+	:endfor
+<	one ~
+	two ~
+	three ~
+
+Dies läuft über jedes Element in der Liste »alist«, wobei es den Wert
+der Variablen »n« zuweist.  Die generische Form einer For-Schleife ist: >
+
+	:for {varname} in {listexpression}
+	:  {commands}
+	:endfor
+
+Um über eine bestimmte Anzahl von Malen zu laufen, brauchen Sie eine Liste
+einer bestimmten Länge.  Die Funktion range() erzeugt einem eine: >
+
+	:for a in range(3)
+	:  echo a
+	:endfor
+<	0 ~
+	1 ~
+	2 ~
+
+Beachten Sie, dass das erste Element der Liste, die range() produziert, Null
+ist, also ist das letzte Element eins weniger als die Länge der Liste.
+   Sie können auch den Maximalwert angeben, den Inkrement, und sogar rückwärts
+laufen: >
+
+	:for a in range(8, 4, -2)
+	:  echo a
+	:endfor
+<	8 ~
+	6 ~
+	4 ~
+
+Ein nützlicheres Beispiel, das über Zeilen im Puffer läuft: >
+
+	:for line in getline(1, 20)
+	:  if line =~ "Date: "
+	:    echo matchstr(line, 'Date: \zs.*')
+	:  endif
+	:endfor
+
+Dies schaut sich Zeilen 1 bis 20 (einschließlich) an, und gibt jedes dort
+gefundene Datum aus.
+
+
+WÖRTERBÜCHER
+
+Ein Wörterbuch speichert Schlüssel-Wert-Paare.  Man kann schnell einen
+Wert nachschlagen, wenn man den Schlüssel kennt.  Ein Wörterbuch wird mit
+geschwungenen Klammern erzeugt: >
+
+	:let uk2nl = {'one': 'een', 'two': 'twee', 'three': 'drie'}
+
+Nun kann man Wörter nachschlagen, indem man den Schlüssel in eckige
+Klammern setzt: >
+
+	:echo uk2nl['two']
+<	twee ~
+
+Die generische Form für das Definieren eines Wörterbuchs ist: >
+
+	{<key> : <value>, ...}
+
+Ein leeres Wörterbuch ist eines ohne Schlüssel: >
+
+	{}
+
+Die Möglichkeiten mit Wörterbüchern sind zahlreich.  Ebenso gibt es für
+sie verschiedene Funktionen.  Zum Beispiel kann man eine Liste der
+Schlüssel beziehen und sie durchlaufen: >
+
+	:for key in keys(uk2nl)
+	:  echo key
+	:endfor
+<	three ~
+	one ~
+	two ~
+
+Sie werden bemerken, dass die Schlüssel nicht geordnet sind.  Man kann die
+Liste sortieren, um eine bestimmte Ordnung zu erhalten: >
+
+	:for key in sort(keys(uk2nl))
+	:  echo key
+	:endfor
+<	one ~
+	three ~
+	two ~
+
+Aber man kann nie die Reihenfolge zurückbekommen, in der die Elemente
+definiert wurden.  Dafür muss man eine Liste benutzen, sie speichert
+Elemente in einer geordneten Reihenfolge.
+
+
+WÖRTERBUCHFUNKTIONEN
+
+Die Elemente in einem Wörterbuch können normalerweise mit einem Index in
+eckigen Klammern bezogen werden: >
+
+	:echo uk2nl['one']
+<	een ~
+
+Eine Methode, die dasselbe tut, aber ohne so viele Zeichen: >
+
+	:echo uk2nl.one
+<	een ~
+
+Dies funktioniert nur für einen Schlüssel, der aus ASCII-Buchstaben,
+Ziffern und dem Unterstrich besteht.  Auf diese Weise kann man auch einen
+neuen Wert zuweisen: >
+
+	:let uk2nl.four = 'vier'
+	:echo uk2nl
+<	{'three': 'drie', 'four': 'vier', 'one': 'een', 'two': 'twee'} ~
+
+Und nun zu etwas Besonderem: man kann direkt eine Funktion definieren und
+eine Referenz auf diese in dem Wörterbuch speichern: >
+
+	:function uk2nl.translate(line) dict
+	:  return join(map(split(a:line), 'get(self, v:val, "???")'))
+	:endfunction
+
+Probieren wir dies zunächst einmal aus: >
+
+	:echo uk2nl.translate('three two five one')
+<	drie twee ??? een ~
+
+Das erste Besondere, das Sie bemerken, ist das »dict« am Ende der Zeile
+mit
+»:function«.  Dies markiert die Funktion als aus einem Wörterbuch zu benutzen.
+Die Variable »self« referenziert dann dieses Wörterbuch.
+   Schauen wir uns den komplizierten Rückgabebefehl nun Stück für Stück an: >
+
+	split(a:line)
+
+Die Funktion split() nimmt eine Zeichenkette, schneidet sie in
+leerzeichen-getrennte Wörter, und gibt eine Liste mit diesen Wörtern
+zurück.  Im Beispiel also: >
+
+	:echo split('three two five one')
+<	['three', 'two', 'five', 'one'] ~
+
+Diese Liste ist das erste Argument an die Funktion map().  Diese geht durch
+die Liste, und wertet dabei ihr zweite Argument mit »v:val« auf den Wert
+jedes Elements gesetzt.  Dies ist eine Abkürzung zum Benutzen einer
+For-Schleife.  Dieser Befehl: >
+
+	:let alist = map(split(a:line), 'get(self, v:val, "???")')
+
+ist gleichbedeutend mit: >
+
+	:let alist = split(a:line)
+	:for idx in range(len(alist))
+	:  let alist[idx] = get(self, alist[idx], "???")
+	:endfor
+
+Die Funktion get() prüft, ob ein Schlüssel in einem Wörterbuch vorhanden
+ist.  Falls er es ist, wird der Wert zurückgegeben.  Falls nicht, wird ein
+Standardwert zurückgegeben, im Beispiel '???'.  Dies ist eine bequeme Art
+Situationen zu behandeln, in denen ein Schlüssel möglicherweise nicht
+vorhanden ist und man keine Fehlermeldung möchte.
+
+Die Funktion join() tut das Gegenteil von split(): sie fügt eine Liste von
+Wörtern zusammen, wobei sie ein Leerzeichen zwischen sie setzt.
+  Diese Kombination von split(), map() und join() ist eine schöne Möglichkeit,
+eine Zeile von Wörtern auf eine sehr kompakte Weise zu filtern.
+
+
+OBJEKT-ORIENTIERTE PROGRAMMIERUNG
+
+Jetzt, da Sie sowohl Werte wie Funktionen in ein Wörterbuch stecken können,
+können Sie ein Wörterbuch tatsächlich wie ein Objekt benutzen.
+   Oben haben wir ein Wörterbuch benutzt, um Holländisch in Englisch zu
+übersetzen.  Wir könnten dasselbe für andere Sprachen tun wollen.  Machen wir
+zunächst ein Objekt (aka Wörterbuch), das die Übersetzungsfunktion hat, aber
+keine Wörter zum Übersetzen: >
+
+	:let transdict = {}
+	:function transdict.translate(line) dict
+	:  return join(map(split(a:line), 'get(self.words, v:val, "???")'))
+	:endfunction
+
+Es ist ein wenig verschieden von der Funktion oben, indem wir 'self.words'
+benutzen, um Wort-Übersetzungen nachzuschlagen.  Aber wir haben keine
+self.words.  Also könnte man dies eine abstrakte Klasse nennen.
+
+Nun können wir ein Übersetzungsobjekt für Holländisch instanziieren: >
+
+	:let uk2nl = copy(transdict)
+	:let uk2nl.words = {'one': 'een', 'two': 'twee', 'three': 'drie'}
+	:echo uk2nl.translate('three one')
+<	drie een ~
+
+Und einen Übersetzer für Deutsch: >
+
+	:let uk2de = copy(transdict)
+	:let uk2de.words = {'one': 'ein', 'two': 'zwei', 'three': 'drei'}
+	:echo uk2de.translate('three one')
+<	drei ein ~
+
+Sie sehen, dass die Funktion copy() benutzt wird, um eine Kopie des
+Wörterbuchs »transdict« zu machen, und dann diese Kopie verändert wird,
+um die Worte aufzunehmen.  Das Original bleibt natürlich dasselbe.
+
+Nun kann man einen Schritt weiter gehen, und den bevorzugten Übersetzer
+verwenden: >
+
+	:if $LANG =~ "de"
+	:  let trans = uk2de
+	:else
+	:  let trans = uk2nl
+	:endif
+	:echo trans.translate('one two three')
+<	een twee drie ~
+
+Hier referenziert »trans« eines der beiden Objekte (Wörterbücher).  Es
+wird keine Kopie gemacht.  Mehr über Listen- und Wörterbuch-Identität
+kann unter |list-identity| und |dict-identity| gefunden werden.
+
+Nun könnte man eine Sprache benutzen, die nicht unterstützt wird.  Man
+kann die Funktion translate() überstimmen, nichts zu machen: >
+
+	:let uk2uk = copy(transdict)
+	:function! uk2uk.translate(line)
+	:  return a:line
+	:endfunction
+	:echo uk2uk.translate('three one wladiwostok')
+<	three one wladiwostok ~
+
+Beachten Sie, dass ein ! benutzt wurde, um die bestehende Funktionsreferenz
+zu überschreiben.  Nun benutze »uk2uk«, falls keine erkannte Sprache
+gefunden wird: >
+
+	:if $LANG =~ "de"
+	:  let trans = uk2de
+	:elseif $LANG =~ "nl"
+	:  let trans = uk2nl
+	:else
+	:  let trans = uk2uk
+	:endif
+	:echo trans.translate('one two three')
+<	one two three ~
+
+Zum Weiterlesen siehe |Lists| und |Dictionaries|.
+
+==============================================================================
+*41.9*	Ausnahmen
+
+Beginnen wir mit einem Beispiel: >
+
+	:try
+	:   read ~/templates/pascal.tmpl
+	:catch /E484:/
+	:   echo "Sorry, the Pascal template file cannot be found."
+	:endtry
+
+Der Befehl »:read« scheitert, falls die Datei nicht existiert.  Statt eine
+Fehlermeldung zu generieren, fängt dieser Code den Fehler auf und gibt dem
+Benutzer stattdessen eine nette Meldung.
+
+Für die Befehle zwischen »:try« und »:endtry« werden Fehler in
+Ausnahmen verwandelt.  Eine Ausnahme ist eine Zeichenkette.  Im Falle eines
+Fehlers enthält die Zeichenkette die Fehlernummer.  Und jede Fehlermeldung
+hat eine Nummer.  In diesem Fall enthält der Fehler, den wir auffangen,
+»E484:«.  Diese Nummer bleibt garantiert dieselbe (der Text kann sich
+ändern, z.B. übersetzt werden).
+
+Wenn der Befehl »:read« einen anderen Fehler verursacht, passt das Muster
+»E484:« nicht.  Also wird diese Ausnahme nicht aufgefangen und resultiert
+in der üblichen Fehlermeldung.
+
+Sie sind vielleicht versucht, dies zu tun: >
+
+	:try
+	:   read ~/templates/pascal.tmpl
+	:catch
+	:   echo "Sorry, the Pascal template file cannot be found."
+	:endtry
+
+Dies bedeutet, dass alle Fehler aufgefangen werden.  Dann aber sehen Sie
+keine nützlichen Fehler, so wie »E21: Kann keine Änderungen machen,
+'modifiable' ist aus«.
+
+Ein weiterer nützlicher Mechanismus ist der Befehl »:finally«: >
+
+	:let tmp = tempname()
+	:try
+	:   exe ".,$write " . tmp
+	:   exe "!filter " . tmp
+	:   .,$delete
+	:   exe "$read " . tmp
+	:finally
+	:   call delete(tmp)
+	:endtry
+
+Dies filtert die Zeilen vom Cursor bis zum Dateiende durch das Programm
+»filter«, das einen Dateinamen als Argument nimmt.  Egal, ob das Filtern
+funktioniert, etwas geht zwischen »:try« und »:finally« schief, oder der
+Benutzer bricht das Filtern ab, indem er CTRL-C drückt, »call
+delete(tmp)« wird jederzeit ausgeführt.  Dies stellt sicher, dass man
+nicht die temporäre Datei zurücklässt.
+
+Weiter Informationen über Ausnahme-Behandlung können im Referenzhandbuch
+gefunden werden: |exception-handling|.
+
+==============================================================================
+*41.10*	Verschiedene Anmerkungen
+
+Hier ist eine Sammlung von Elementen, die auf Vim-Skripte zutreffen.  Sie
+werden auch anderswo erwähnt, aber formen eine nette Prüfliste.
+
+Das Zeichen für das Zeilenende hängt vom System ab.  Unix benutzt ein
+einzelnes <NL>-Zeichen.  Unter MS-DOS, Windows, OS/2 und so wird <CR><LF>
+benutzt.  Dies ist wichtig, wenn Belegungen verwandt werden, die in einem
+<CR> enden.  Siehe |:source_crnl|.
+
+
+WHITE SPACE
+
+Leere Zeilen sind erlaubt und werden ignoriert.
+
+Führende Leerzeichen und Tabulatoren werden immer ignoriert.  Der
+Whitespace zwischen Parametern (z.B zwischen dem 'set' und dem 'cpoptions'
+im Beispiel unten) wird reduziert auf ein Leerzeichen und spielt die Rolle
+eines Trenners, der Whitespace nach dem letzten (sichtbaren) Zeichen kann
+situationsabhängig ignoriert werden oder auch nicht, siehe unten.
+
+Für einen »:set«-Befehl, der das Zeichen »=« (gleich) enthält, so wie
+in: >
+
+	:set cpoptions    =aABceFst
+
+wird der Whitespace unmittelbar vor dem Zeichen »=« ignoriert.  Aber es
+darf kein Whitespace nach dem »=«-Zeichen sein!
+
+Um ein Whitespace-Zeichen im Wert einer Option zu verwenden, muss es durch
+einen »\« (Backslash) geschützt werden, wie in dem folgenden Beispiel: >
+
+	:set tags=my\ nice\ file
+
+Dasselbe Bespiel geschrieben als >
+
+	:set tags=my nice file
+
+resultiert in einem Fehler, weil es interpretiert wird als: >
+
+	:set tags=my
+	:set nice
+	:set file
+
+
+KOMMENTARE
+
+Das Zeichen " (das doppelte Anführungszeichen) leitet einen Kommentar ein.
+Alles nach und einschließlich dieses Zeichens bis zum Zeilenende wird als
+Kommentar betrachtet und ignoriert, außer bei Befehlen, die keine
+Kommentare beachten, wie in den Beispielen unten gezeigt.  Ein Kommentar
+kann an jeder Zeichen-Position auf der Zeile beginnen.
+
+Bei einigen Befehlen gibt es »Fallen« mit Kommentaren.  Beispiele: >
+
+	:abbrev dev development		" shorthand
+	:map <F3> o#include		" insert include
+	:execute cmd			" do it
+	:!ls *.c			" list C files
+
+Die Abkürzung 'dev' wird expandiert zu 'development     " shorthand'.  Die
+Belegung von <F3> ist tatsächlich die ganze Zeile nach dem 'o# ....',
+einschließlich dem '" insert include'.  Der »execute«-Befehl ergibt einen
+Fehler.  Der »!«-Befehl schickt alles nach ihm an die Shell, was einen Fehler
+wegen eines unbalancierten '"'-Zeichens verursacht.
+   Nach den Befehlen »:map«, »:abbreviate«, »:execute« und »!« kann kein
+Kommentar stehen (es gibt ein paar Befehle mehr mit dieser Einschränkung).
+Für die Befehle »:map«, »:abbreviate« und »:execute« gibt es einen Trick: >
+
+	:abbrev dev development|" shorthand
+	:map <F3> o#include|" insert include
+	:execute cmd			|" do it
+
+Mit dem Zeichen '|' wird ein Befehl vom nächsten getrennt.  Und dieses nächste
+Zeichen ist nur ein Kommentar.  Für den letzten Befehl müssen Sie zwei Dinge
+machen: |:execute| und '|' benutzen: >
+
+	:exe '!ls *.c'			|" list C files
+
+Man beachte, das hier kein Leerzeichen vor dem '|' in der Abkürzung und der
+Belegung ist.  Bei diesen Befehlen wird jedes Zeichen bis zum Zeilenende
+oder dem '|' einbezogen.  Als Konsequenz dieses Verhaltens sieht man nicht
+immer, das nachstehende Leerzeichen einbezogen werden: >
+
+	:map <F4> o#include  
+
+Um diese Probleme zu erkennen, können Sie die Option 'list' setzen, wenn
+Sie vimrc-Dateien editieren.
+
+Für Unix gibt es eine besondere Möglichkeit, eine Zeile zu kommentieren, die
+es erlaubt, ein Vim-Skript ausführbar zu machen: >
+
+	#!/usr/bin/env vim -S
+	echo "this is a Vim script"
+	quit
+
+Der Befehl »#« selbst listet eine Zeile mit der Zeilennummer.  Das
+Hinzufügen eines Ausrufezeichen lässt ihn nichts machen, so dass Sie den
+Shell-Befehl hinzufügen können, um den Rest der Datei auszuführen. |:#!|
+|-S|
+
+
+FALLEN
+
+Ein noch größeres Problem ensteht im folgenden Beispiel: >
+
+	:map ,ab o#include
+	:unmap ,ab 
+
+Hier funktioniert der unmap-Befehl nich, weil er versucht »,ab «
+freizugeben.  Dies existiert nicht als Belegungsfolge.  Ein Fehler wird
+ausgegeben, der sehr schwer zu identifizieren ist, weil das nachstehende
+Leerzeichen in »:unmap ,ab « nicht sichtbar ist.
+
+Und es ist dasselbe wie wenn man einen Kommentar nach einem »unmap«-Befehl
+benutzt: >
+
+	:unmap ,ab     " comment
+
+Hier wird der Teil, der Kommentar, ist ignoriert.  Vim versucht dennoch
+»,ab     «, freizugeben, was nicht existiert.  Wir schreiben es um als: >
+
+	:unmap ,ab|    " comment
+
+
+DIE ANSICHT WIEDERHERSTELLEN
+
+Manchmal will man eine Änderung machen und dahin zurück gehen, wo der Cursor
+war.  Die relative Position wiederherstellen wäre auch nett, so dass dieselbe
+Zeile die oberste im Fenster ist.
+   Dieses Beispiel kopiert die aktuelle Zeile, setzt sie über die erste Zeile
+der Datei, und stellt dann die Ansicht wieder her: >
+
+	map ,p ma"aYHmbgg"aP`bzt`a
+
+Was dies tut: >
+	ma"aYHmbgg"aP`bzt`a
+<	ma			setze Markierung a bei Cursor-Position
+	  "aY			kopiere aktuelle Zeile in Register a
+	     Hmb		gehe zur obersten Zeile im Fenster und setze
+				dort Markierung b
+		gg		gehe zur ersten Zeile der Datei
+		  "aP		setze kopierte Zeile über sie
+		     `b		gehe zurück zur obersten Zeile der Anzeige
+		       zt	positioniere den Text im Fenster wie vorher
+			 `a	gehe zurück zur gespeicherten Cursor-Position
+
+
+PAKETIERUNG
+
+Um zu vermeiden, dass Ihre Funktionsnamen Funktionen beeinflussen, die Sie von
+anderen erhalten, benutzen Sie dieses Schema:
+
+- Stellen Sie jedem Funktionsnamen eine einzigartige Zeichenkette voran.  Ich
+  benutze oft eine Abkürzung.  Zum Beispiel wird »OW_« für Funktionen des
+Optionsfensters verwandt.
+
+- Packen Sie die Definitionen Ihrer Funktionen in eine Datei.  Setzen Sie eine
+  globale Variable, die anzeigt, dass die Funktionen geladen wurden.  Wenn die
+  Datei erneut eingelesen wird, geben Sie erst die Funktionen frei.
+
+Beispiel: >
+
+	" Dies ist das Paket XXX
+
+	if exists("XXX_loaded")
+	  delfun XXX_one
+	  delfun XXX_two
+	endif
+
+	function XXX_one(a)
+		... body of function ...
+	endfun
+
+	function XXX_two(b)
+		... body of function ...
+	endfun
+
+	let XXX_loaded = 1
+
+==============================================================================
+*41.11*	Ein Plugin schreiben				*write-plugin*
+
+Sie können ein Vim-Skript so schreiben, dass viele Leute es benutzen
+können.  Dies nennt sich Plugin.  Vim-Benutzer können Ihr Skript in ihr
+Plugin-Verzeichnis legen und seine Features auf der Stelle nutzen
+|add-plugin|.
+
+Tatsächlich gibt es zwei Typen von Plugins:
+
+ globale Plugins: Für alle Typen von Dateien.
+Dateityp-Plugins: Nur für Dateien eines bestimmten Typs.
+
+In diesem Abschnitt wird der erste Typ erklärt.  Die meisten Elemente sind
+auch relevant für das Schreiben von Dateityp-Plugins.  Die Spezifika für
+Dateityp-Plugins folgen im nächsten Abschnitt |write-filetype-plugin|.
+
+
+NAME
+
+Zuallererst müssen Sie einen Namen für Ihr Plugin wählen.  Die Features,
+die von dem Plugin bereitgestellt werden werden, sollten anhand seines
+Namens klar sein.  Und es sollte unwahrscheinlich sein, dass jemand anderes
+ein Plugin mit demselben Namen schreibt, das etwas anderes tut.  Und bitte
+begrenzen Sie den Namen auf acht Zeichen, um Probleme auf alten
+Windows-Systemen zu vermeiden.
+
+Ein Skript, welches Tipp-Fehler korrigiert, könnte »typecorr.vim« genannt
+werden.  Wir benutzen es hier als Beispiel.
+
+Damit das Plugin für jeden funktioniert, sollte es einigen wenigen
+Richtlinien folgen.  Diese werden Schritt-für-Schritt erklärt.  Das
+komplette Beispiel-Plugin steht am Ende.
+
+
+KÖRPER
+
+Lassen Sie uns mit dem Körper des Plugins beginnen, den Zeilen, die
+tatsächlich die Arbeit erledigen: >
+
+ 14	iabbrev teh the
+ 15	iabbrev otehr other
+ 16	iabbrev wnat want
+ 17	iabbrev synchronisation
+ 18		\ synchronization
+ 19	let s:count = 4
+
+Die tatsächliche Liste sollte selbstverständlich viel länger sein.
+
+Die Zeilennummern wurden nur hinzugefügt, um ein Paar Dinge zu erläutern,
+übernehmen Sie sie nicht in Ihre Plugin-Datei!
+
+
+KOPF
+
+Sie werden dem Plugin vermutlich neue Korrekturen hinzufügen, und bald
+haben Sie mehrere Versionen herumliegen.  Und wenn Sie die Datei verteilen,
+werden die Leute wissen wollen, wer dieses wundervolle Plugin schrieb und
+wohin sie Anmerkungen schicken können.  Deshalb stellen Sie Kopfzeilen an
+den Beginn Ihres Plugins: >
+
+  1	" Vim global plugin for correcting typing mistakes
+  2	" Last Change:	2000 Oct 15
+  3	" Maintainer:	Bram Moolenaar <Bram@vim.org>
+
+Über Copyright und Lizensierung: Da Plugins sehr nützlich sind, und es
+kaum wert ist, ihre Verteilung zu begrenzen, erwägen Sie bitte, Ihr Plugin
+entweder in die Public-Domain oder unter die Vim-Lizenz |license| zu
+stellen.  Eine kurze Zeile hierüber nahe des Beginn des Plugins sollte
+ausreichend sein.  Beispiel: >
+
+  4	" License:	This file is placed in the public domain.
+
+
+ZEILENFORTSETZUNG, SEITENEFFEKTE VERMEIDEN		*use-cpo-save*
+
+Oben in Zeile 18 wird der Mechanismus der Zeilen-Fortsetzung benutzt
+|line-continuation|.  Benutzer, bei denen 'compatible' gesetzt ist, werden
+hier Probleme, eine Fehlermeldung bekommen.  Wir können nicht einfach
+'compatible' neu setzen, weil dies viele Seiteneffekte hat.  Um dies zu
+vermeiden, setzen wir die Option 'cpoptions' auf ihren Vim-Standardwert und
+stellen sie später wieder her.  Das erlaubt die Benutzung von
+Zeilen-Fortsetzung und lässt das Skript für die meisten Leute
+funktionieren.  Es wird so gemacht: >
+
+ 11	let s:save_cpo = &cpo
+ 12	set cpo&vim
+ ..
+ 42	let &cpo = s:save_cpo
+
+Wir speichern zunächst den alten Wert von 'cpoptions' in der Variablen
+s:save_cpo.  Am Ende des Plugins wird dieser Wert wiederhergestellt.
+
+Beachten Sie, dass eine skript-lokale Variable benutzt wird |s:var|.  Eine
+globale Variable könnte bereits für etwas anderes in Gebrauch sein.
+Benutzen Sie immer skript-lokale Variablen für Dinge, die nur in dem Skript
+benutzt werden.
+
+
+NICHT LADEN
+
+Es ist möglich, dass ein Nutzer nicht immer dieses Plugin laden möchte.
+Oder der System-Administrator hat es in das system-weite Plugin-Verzeichnis
+gelegt, aber ein Nutzer hat sein eigenes Plugin, das er nutzen möchte.
+Dann muss der Nutzer eine Möglichkeit haben, das Laden dieses bestimmten
+Plugins zu deaktivieren.  Dies macht es möglich: >
+
+  6	if exists("loaded_typecorr")
+  7	  finish
+  8	endif
+  9	let loaded_typecorr = 1
+
+Dies vermeidet es auch, dass wenn das Skript zweimal geladen wird, dass es
+Fehlermeldungen für das Neudefinieren von Funktionen und Schwierigkeiten
+bei automatischen Befehlen, die zweimal hinzugefügt werden, verursacht.
+
+
+BELEGUNGEN
+
+Nun lassen Sie uns das Plugin interessanter machen: Wir fügen eine Belegung
+hinzu, die eine Korrektur für das Wort unter dem Cursor hinzufügt.  Um dem
+Nutzer zu erlauben, zu definieren, welche Tasten eine Belegung in einem
+Plugin benutzt, kann das Element <Leader> benutzt werden: >
+
+ 22	  map <unique> <Leader>a  <Plug>TypecorrAdd
+
+Das »<Plug>TypecorrAdd« macht die Arbeit, mehr darüber weiter unten.
+
+Der Nutzer kann die Variable »mapleader« auf die Tastenfolge setzen, mit
+der er diese Belegung starten lassen möchte.  Falls der Nutzer also dies
+macht: >
+
+	let mapleader = "_"
+
+definiert die Belegung »_a«.  Falls der Nutzer dies nicht tat, wird der
+Standardwert benutzt, was ein Backslash ist.  Dann wird eine Belegung für
+»\a« definiert.
+
+Beachten Sie, dass <unique> benutzt wird, dies verursacht eine
+Fehlermeldung, falls die Belegung der Tastenfolge bereits
+existiert. |:map-<unique>|
+
+Aber was, falls der Nutzer seine eigene Tastenfolge definieren möchte? Wir
+können dies mit folgendem Mechanismus erlauben: >
+
+ 21	if !hasmapto('<Plug>TypecorrAdd')
+ 22	  map <unique> <Leader>a  <Plug>TypecorrAdd
+ 23	endif
+
+Dies prüft, ob eine Belegung von »<Plug>TypecorrAdd« bereits existiert,
+und definiert die Belegung von »<Leader>a« nur dann, falls nicht.  Der
+Nutzer hat nun die Möglichkeit, dies in seine vimrc zu packen: >
+
+	map ,c  <Plug>TypecorrAdd
+
+Dann ist die belegte Tastenfolge »,c« statt »_a« oder »\a«.
+
+
+STÜCKE
+
+Wenn ein Skript länger wird, möchte man oft die Arbeit in Portionen
+aufteilen.  Man kann hierfür Funktionen oder Belegungen benutzen.  Aber man
+will nicht, dass diese Funktionen oder Belegungen andere Skripte
+beeinflussen.  Man könnte zum Beispiel eine Funktion Add() definieren, aber
+ein anderes Skript könnte versuchen, dieselbe Funktion zu definieren.  Um
+dies zu vermeiden, definieren wir die Funktion lokal zum Skript, indem wir
+ihr »s:« voranstellen.
+
+Wir definieren eine Funktion, die eine neue Tipp-Korrektur hinzufügt: >
+
+ 30	function s:Add(from, correct)
+ 31	  let to = input("type the correction for " . a:from . ": ")
+ 32	  exe ":iabbrev " . a:from . " " . to
+ ..
+ 36	endfunction
+
+Jetzt können wir innerhalb des Skripts die Funktion s:Add() aufrufen.
+Falls ein anderes Skript ebenfalls s:Add() definiert, ist sie lokal zu jenem
+Skript und kann nur von dem Skript aufgerufen werden, in dem sie definiert
+wurde.  Es kann auch eine globale Funktion Add() geben (ohne »s:«, die
+wieder eine andere Funktion ist.
+
+<SID> kann mit Belegungen verwandt werden.  Es generiert eine Skript-ID, die
+das aktuelle Skript identifiziert.  In unserem Tipp-Korrektur-Plugin
+verwenden wir es folgendermaßen: >
+
+ 24	noremap <unique> <script> <Plug>TypecorrAdd  <SID>Add
+ ..
+ 28	noremap <SID>Add  :call <SID>Add(expand("<cword>"), 1)<CR>
+
+Wenn also ein Nutzer »\a« tippt, wird diese Folge aufgerufen: >
+
+	\a  ->  <Plug>TypecorrAdd  ->  <SID>Add  ->  :call <SID>Add()
+
+Falls ein anderes Skript auch <SID>Add belegen würde, würde es eine andere
+Skript-ID erhalten, also eine andere Belegung definieren.
+
+Beachten Sie, dass wir hier <SID>Add() statt s:Add benutzen.  Das kommt
+daher, dass die Belegung vom Nutzer getippt wird, also außerhalb des
+Skripts.  Das <SID> wird in die Skript-ID übersetzt, so dass Vim weiß, in
+welchem Skript er nach der Funktion Add() schauen muss.
+
+Dies ist ein Bisschen kompliziert, aber es ist nötig, damit das Plugin mit
+anderen Skripten zusammenarbeitet.  Die Grundregel ist, dass Sie <SID>Add()
+in Belegungen verwenden, und s:Add() an anderen Stellen (dem Skript selbst,
+automatischen Befehlen, Benutzerbefehlen).
+
+Wir können auch einen Menü-Eintrag hinzufügen, der dasselbe tut wie die
+Belegung: >
+
+ 26	noremenu <script> Plugin.Add\ Correction      <SID>Add
+
+Das Menü »Plugin« ist das empfohlene, um Menü-Element für Plugins
+hinzuzufügen.  In diesem Falle wird nur ein Element benutzt.  Wenn man
+mehrere Elemente hinzufügt, empfiehlt sich das Erzeugen eines Untermenüs.
+Zum Beispiel könnte »Plugin.CVS« für ein Plugin verwendet werden, das
+CVS-Operationen anbietet: »Plugin.CVS.checkin«, »Plugin.CVS.checkout«
+usw.
+
+Beachten Sie, dass in Zeile 28 »:noremap« benutzt wird, um zu vermeiden,
+dass irgendwelche anderen Belegungen Probleme verursachen.  Jemand könnte
+zum Beispiel »:call« neu belegt haben.  In Zeile 24 benutzen wir auch
+»:noremap«, aber wir wollen »<SID>Add« neu belegt haben.  Deshalb wird
+hier »<script>« benutzt.  Dies erlaubt nur Belegungen, die lokal zum
+Skript sind |:map-<script>|.  Dasselbe passiert in Zeile 26 für
+»:noremenu« |:menu-<script>|.
+
+
+<SID> UND <Plug>					*using-<Plug>*
+
+Sowohl <SID> und <Plug> werden benutzt, um zu vermeiden, dass Belegungen von
+getippten Tasten Belegungen beeinflussen, die nur von anderen Belegungen zu
+verwenden sind.  Beachten Sie den Unterschied zwischen <SID> und <Plug>:
+
+<Plug>	ist außerhalb des Skripts sichtbar.  Es wird für Belegungen verwendet,
+	die der Nutzer möglicherweise mit einer Tastenfolge belegen will.
+	<Plug> ist ein besonderer Code, den eine getippte Taste nie
+	produzieren wird.
+	Um es sehr unwahrscheinlich zu machen, dass andere Plugins dieselbe
+	Zeichenfolge verwenden, benutze man diese Struktur:
+	<Plug> Skriptname Belegungsname.
+	In unserem Beispiel ist der Skriptname »Typecorr« und der
+	Belegungsname »Add«.  Dies ergibt »<Plug>TypecorrAdd«.  Nur das erste
+	Zeichen von Skriptname und Belegungsname ist groß, so dass wir sehen
+	können, wo der Belegungsname beginnt.
+
+<SID>	ist die Skript-ID, ein eindeutiger Identifikator für ein Skript.
+	Intern übersetzt Vim <SID> in »<SNR>123_«, wobei »123« jede Zahl sein
+	kann.  Also hat eine Funktion »<SID>Add()« einen Name »<SNR>11_Add()«
+	in einem Skript und »<SNR>22_Add()« in einem anderen.  Sie können dies
+	sehen, falls Sie den Befehl »:function« benutzen, um eine Liste von
+	Funktionen zu erhalten.  Die Übersetzung von <SID> in Belegungen ist
+	exakt dieselbe, deshalb können Sie eine skript-lokale Funktion von
+	einer Belegung aufrufen.
+
+
+BENUTZERBEFEHLE
+
+Nun lassen Sie uns einen Benutzerbefehl hinzufügen, um eine Korrektur
+hinzuzufügen: >
+
+ 38	if !exists(":Correct")
+ 39	  command -nargs=1  Correct  :call s:Add(<q-args>, 0)
+ 40	endif
+
+Der Benutzerbefehl wird nur definiert, falls kein Befehl desselben Namen
+bereits existiert.  Andernfalls würden wir hier einen Fehler bekommen.  Den
+existierenden Benutzerbefehl mit »:command!« nichtig machen, ist keine
+gute Idee, dies könnte den Nutzer sich fragen lassen, warum der Befehl, den
+er selbst definiert hat, nicht funktioniert |:command|.
+
+
+SKRIPT-VARIABLEN
+
+Wenn eine Variable mit »s:« beginnt, ist sie eine Skript-Variable.  Sie
+kann nur innerhalb eines Skripts verwendet werden.  Außerhalb des Skripts
+ist sie nicht sichtbar.  Dies vermeidet Probleme, wenn derselbe
+Variablenname in verschiedenen Skripten verwendet wird.  Die Variablen
+werden solange gehalten, wie Vim läuft.  Und dieselben Variablen werden
+verwandt, wenn dasselbe Skript wieder eingelesen wird |s:var|.
+
+Der Spaß an der Sache ist, dass diese Variablen auch in Funktionen,
+automatischen Befehlen und Benutzerbefehlen, die in dem Skript definiert
+werden, verwendet werden können.  In unserem Beispiel können wir ein Paar
+Zeilen hinzufügen, um die Anzahl der Korrekturen zu zählen: >
+
+ 19	let s:count = 4
+ ..
+ 30	function s:Add(from, correct)
+ ..
+ 34	  let s:count = s:count + 1
+ 35	  echo s:count . " corrections now"
+ 36	endfunction
+
+Zunächst wird s:count im Skript selbst auf 4 initialisiert.  Wenn später
+die Funktion s:Add() aufgerufen wird, inkremiert sie s:count.  Es ist nicht
+entscheidend von wo die Funktion aufgerufen wurde, weil sie im Skript
+definiert wurde, benutzt sie die lokalen Variablen dieses Skripts.
+
+
+DAS ERGEBNIS
+
+Hier ist das komplette sich ergebende Beispiel: >
+
+  1	" Vim global plugin for correcting typing mistakes
+  2	" Last Change:	2000 Oct 15
+  3	" Maintainer:	Bram Moolenaar <Bram@vim.org>
+  4	" License:	This file is placed in the public domain.
+  5
+  6	if exists("loaded_typecorr")
+  7	  finish
+  8	endif
+  9	let loaded_typecorr = 1
+ 10
+ 11	let s:save_cpo = &cpo
+ 12	set cpo&vim
+ 13
+ 14	iabbrev teh the
+ 15	iabbrev otehr other
+ 16	iabbrev wnat want
+ 17	iabbrev synchronisation
+ 18		\ synchronization
+ 19	let s:count = 4
+ 20
+ 21	if !hasmapto('<Plug>TypecorrAdd')
+ 22	  map <unique> <Leader>a  <Plug>TypecorrAdd
+ 23	endif
+ 24	noremap <unique> <script> <Plug>TypecorrAdd  <SID>Add
+ 25
+ 26	noremenu <script> Plugin.Add\ Correction      <SID>Add
+ 27
+ 28	noremap <SID>Add  :call <SID>Add(expand("<cword>"), 1)<CR>
+ 29
+ 30	function s:Add(from, correct)
+ 31	  let to = input("type the correction for " . a:from . ": ")
+ 32	  exe ":iabbrev " . a:from . " " . to
+ 33	  if a:correct | exe "normal viws\<C-R>\" \b\e" | endif
+ 34	  let s:count = s:count + 1
+ 35	  echo s:count . " corrections now"
+ 36	endfunction
+ 37
+ 38	if !exists(":Correct")
+ 39	  command -nargs=1  Correct  :call s:Add(<q-args>, 0)
+ 40	endif
+ 41
+ 42	let &cpo = s:save_cpo
+
+Zeile 33 wurde noch nicht erklärt.  Sie verbindet die neue Korrektur mit
+dem Wort unter dem Cursor.  Der Befehl |:normal| wird benutzt, um die neue
+Abkürzung zu benutzen.  Beachten Sie, das Belegungen und Abkürzungen hier
+expandiert werden, selbst wenn die Funktion von einer Belegung aufgerufen
+wurde, die mit »:noremap« definiert wurde.
+
+Es empfiehlt sich, für die Option 'fileformat' »unix« zu benutzen.  Die
+Vim-Skripte funktionieren dann überall.  Skripte, bei denen 'fileformat'
+auf »dos« gesetzt ist, funktionieren nicht unter Unix.  Siehe auch
+|:source_crnl|.  Um sicher zu sein, dass sie richtig gesetzt ist, tun Sie
+dies vor dem Schreiben der Datei: >
+
+	:set fileformat=unix
+
+
+DOKUMENTATION						*write-local-help*
+
+Es ist eine gute Idee, auch etwas Dokumentation für das Plugin zu
+schreiben.  Besonders, wenn sein Verhalten von dem Nutzer geändert werden
+kann.  Für die Installation siehe |add-local-help|.
+
+Hier ist ein einfaches Beispiel für eine Plugin-Hilfe-Datei namens
+»typecorr.txt«
+
+  1	*typecorr.txt*	Plugin for correcting typing mistakes
+  2
+  3	If you make typing mistakes, this plugin will have them corrected
+  4	automatically.
+  5
+  6	There are currently only a few corrections.  Add your own if you like.
+  7
+  8	Mappings:
+  9	<Leader>a   or   <Plug>TypecorrAdd
+ 10		Add a correction for the word under the cursor.
+ 11
+ 12	Commands:
+ 13	:Correct {word}
+ 14		Add a correction for {word}.
+ 15
+ 16							*typecorr-settings*
+ 17	This plugin doesn't have any settings.
+
+Die erste Zeile ist tatsächlich die einzige, bei der das Format zählt.
+Sie wird aus der Hilfe-Datei extrahiert, um in den Abschnitt »LOKALE
+ERGÄNZUNGEN« von help.txt gepackt zu werden |local-additions|.  Der erste
+»*« muss in der ersten Spalte der ersten Zeile sein.  Nach dem Hinzufügen
+Ihrer Hilfe-Datei machen Sie »:help« und prüfen, ob sich die Einträge
+hübsch aufreihen.
+
+Sie können weitere Tags in ** in Ihrer Hilfe-Datei hinzufügen.  Aber seien
+Sie vorsichtig, existierende Hilfe-Tags nicht zu verwenden.  In den meisten
+werden Sie wahrscheinlich den Namen Ihres Plugins verwenden, wie
+»typecorr-settings« im Beispiel.
+
+Referenzen auf andere Teile der Hilfe in || zu verwenden empfiehlt sich.
+Dies macht es dem Nutzer leicht, verwandte Hilfe zu finden.
+
+
+DATEITYP-ERKENNUNG					*plugin-filetype*
+
+Falls Ihr Dateityp noch nicht von Vim erkannt wird, sollten Sie einen
+Schnipsel zur Dateityp-Erkennung in einer gesonderten Datei erstellen.  Es
+ist für gewöhnlich ein automatischer Befehl der den Dateityp setzt, wenn
+der Dateiname auf ein Muster passt.  Beispiel: >
+
+	au BufNewFile,BufRead *.foo			set filetype=foofoo
+
+Schreiben sie diese einzeilige Datei als »ftdetect/foofoo.vim« in das
+erste Verzeichnis, das in 'runtimepath' erscheint.  Unter Unix wäre dies
+»~/.vim/ftdetect/foofoo.vim«.  Konvention ist, dass der Name des Dateityps
+für den Skriptnamen verwandt wird.
+
+Sie können kompliziertere Tests machen, falls Sie mögen, zum Beispiel den
+Inhalt der Datei inspizieren, um die Sprache zu erkennen.  Siehe auch
+|new-filetyp|
+
+
+ZUSAMMENFASSUNG						*plugin-special*
+
+Zusammenfassung besonderer Dinge, die man in einem Plugin benutzen kann:
+
+s:name			Variablen lokal zum Skript.
+
+<SID>			Skript-ID, benutzt für Belegungen und Funktionen lokal
+			zum Skript.
+
+hasmapto()		Funktion, um zu testen, ob der Nutzer bereits eine
+			Belegung für Funktionalität, die das Skript bietet,
+			definiert hat.
+
+<Leader>		Wert von »mapleader«, die der Nutzer als die Tasten
+			definiert, mit denen Plugin-Belegungen beginnen.
+
+:map <unique>		Gibt eine Warnung, falls eine Belegung bereits
+			existiert
+
+:noremap <script>	Benutze nur Belegungen lokal zum Skript, nicht globale.
+
+exists(":Cmd")		Prüft, ob ein Benutzerbefehl bereits existiert.
+
+==============================================================================
+*41.12*	Ein Dateityp-Plugin schreiben	*write-filetype-plugin* *ftplugin*
+
+Ein Dateityp-Plugin ist wie ein globales, außer dass es nur für den
+aktuellen Puffer Optionen setzt und Belegungen definiert.  Siehe
+|add-filetype-plugin| für Informationen, wie dieser Plugin-Typ benutzt
+wird.
+
+Zunächst lesen Sie den Abschnitt über globale Plugins oben |41.11|.  Alles
+dort gesagte gilt auch für Dateityp-Plugins.  Es gibt ein Paar Extras, die
+hier erklärt werden.  Essenziell ist, dass ein Dateityp-Plugin sich nur auf
+den aktuellen Puffer auswirken sollte.
+
+
+DEAKTIVIEREN
+
+Falls Sie ein Dateityp-Plugin schreiben, das von vielen Leuten genutzt
+werden soll, brauchen sie eine Möglichkeit, sein Laden zu deaktivieren.
+Stellen Sie dies an den Anfang des Plugins: >
+
+	" Only do this when not done yet for this buffer
+	if exists("b:did_ftplugin")
+	  finish
+	endif
+	let b:did_ftplugin = 1
+
+Dies muss auch verwandt werden, um zu vermeiden, dass dasselbe Plugin
+zweimal für denselben Puffer ausgeführt wird (passiert, wenn man den
+Befehl »:edit« ohne Argumente benutzt).
+
+Jetzt können Nutzer das Laden des Standard-Plugins komplett deaktivieren,
+indem sie ein Dateityp-Plugin mit nur dieser Zeile machen: >
+
+	let b:did_ftplugin = 1
+
+Dies erfordert, dass das Verzeichnis für das Dateityp-Plugin in
+'runtimepath' vor $VIMRUNTIME kommt!
+
+Falls Sie das Standard-Plugin benutzen möchten, aber eine der Einstellungen
+aufheben möchten, können sie die unterschiedliche Einstellung in ein
+Skript schreiben: >
+
+	setlocal textwidth=70
+
+Nun schreiben Sie dies in das Verzeichnis »after«, so dass es nach dem
+verteilten Dateityp-Plugin »vim.vim« eingelesen wird |after-directory|.
+Unter Unix wäre dies »~/.vim/after/ftplugin/vim.vim«.  Beachten Sie, dass
+das Standard-Plugin »b:did_ftplugin« setzt, dies wird hier aber nicht
+beachtet.
+
+
+OPTIONEN
+
+Um sicherzustellen, dass das Dateityp-Plugin nur den aktuellen Puffer
+beeinflusst, benutzen Sie den Befehl >
+
+	:setlocal
+
+um Optionen zu setzen.  Und setzen Sie nur Optionen, die lokal zu einem
+Puffer sind (siehe die Hilfe zu der Option, um dies zu prüfen).  Wenn
+|:setlocal| für globale Optionen oder Optionen, die lokal zu einem Fenster
+sind, benutzt wird, ändert sich der Wert für viele Puffer, und das ist
+nicht, was ein Dateityp-Plugin tun sollte.
+
+Wenn eine Option einen Wert hat, der eine Liste von Flags oder Elementen
+ist, erwägen Sie »+=« und »-=« zu nutzen, um den existierenden Wert zu
+behalten.  Seien Sie sich bewusst, dass der Nutzer einen Optionswert bereits
+verändert haben kann.  Zuerst auf den Standardwert setzen und dann ändern
+ist oft eine gute Sache.  Beispiel: >
+
+	:setlocal formatoptions& formatoptions+=ro
+
+
+BELEGUNGEN
+
+Um sicherzustellen, dass Belegungen nur in dem aktuellen Puffer
+funktionieren, benutzen Sie den Befehl >
+
+	:map <buffer>
+
+Dies muss mit der zweischrittigen Belegung, wie oben erklärt, kombiniert
+werden.  Ein Beispiel wie man Funktionalität in einem Dateityp-Plugin
+definiert: >
+
+	if !hasmapto('<Plug>JavaImport')
+	  map <buffer> <unique> <LocalLeader>i <Plug>JavaImport
+	endif
+	noremap <buffer> <unique> <Plug>JavaImport oimport ""<Left><Esc>
+
+|hasmapto()| wird benutzt um zu prüfen, ob der Nutzer bereits eine Belegung
+auf <Plug>JavaImport definiert hat.  Falls nicht, definiert das
+Dateityp-Plugin die Standard-Belegung.  Diese beginnt mit |<LocalLeader>|,
+was dem Nutzer erlaubt, die Taste(n), mit denen Belegungen aus
+Dateityp-Plugins beginnen, zu wählen.  Der Standard ist ein Backslash.
+»<unique>« wird benutzt, um eine Fehlermeldung auszugeben, falls die
+Belegung bereits existiert oder mit anderen Belegungen überlappt.
+|:noremap| wird benutzt, um zu vermeiden, dass jegliche anderen Belegungen,
+die der Nutzer definiert hat,Einfluss nehmen.  Man will möglicherweise
+»:noremap <script>« verwenden, um das Neubelegen von Belegungen, die in
+diesem Skript definiert wurden und mit <SID> beginnen, zu erlauben.
+
+Der Nutzer muss die Möglichkeit haben, die Belegungen in einem
+Dateityp-Plugin zu deaktivieren, ohne alles zu deaktivieren.  Hier ein
+Beispiel, wie dies in einem Plugin für den Dateityp Email gemacht wird: >
+
+	" Add mappings, unless the user didn't want this.
+	if !exists("no_plugin_maps") && !exists("no_mail_maps")
+	  " Quote text by inserting "> "
+	  if !hasmapto('<Plug>MailQuote')
+	    vmap <buffer> <LocalLeader>q <Plug>MailQuote
+	    nmap <buffer> <LocalLeader>q <Plug>MailQuote
+	  endif
+	  vnoremap <buffer> <Plug>MailQuote :s/^/> /<CR>
+	  nnoremap <buffer> <Plug>MailQuote :.,$s/^/> /<CR>
+	endif
+
+Zwei globale Variablen werden benutzt:
+no_plugin_maps		deaktiviert Belegungen für alle Dateityp-Plugins
+no_mail_maps		deaktiviert Belegungen für einen bestimmten Dateityp
+
+
+BENUTZERBEFEHLE
+
+Um einen Benutzerbefehl für einen bestimmten Dateityp hinzufügen, so dass
+er nur in einem Puffer benutzt werden kann, benutzen Sie das Argument
+»-buffer« von |:command|.  Beispiel: >
+
+	:command -buffer  Make  make %:r.s
+
+
+VARIABLEN
+
+Ein Dateityp-Plugin wird für jeden Puffer seines Typs eingelesen.  Lokale
+Skript-Variablen |s:var| werden zwischen allen Aufrufen geteilt.  Benutzen
+Sie lokale Puffer-Variablen |b:var|, falls Sie eine Variable für einen
+bestimmten Puffer wollen.
+
+
+FUNKTIONEN
+
+Wenn eine Funktion definiert wird, braucht dies nur einmal getan werden.
+Aber das Dateityp-Plugin wird jedesmal eingelesen, wenn eine Datei dieses
+Dateityps geöffnet wird.  Dieses Konstrukt stellt sicher, dass die Funktion
+nur einmal definiert wird: >
+
+	:if !exists("*s:Func")
+	:  function s:Func(arg)
+	:    ...
+	:  endfunction
+	:endif
+<
+
+UNDO							*undo_ftplugin*
+
+Wenn der Benutzer »:setfiletype xyz« eingibt, sollte der Effekt des
+vorigen Dateityps zurückgenommen werden.  Setzen Sie die Variable
+b:undo_ftplugin auf die Befehle, die die Einstellungen in Ihrem
+Dateityp-Plugin zurücknehmen.  Beispiel: >
+
+	let b:undo_ftplugin = "setlocal fo< com< tw< commentstring<"
+		\ . "| unlet b:match_ignorecase b:match_words b:match_skip"
+
+Das Benutzen von »:setlocal« mit »<« nach dem Optionsnamen setzt die
+Option auf ihren globalen Wert.  Das ist meistens das Beste, um den
+Optionswert neu zu setzen.
+
+Dies erfordert das Entfernen des Flags »C« von 'cpoptions' um
+Zeilenfortsetzung zu erlauben, wie oben erwähnt |use-cpo-save|.
+
+
+DATEINAME
+
+Der Dateityp muss in den Dateinamen einbezogen werden |ftplugin-name|.
+Benutzen Sie eine von diesen drei Formen:
+
+	.../ftplugin/stuff.vim
+	.../ftplugin/stuff_foo.vim
+	.../ftplugin/stuff/bar.vim
+
+»stuff« ist der Dateityp, »foo« und »bar« sind beliebige Namen.
+
+
+ZUSAMMENFASSUNG						*ftplugin-special*
+
+Zusammenfassung besonderer Dinge, die man in einem Dateityp-Plugin nutzen
+kann:
+
+<LocalLeader>		Wert von »maplocalleader«, welche der Nutzer als die
+			Tasten definiert, mit denen Dateityp-Plugin-Belegungen
+			beginnen.
+
+:map <buffer>		Definiere eine Belegung lokal zum Puffer.
+
+:noremap <script>	Belege nur Belegungen neu, die in diesem Skript
+			definiert wurden und mit <SID> beginnen.
+
+:setlocal		Setze eine Option nur für den aktuellen Puffer.
+
+:command -buffer	Definiere einen Benutzerbefehl lokal zum Puffer.
+
+exists("*s:Func")	Prüfe ob eine Funktion bereits definiert wurde.
+
+Siehe auch |plugin-special|, die besonderen Dinge, die für alle Plugins
+verwendet werden.
+
+==============================================================================
+*41.13*	Ein Kompiler-Plugin schreiben		*write-compiler-plugin*
+
+Ein Kompiler-Plugin setzt Optionen zum Gebrauch mit einem bestimmten
+Kompiler.  Der Nutzer kann es mit dem Befehl |:compiler| laden.
+Hauptsächlicher Gebrauch ist es, die Optionen 'errorformat' und 'makeprg'
+zu setzen.
+
+Am einfachsten ist es, auf Beispiele zu schauen.  Dieser Befehl editiert
+alle Standard-Kompiler-Plugins: >
+
+	:next $VIMRUNTIME/compiler/*.vim
+
+Benutzen Sie |:next|, um zur nächsten Plugin-Datei zu gelangen.
+
+Es gibt zwei besondere Elemente bei diesen Dateien.  Das erste ist ein
+Mechanismus, um einem Benutzer zu erlauben, die Standard-Datei zu
+überstimmen oder ihr hinzuzufügen.  Die Standard-Dateien beginnen mit: >
+
+	:if exists("current_compiler")
+	:  finish
+	:endif
+	:let current_compiler = "mine"
+
+Wenn Sie eine Kompiler-Datei schreiben und in Ihr persönliches
+Laufzeit-Verzeichnis legen (z.B. ~/.vim/compiler für Unix), setzen Sie die
+Variable »current_compiler«, um die Standard-Datei die Einstellungen
+überspringen zu lassen.
+							*:CompilerSet*
+Der zweite Mechanismus ist, »:set« für »:compiler!« und »:setlocal« für
+»:compiler« zu benutzen.  Vim definiert hierfür den Benutzerbefehl
+»:CompilerSet«.  Ältere Vim-Versionen tun dies jedoch nicht, also sollte Ihr
+Plugin ihn dann definieren.  Dies ist ein Beispiel: >
+
+  if exists(":CompilerSet") != 2
+    command -nargs=* CompilerSet setlocal <args>
+  endif
+  CompilerSet errorformat&		" use the default 'errorformat'
+  CompilerSet makeprg=nmake
+
+Wenn Sie ein Kompiler-Plugin für die Vim-Distribution oder für ein
+system-weites Laufzeit-Verzeichnis schreiben, benutzen Sie den oben
+erwähnten Mechanismus.  Wenn »current_compiler« bereits von einem
+Nutzer-Plugin gesetzt wurde, wird nichts getan.
+
+Wenn Sie ein Kompiler-Plugin schreiben, um Einstellungen eines
+Standard-Plugins zu überstimmen, prüfen Sie nicht »current_compiler«.
+Dieses Plugin soll als letztes geladen werden, also sollte es in einem
+Verzeichnis am Ende von 'runtimepath' stehen.  Für Unix könnte dies
+~/.vim/after/compiler sein.
+
+==============================================================================
+*41.14*	Ein Plugin so schreiben, dass es schnell lädt *write-plugin-quickload*
+
+Ein Plugin kann wachsen und ziemlich lang werden.  Die Start-Verzögerung
+kann merkbar werden, während Sie das Plugin kaum benutzen.  Dann ist es
+Zeit für ein Schnelllade-Plugin.
+
+Die Grundidee ist, dass das Plugin zweimal geladen wird.  Beim ersten Mal
+werden Benutzerbefehle und Belegungen definiert, die die Funktionalität
+anbieten.  Beim zweiten Mal werden die Funktion, die die Funktionalität
+implementieren, definiert.
+
+Es mag überraschend klingen, dass Schnellladen bedeutet, ein Skript zweimal
+zu laden.  Was wir meinen ist, dass es beim ersten Mal schnell lädt, die
+Masse des Skripts auf das zweite Mal verschiebend, was nur passiert, wenn
+man es tatsächlich benutzt.  Wenn Sie immer die Funktionalität benutzen,
+wird es tatsächlich langsamer!
+
+Beachten Sie, dass es seit Vim 7 eine Alternative gibt: benutzen Sie die
+Funktionalität |autoload| |41.15|.
+
+Das folgende Beispiel zeigt, wie es gemacht wird: >
+
+	" Vim global plugin for demonstrating quick loading
+	" Last Change:	2005 Feb 25
+	" Maintainer:	Bram Moolenaar <Bram@vim.org>
+	" License:	This file is placed in the public domain.
+
+	if !exists("s:did_load")
+		command -nargs=* BNRead  call BufNetRead(<f-args>)
+		map <F19> :call BufNetWrite('something')<CR>
+
+		let s:did_load = 1
+		exe 'au FuncUndefined BufNet* source ' . expand('<sfile>')
+		finish
+	endif
+
+	function BufNetRead(...)
+		echo 'BufNetRead(' . string(a:000) . ')'
+		" read functionality here
+	endfunction
+
+	function BufNetWrite(...)
+		echo 'BufNetWrite(' . string(a:000) . ')'
+		" write functionality here
+	endfunction
+
+Wenn das Skript zum ersten Mal geladen wird, ist »s:did_load« nicht
+gesetzt.  Die Befehle zwischen »if« und »endif« werden ausgeführt.
+Dies endet in einem Befehl |:finish|, also wird der Rest des Skripts nicht
+ausgeführt.
+
+Beim zweiten Mal, wenn das Skript geladen wird, existiert »s:did_load« und
+die Befehle nach dem »endif« werden ausgeführt.  Dies definiert die
+(möglicherweise langen) Funktionen BufNetRead() und BufNetWrite().
+
+Falls Sie dieses Skript in Ihr Plugin-Verzeichnis legen, führt Vim es beim
+Starten aus.  Dies ist die Folge von Ereignissen, die geschieht:
+
+1. Der Befehl »BNRead« Befehl wird definiert und die Taste <F19> wird
+   belegt, wenn das Skript beim Start eingelesen wird.  Ein automatischer
+   Befehl |FuncUndefined| wird definiert. Der Befehl »:finish« lässt das
+   Skript frühzeitig terminieren.
+
+2. Der Nutzer tippt den Befehl BNRead oder drückt die Taste <F19>.  Die
+   Funktion BufNetRead() oder BufNetWrite() wird aufgerufen.
+
+3. Vim kann die Funktion nicht finden und löst den automatischen Befehl
+   |FucUndefined| aus.  Weil das Muster »BufNet*« auf die aufgerufene
+   Funktion passt, wird der Befehl »source fname«.  »fname« ist gleich
+   dem Namen der Funktion, egal wo es liegt, weil es vom Expandieren von
+   »<sfile>« kommt (siehe |expand()|).
+
+4. Das Skript wird erneut eingelesen, die Variable »s:did_load« existiert,
+   und die Funktionen werden definiert.
+
+Beachten Sie, dass die Funktionen, die im Nachhinein geladen werden, auf das
+Muster in dem automatischen Befehl |FuncUndefined| passen.  Sie müssen
+sicherstellen, dass kein anderes Plugin Funktionen definiert, die auf dieses
+Muster passen.
+
+==============================================================================
+*41.15*	Bibliotheksskripte schreiben		*write-library-script*
+
+Einige Funktionalität wird an mehreren Stellen benötigt.  Wenn dies mehr
+als ein Paar Zeilen werden, möchten Sie sie in ein Skript packen und es von
+vielen Skripten aus benutzen.  Wir nennen dies eine Skript ein
+Bibliotheksskript.
+
+Ein Bibliotheksskript von Hand laden ist möglich, so lange wie Sie
+vermeiden, es zu laden, wenn dies bereits getan wurde.  Sie können dies mit
+der Funktion |exists()| machen.  Beispiel: >
+
+	if !exists('*MyLibFunction')
+	   runtime library/mylibscript.vim
+	endif
+	call MyLibFunction(arg)
+
+Hier müssen Sie wissen, dass MyLibFunction() in einem Skript
+»library/mylibscript.vim« in einem der Verzeichnisse in 'runtimepath'
+definiert ist.
+
+Um dies ein Bisschen einfacher zu machen, bietet Vim den Mechanismus
+autoload an.  Dann sieht das Beispiel so aus: >
+
+	call mylib#myfunction(arg)
+
+Das ist viel einfacher, oder nicht? Vim erkennt den Funktionsnamen und wenn
+sie nicht definiert ist, sucht er nach dem Skript »autoload/mylib.vim« im
+'runtimepath'.  Dieses Skript muss die Funktion »mylib#myfunction()«
+definieren.
+
+Sie können viele andere Funktionen in das Skript mylib.vim packen, Sie sind
+frei, Ihre Funktionen in Bibliotheksskripten zu organisieren.  Aber Sie
+müssen Funktionsnamen benutzen, bei denen der Teil vor dem '#' mit dem
+Skriptnamen übereinstimmt.  Andernfalls wüsste Vim nicht, welches Skript
+er laden muss.
+
+Falls Sie wirklich enthusiastisch werden und viele Bibliotheksskripte
+schreiben, mögen Sie Unterverzeichnisse verwenden wollen.  Beispiel: >
+
+	call netlib#ftp#read('somefile')
+
+Für Unix könnte das Bibliotheksskript, das für dies benutzt wird, sein:
+
+	~/.vim/autoload/netlib/ftp.vim
+
+Wo die Funktion wie folgt definiert wird: >
+
+	function netlib#ftp#read(fname)
+		"  Read the file fname through ftp
+	endfunction
+
+Beachten Sie, dass der Name, mit dem die Funktion definiert wird, exakt
+derselbe ist, wie der Name für das Aufrufen der Funktion.  Und der Teil vor
+dem letzten '#' stimmt genau mit dem Unterverzeichnis und Skriptnamen
+überein.
+
+Sie können denselben Mechanismus für Variablen verwenden: >
+
+	let weekdays = dutch#weekdays
+
+Die lädt das Skript »autoload/dutch.vim«, welches etwas enthalten sollte
+wie: >
+
+	let dutch#weekdays = ['zondag', 'maandag', 'dinsdag', 'woensdag',
+		\ 'donderdag', 'vrijdag', 'zaterdag']
+
+Zum Weiterlesen: |autoload|.
+
+==============================================================================
+*41.16*	Vim-Skripte verteilen			*distribute-script*
+
+Vim-Nutzer schauen auf der Vim-Webseite (http://www.vim.org/) nach
+Skripten.  Falls Sie etwas gemacht haben, das nützlich für andere ist,
+teilen Sie es!
+
+Vim-Skripte können auf jedem System benutzt werden.  Es könnte keinen
+Befehl tar oder gzip geben.  Falls Sie Dateien zusammen packen und/oder
+komprimieren möchten, empfiehlt sich das Werkzeug »zip«.
+
+Für äußerste Portabilität benutzen Sie Vim selbst, um Skript zusammen zu
+packen.  Dies kann mit dem Werkzeug Vimball gemacht werden.  Siehe
+|vimball|.
+
+Es ist gut, falls Sie eine Zeile hinzufügen, um automatisches Aktualisieren
+zu erlauben.  Siehe |glvs-plugins|.
+
+==============================================================================
+
+Nächstes Kapitel: |usr_42.txt| Neue Menüs hinzufügen
+
+Copyright: siehe |manual-copyright| vim:tw=78:ts=8:ft=help:norl:

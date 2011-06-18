@@ -1,0 +1,326 @@
+*usr_09.txt*	Für Vim Version 7.2.  Letzte Änderung: 2006-Apr-24
+
+		     VIM BENUTZERHANDBUCH - von Bram Moolenaar
+
+				Die GUI benutzen
+
+
+Vim arbeitet in einem gewöhnlichen Terminal.  GVim kann dasselbe leisten
+und ein wenig mehr.  Die GUI bietet Menüs, eine Werkzeugleiste, Rollbalken
+und andere Elemente.  Dieses Kapitel ist über diese Extras, die die GUI
+bietet.
+
+|09.1|	Teile der GUI
+|09.2|	Die Maus benutzen
+|09.3|	Die Zwischenablage
+|09.4|	Der Auswahlmodus
+
+Nächstes Kapitel: |usr_10.txt|  Große Änderungen machen
+ Voriges Kapitel: |usr_08.txt|  Fenster aufteilen
+Inhaltsübersicht: |usr_toc.txt|
+
+==============================================================================
+*09.1*	Teile der GUI
+
+Sie mögen ein Piktogramm auf Ihrem Desktop haben, das gVim startet.
+Ansonsten sollte es einer dieser Befehle tun: >
+
+	gvim datei.txt
+	vim -g datei.txt
+
+Falls dies nicht funktioniert, haben Sie keine Version von Vim mit GUI-
+Unterstützung.  Sie müssen zuerst eine installieren.
+   Vim öffnet ein Fenster und zeigt darin »datei.txt« an.  Wie das Fenster
+aussieht hängt von der Version von Vim ab.  Es sollte dem folgenden Bild
+ähneln (so weit dies in ASCII gezeigt werden kann!).
+
+	+-------------------------------------------------------+
+	| datei.txt + (~/dir) - VIM			      X |<-Fenstertitel
+	+-------------------------------------------------------+
+	| Datei Editieren Werkzeuge Syntax Puffer Ansicht Hilfe |<-Menüleiste
+	+-------------------------------------------------------+
+	| aaa  bbb  ccc  ddd  eee  fff	ggg  hhh  iii  jjj      |<-Werkzeuglst
+	| aaa  bbb  ccc  ddd  eee  fff	ggg  hhh  iii  jjj      |
+	+-------------------------------------------------------+
+	| file text					    | ^ |
+	| ~						    | # |
+	| ~						    | # |<- Rollleiste
+	| ~						    | # |
+	| ~						    | # |
+	| ~						    | # |
+	|						    | V |
+	+-------------------------------------------------------+
+
+Der meiste Raum wird von dem Dateitext eingenommen.  Dies zeigt die Datei in
+derselben Weise wie in einem Terminal.  Möglicherweise mit verschiedenen
+Farben und einer anderen Schriftart.
+
+
+DER FENSTERTITEL
+
+Ganz oben ist der Fenstertitel.  Diese wird von Ihrem Fenstersystem
+gezeichnet.  Vim setzt den Titel so, dass er den Namen der aktuellen Datei
+zeigt.  Zuerst kommt der Name der Datei.  Dann einige besondere Zeichen und
+das Verzeichnis der Datei in Klammern.  Diese besonderen Zeichen können
+vorkommen:
+
+	-	Die Datei kann nicht modifiziert werden (z.B. eine Hilfedatei)
+	+	Die Datei enthält Änderungen
+	=	Die Datei ist nur-lesbar
+	=+	Die Datei ist nur-lesbar, enthält dennoch Änderungen
+
+Falls nichts angezeigt wird, haben Sie eine gewöhnliche, ungeänderte Datei
+
+
+DIE MENÜLEISTE
+
+Sie wissen, wie Menüs funktionieren, richtig?  Vim hat die üblichen
+Elemente, und ein Paar mehr.  Gehen Sie durch sie durch, um eine Vorstellung
+zu bekommen, wofür Sie sie benutzen können.  Ein wichtiges Untermenü ist
+»Editieren/Globale Einstellungen«.  Sie finden diese Einträge:
+
+Werkzeugleiste ein- und ausschalten	Werkzeugleiste
+					erscheinen/verschwinden lassen
+Unteren Rollbalken ein- und ausschalten	Am unteren Fensterrand eine
+					Rollleiste erscheinen/verschwinden
+					lassen
+Linken Rollbalken ein- und ausschalten	Am linken Fensterrand eine
+					Rollleiste erscheinen/verschwinden
+					lassen
+Rechten Rollbalken ein- und ausschalten	Am rechten Fensterrand eine
+					Rollleiste erscheinen/verschwinden
+					lassen
+
+Auf den meisten System können Sie die Menüs ablösen.  Wählen sie den
+obersten Eintrag, den, der wie eine gestrichelte Linie aussieht.  Sie
+bekommen ein getrenntes Fenster mit den Einträgen des Menüs.  Es bleibt
+da, bis Sie das Fenster schließen.
+
+
+DIE WERKZEUGLEISTE
+
+Sie enthält Piktogramme für die am häufigsten benutzten Aktionen.
+Hoffentlich sind die Piktogramme selbsterklärend.  Es gibt Tooltips, um
+einen zusätzlichen Hinweis zu bekommen (bewegen Sie den Mauszeiger auf ein
+Piktogramm ohne zu klicken, und bewegen Sie ihn nicht für eine Sekunde).
+
+Der Menüpunkt »Editieren/Globale Einstellungen/Werkzeugleiste ein- und
+ausschalten« kann benutzt werden, um die Werkzeugleiste verschwinden zu
+lassen.  Falls Sie nie eine Werkzeugleiste wollen, benutzen Sie diesen
+Befehl in Ihrer vimrc-Datei: >
+
+	:set guioptions-=T
+
+Dies entfernt das Flag »T« aus der Option 'guioptions'.  Auch andere Teile
+der GUI können mit dieser Option aktiviert oder deaktiviert werden.  Siehe
+die Hilfe hierzu.
+
+
+DIE ROLLLEISTEN
+
+In der Voreinstellung gibt es eine Rollleiste an der rechten Seite.  Sie tut
+das offensichtliche.  Wenn Sie das Fenster teilen, erhält jedes Fenster
+seine eigene Rollleiste.
+   Sie können mit dem Menüpunkt »Editieren/Globale Einstellungen/Unteren
+Rollbalken ein- und ausschalten« eine horizontale Rollleiste erscheinen
+lassen.  Dies ist nützlich im Diff-Modus, oder wenn die Option 'wrap'
+gelöscht wurde (mehr dazu später).
+
+Wenn es vertikal geteilte Fenster gibt, haben nur die Fenster auf der rechten
+Seite eine Rollleiste.  Wenn Sie jedoch den Cursor in ein Fenster auf der
+linken Seite bewegen, ist es dieses, das die Rollleiste kontrolliert.  Es
+braucht ein wenig, sich daran zu gewöhnen.
+   Wenn Sie mit vertikal geteilten Fenstern arbeiten, erwägen Sie eine
+Rollleiste auf der linken Seite hinzuzufügen.  Dies kann über den Menüpunkt
+oder mit der Option 'guioptions' gemacht werden: >
+
+	:set guioptions+=l
+
+Dies fügt 'guioptions' das Flag »l« hinzu.
+
+==============================================================================
+*09.2*	Die Maus benutzen
+
+Standards sind wundervoll.  In Microsoft Windows können Sie die Maus benutzen,
+um Text auf eine standardisierte Weise auszuwählen.  Auch das X-Fenster-System
+hat einen Standard zur Benutzung der Maus.  Unglücklicherweise sind diese
+beiden Standards nicht dieselben.
+   Glücklicherweise können Sie Vim Ihren Bedürfnissen anpassen.  Sie können
+das Verhalten der Maus wie eine X-Fenster-System-Maus oder wie eine Microsoft
+Windows Maus funktionieren lassen.  Der folgende Befehl lässt die sich wie
+X-Fenster-System-Maus verhalten: >
+
+	:behave xterm
+
+Der folgende Befehl lässt die Maus wie eine Microsoft-Windows-Maus
+funktionieren: >
+
+	:behave mswin
+
+Das voreingestellte Verhalten der Maus auf Unix-System ist xterm.  Das
+voreingestellte Verhalten auf einem Microsoft-Windows-System wird während
+des Installationsprozesses ausgewählt.  Für Details, was die beiden
+Verhalten sind, siehe |:behave|.  Hier folgt eine Zusammenfassung.
+
+
+XTERM-MAUS-VERHALTEN
+
+Mausklick links		positioniere den Cursor
+Mausziehen links	wähle Text im visuellen Modus aus
+Mausklick mitte		füge Text aus der Zwischenablage ein
+Mausklick rechts	erweitere den ausgewählten Text bis zum Mauszeiger
+
+
+MSWIN-MAUS-VERHALTEN
+
+Mausklick links				den Cursor positionieren
+Mausziehen links			Text im Auswahlmodus auswählen (siehe
+					|09.4|)
+Mausklick links mit Umschalttaste	erweitere den ausgewählten Text bis
+					zum Mauszeiger
+Mausklick mitte				füge Text aus der Zwischenablage ein
+Mausklick rechts			zeige ein Pop-Up-Menü an
+
+
+Die Maus kann weiter justiert werden.  Sehen Sie sich diese Optionen an,
+falls Sie ändern wollen, wie die Maus funktioniert:
+
+	'mouse'			in welchem Modus die Maus von Vim benutzt wird
+	'mousemodel'		welchen Effekt ein Mausklick hat
+	'mousetime'		Zeit zwischen Klicken für einen Doppelklick
+	'mousehide'		verstecke die Maus während des Tippens
+	'selectmode'		ob die Maus visuellen oder Auswahl-Modus startet
+
+==============================================================================
+*09.3*	Die Zwischenablage
+
+In Abschnitt |04.7| wurde der grundlegende Gebrauch der Zwischenablage
+erklärt.  Über das X-Fenster-System gibt es etwas essenzielles zu
+erklären: Tatsächlich gibt es zwei Orte, um Text zwischen Programmen
+auszutauschen.  MS-Windows hat dies nicht.
+
+In X11 gibt es die »aktuelle Auswahl«.  Dies ist der Text, der aktuell
+hervorgehoben ist.  In Vim ist dies der visuelle Bereich (dies nimmt an, dass
+Sie die voreingestellten Optionseinstellungen benutzen).  Sie können diese
+Auswahl in einer anderen Anwendung ohne jegliche weitere Aktion einfügen.
+   Wählen Sie zum Beispiel in diesem Text ein paar Wörter mit der Maus aus.
+Vim schaltet in den visuellen Modus und hebt den Text hervor.  Jetzt starten
+Sie einen weiteren gVim, ohne einen Dateinamen, so dass er ein leeres
+Fenster anzeigt.  Klicken Sie den mittleren Mausknopf.  Der ausgewählte Text
+wird eingefügt.
+
+Die »aktuelle Auswahl« bleibt nur solange gültig bis anderer Text
+ausgewählt wird.  Nachdem Sie die Einfügung in dem anderen gVim
+vorgenommen haben, wählen Sie nun einige Zeichen in dem Fenster.  Sie
+bemerken, dass die Wörter, die vorher in dem anderen gVim ausgewählt waren
+anders dargestellt werden.  Dies bedeutet, dass sie nicht mehr in der
+aktuellen Auswahl sind.
+
+Sie brauchen den Text nicht mit der Maus auswählen, die Tastatur-Befehle
+für den visuellen Modus benutzen funktioniert genau so.
+
+
+DIE ECHTE ZWISCHENABLAGE
+
+Nun zu dem anderen Ort, über den Text ausgetauscht werden kann.  Wir nennen
+dies die »echte Zwischenablage«, um Verwirrung zu vermeiden.  Oft werden
+sowohl die »aktuelle Auswahl« wie auch die »echte Zwischenablage«
+Zwischenablage genannt,  Sie müssen sich daran gewöhnen.
+   Um Text in die echte Zwischenablage zu legen, wählen Sie ein Paar
+verschiedene Wörter in einem der gVims, die Sie laufen haben, aus.  Dann
+benutzen Sie den Menüpunkt »Editieren/Kopieren«.  Jetzt wurde der Text in die
+echte Zwischenablage kopiert.  Sie können dies nicht sehen, außer Sie haben
+eine Anwendung, die den Inhalt der Zwischenablage anzeigt (z.B. Klipper aus
+KDE).
+   Nun gehen Sie in den anderen gVim, positionieren den Cursor irgendwo und
+benutzen Sie den Menüpunkt »Editieren/Einfügen«.  Sie sehen, dass der Text aus
+der echten Zwischenablage eingefügt wird.
+
+BEIDE BENUTZEN
+
+Dieser Gebrauch von sowohl der »aktuellen Auswahl« und der »echten
+Zwischenablage« mag ein wenig verwirrend klingen.  Aber es ist sehr
+nützlich.  Lassen Sie uns das an einem Beispiel betrachten.  Nehmen Sie
+einen gVim mit einer Textdatei und vollführen Sie diese Aktionen:
+
+-  Wählen Sie zwei Wörter im visuellen Modus.
+-  Benutzen Sie den Menüpunkt »Editieren/Kopieren«, um diese Wörter in
+   die Zwischenablage zu bekommen.
+-  Wählen Sie ein anderes Wort im visuellen Modus aus.
+-  Benutzen Sie den Menüpunkt »Editieren/Einfügen«.  Was passiert ist,
+   dass das einzelne ausgewählte Wort durch die beiden Wörter aus der
+   Zwischenablage ersetzt wird.
+-  Bewegen Sie den den Mauszeiger irgendwo anders hin und klicken Sie den
+   mittleren Mausknopf.  Sie sehen, dass das Wort, das Sie gerade mit der
+   Zwischenablage überschrieben haben, hier einfügt wird.
+
+Falls Sie die »aktuelle Auswahl« und die »echte Zwischenablage« mit
+Sorgfalt gebrauchen, können Sie mit ihnen viel nützliches Editieren
+machen.
+
+
+DIE TASTATUR BENUTZEN
+
+Falls Sie die Maus nicht mögen, können Sie auf die aktuelle Auswahl und die
+echte Zwischenablage über zwei Register zugreifen.  Das Register »"*« ist für
+die aktuelle Auswahl.
+   Um Text die aktuelle Auswahl werden zu lassen, benutzen Sie den visuellen
+Modus.  Um zum Beispiel eine ganze Zeile auszuwählen, drücken Sie einfach »V«.
+   Um die aktuelle Auswahl vor dem Cursor einzufügen: >
+
+	"*P
+
+Beachten Sie den Großbuchstaben »P«.  Der Kleinbuchstabe »p« setzt den
+Text nach dem Cursor.
+
+Das Register »"+« wird für die echte Zwischenablage benutzt.  Um zum
+Beispiel von der Cursorposition bis zum Zeilenende in die Zwischenablage zu
+kopieren: >
+
+	"+y$
+
+Merke, »y« steht für »yank«, das Vims Kopierbefehl ist.
+   Um den Inhalt der echten Zwischenablage vor dem Cursor einzufügen: >
+
+	"+P
+
+Es ist dasselbe wie für die aktuelle Auswahl, aber benutzt das
+Plus-Register (+) statt des Stern-Registers (*).
+
+==============================================================================
+*09.4*	Der Auswahlmodus
+
+Und nun etwas, das häufiger unter MS-Windows als unter X11 benutzt wird.
+Aber beide können es.  Sie kennen bereits den visuellen Modus.  Der
+Auswahlmodus ist wie der visuelle Modus, weil er auch benutzt werden kann,
+um Text auszuwählen.  Aber es gibt einen offensichtlichen Unterschied: Wenn
+Text getippt wird, wird der ausgewählte Text gelöscht und der getippte
+Text ersetzt ihn.
+
+Um die Arbeit mit dem Auswahlmodus zu beginnen, müssen Sie ihn zuerst
+aktivieren (für MS-Windows ist er möglicherweise schon aktiviert, aber Sie
+können dies dennoch tun): >
+
+	:set selectmode+=mouse
+
+Nun benutzen Sie die Maus, um einigen Text auszuwählen.  Er wird
+hervorgehoben, wie im visuellen Modus.  Nun drücken Sie einen Buchstaben.
+Der ausgewählte Text wird gelöscht, und der einzelne Buchstabe ersetzt
+ihn.  Nun sind Sie im Einfügemodus, also können Sie mit Tippen fortfahren.
+
+Weil das Tippen von normalen Text verursacht, dass der ausgewählte Text
+gelöscht wird, können Sie nicht die normalen Bewegungsbefehle »hjkl«,
+»w« usw. benutzen.  Benutzen Sie stattdessen Funktionstasten mit
+Umschalttaste.  <U-Links> (linke Pfeiltaste + Umschalttaste) bewegt den
+Cursor nach links.  Der ausgewählte Text wird wie im visuellen Modus
+geändert.  Die anderen Pfeiltasten machen unter der Umschalttaste was Sie
+erwarten.  Auch <U-Pos1> und <U-Ende> funktionieren.
+
+Sie können die Art, wie der Auswahlmodus funktioniert, mit der Option
+'selectmode' justieren.
+
+==============================================================================
+
+Nächstes Kapitel: |usr_10.txt| Große Änderungen machen
+
+Copyright: siehe |manual-copyright| vim:tw=78:ts=8:ft=help:norl:

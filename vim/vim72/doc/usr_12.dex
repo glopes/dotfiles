@@ -1,0 +1,387 @@
+*usr_12.txt*	Für Vim Version 7.2.  Letzte Änderung: 2007-Mai-11
+
+		     VIM BENUTZERHANDBUCH - von Bram Moolenaar
+
+				Klevere Tricks
+
+
+Durch das Kombinieren mehrerer Befehle können Sie Vim fast alles tun
+lassen.  In diesem Kapitel werden ein Paar nützliche Kombinationen
+gezeigt.  Diese benutzen die in den vorigen Kapiteln eingeführten Befehle
+und ein paar mehr.
+
+|12.1|	Ein Wort ersetzen
+|12.2|	»Nachname, Vorname« in »Vorname Nachname« ändern
+|12.3|	Eine Liste sortieren
+|12.4|	Umgekehrte Zeilenreihenfolge
+|12.5|	Wörter zählen
+|12.6|	Eine Man-Page finden
+|12.7|	Leerzeichen abschneiden
+|12.8|	Herausfinden, wo ein Wort benutzt wird
+
+
+Nächstes Kapitel: |usr_20.txt| Befehle auf der Befehlszeile schnell tippen
+ Voriges Kapitel: |usr_11.txt| Nach einem Absturz retten
+Inhaltsübersicht: |usr_toc.txt|
+
+==============================================================================
+*12.1*	Ein Wort ersetzen
+
+Der Ersetzungsbefehl »substitute« kann benutzt werden, um jedes Auftreten
+eines Wortes durch ein anderes Wort zu ersetzen: >
+
+	:%s/four/4/g
+
+Der Bereich »%« bedeutet, dass in allen Zeilen ersetzt werden soll.  Das Flag
+»g« am Ende veranlasst, dass jedes Auftreten des Wortes in einer Zeile ersetzt
+wird.
+   Dies tut nicht das Richtige, falls Ihre Datei auch »thirtyfour« enthält.
+Dies würde durch »thirty4« ersetzt.  Benutzen Sie das Element »\<«, das den
+Anfang eines Wortes sucht, um dies zu vermeiden: >
+
+	:%s/\<four/4/g
+
+Dies geht offensichtlich noch bei »fourteen« daneben.  Benutzen Sie
+»\>«, das ein Wortende sucht: >
+
+	:%s/\<four\>/4/g
+
+Falls Sie programmieren, mögen Sie »four« in Kommentaren ersetzen wollen,
+aber nicht im Kode.  Da dies schwer zu formulieren ist, fügen Sie das Flag
+»c« hinzu, das den Befehl »substitute« Sie bei jeder Ersetzung fragen
+lässt: >
+
+
+	:%s/\<four\>/4/gc
+
+
+IN MEHREREN DATEIEN ERSETZEN
+
+Nehmen wir an, Sie wollen ein Wort in mehr als einer Datei ersetzen.  Sie
+könnten jede Datei einzeln editieren und den Befehl manuell tippen.  Es ist
+viel schneller die Aufnahme- und Abspiel-Funktion zu benutzen.
+  Nehmen wir weiter an, Sie haben ein Verzeichnis mit C++-Dateien, die alle
+auf .cpp enden.  Es gibt eine Funktion »GetResp«, die Sie in »GetAnswer«
+umbenennen wollen.
+
+	vim *.cpp		Starte Vim und definiere, dass alle C++-
+				Dateien in der Argumentenliste sind.
+	qq			Starte die Aufnahme in das Register »q«
+	:%s/\<GetResp\>/GetAnswer/g
+				Mache die Ersetzungen in der ersten Datei.
+	:wnext			Schreibe diese Datei und gehe zur nächsten.
+	q			Beende die Aufnahme.
+	@q			Führe das Register »q« aus.  Dies spielt den
+				Substitutionsbefehl und das »:wnext« ab.  Sie
+				können sicherstellen, dass dies keine
+				Fehlermeldung ausgibt.
+	999q			Führe das Register »q« für die übrigen Dateien
+				aus.
+
+Bei der letzten Datei bekommen Sie eine Fehlermeldung, weil »:wnext« nicht
+zur nächsten Datei gehen kann.  Dies beendet die Ausführung und alles ist
+erledigt.
+
+	Anmerkung:
+	Beim Abspielen einer aufgezeichneten Sequenz beendet ein Fehler die
+	Ausführung.  Stellen Sie deshalb beim Aufzeichnen sicher, dass Sie
+	keine Fehlermeldung bekommen.
+
+Es gibt einen Haken: Falls eine der .cpp-Dateien das Wort »GetResp« nicht
+enthält, erhalten Sie einen Fehler und das Ersetzen hält an.  Um dies zu
+vermeiden, fügen Sie dem Befehl »substitute« das Flag »e« hinzu: >
+
+	:%s/\<GetResp\>/GetAnswer/ge
+
+Das Flag »e« sagt »:substitute«, dass das Finden keiner Übereinstimmung
+kein Fehler ist.
+
+==============================================================================
+*12.2*	»Nachname, Vorname« in »Vorname Nachname« ändern
+
+Sie haben eine Namensliste dieser Form:
+
+	Doe, John ~
+	Smith, Peter ~
+
+Diese wollen Sie wie folgt ändern:
+
+	John Doe ~
+	Peter Smith ~
+
+Dies geht mit nur einem Befehl: >
+
+	:%s/\([^,]*\), \(.*\)/\2 \1/
+
+Lassen Sie uns dies Stück für Stück betrachten.  Offensichtlich beginnt es mit
+dem Befehl »substitute«.  »%« ist der Bereich, was für die ganze Datei steht.
+Also geschieht die Ersetzung in jeder Zeile der Datei.
+   Die Argumente des Befehls »substitute« sind »/von/nach/«.  Die
+Schrägstriche trennen das Muster »von« und die Zeichenkette »nach«.  Dies
+enthält das Muster »von«:
+							   \([^,]*\), \(.*\) ~
+
+	Der erste Teil zwischen \(...\) trifft »Nachname«  \(     \)
+	    treffe alles außer einem Komma		     [^,]
+	    jegliche Anzahl					 *
+	trifft genau das Zeichen »,«				    ,
+	Der zweite Teil zwischen \(...\) trifft »Vorname«	      \(  \)
+	    jegliches Zeichen						.
+	    jegliche Anzahl						 *
+
+In dem Teil »nach« haben wir »\2« und »\1«.  Dies sind sogenannte
+Rückreferenzen (backreference).  Sie referenzieren den Text, der im Suchmuster
+zwischen den \(...\) gefunden wurde.  »\2« referenziert den Text, der von dem
+zweiten \(...\) gefunden wurde, was der Vorname ist.  »\1« referenziert das
+erste Paar \(...\), das dem Nachnamen entspricht.
+   Sie können bis zu neun Rückreferenzen im »nach«-Teil eines
+Ersetzungsbefehls benutzen.  »\0« steht für das ganze getroffene Muster.  Der
+Befehl »substitute« kennt ein Paar besondere Elemente mehr, siehe
+|sub-replace-special|.
+
+==============================================================================
+*12.3*	Eine Liste sortieren
+
+In einem Makefile haben Sie häufig eine Liste von Dateien.  Zum Beispiel:
+
+	OBJS = \ ~
+		version.o \ ~
+		pch.o \ ~
+		getopt.o \ ~
+		util.o \ ~
+		getopt1.o \ ~
+		inp.o \ ~
+		patch.o \ ~
+		backup.o ~
+
+Um diese Liste zu sortieren, filtern Sie den Text durch den externen Befehl
+»sort«: >
+
+	/^OBJS
+	j
+	:.,/^$/-1!sort
+
+Wir gehen hier in die erste Zeile, an deren Anfang »OBJS« steht.  Dann gehen
+wir eine Zeile nach unten und filtern die Zeilen bis zur nächsten leeren Zeile.
+Wir könnten die Zeilen auch im visuellen Modus auswählen und dann »!sort«
+benutzen.  Das ist einfacher zu tippen, aber mehr Arbeit bei vielen Zeilen
+   Dies ist das Ergebnis:
+
+	OBJS = \ ~
+		backup.o ~
+		getopt.o \ ~
+		getopt1.o \ ~
+		inp.o \ ~
+		patch.o \ ~
+		pch.o \ ~
+		util.o \ ~
+		version.o \ ~
+
+
+Beachten Sie, dass der Backslash am Ende jeder Zeile angibt, dass die Zeile
+logisch weitergeht.  Nach dem Sortieren ist dies falsch!  Die Zeile mit
+»backup.o«, die die letzte war, hat keinen Backslash.  Nun ist sie an anderer
+Stelle und muss einen Backslash haben.
+   Die einfachste Lösung ist, den Backslash mit »A \<esc>« hinzuzufügen.  Sie
+können den Backslash in der letzten Zeile stehenlassen, falls Sie
+sicherstellen, dass danach eine leere Zeile kommt.  So haben Sie dieses
+Problem nicht noch einmal.
+
+==============================================================================
+*12.4*	Umgekehrte Zeilenreihenfolge
+
+Der Befehl |:global| kann mit dem Befehl |:move| kombiniert werden, um alle
+Zeilen vor die erste zu verschieben, was eine umgedrehte Datei zum Ergebnis
+hat.  Der Befehl ist: >
+
+	:global/^/m 0
+
+Abgekürzt: >
+
+	:g/^/m 0
+
+Der reguläre Ausdruck »^« trifft den Anfang der Zeile (selbst wenn die
+Zeile leer ist).  Der Befehl |:move| schiebt die getroffene Zeile hinter die
+mystische nullte Zeile, so dass die aktuell getroffene Zeile die erste Zeile
+der Datei wird.  Da der Befehl |:global| nicht durch die sich ändernde
+Zeilenreihenfolge verwirrt wird, macht er damit weiter, jede verbleibende
+Zeile der Datei zu treffen und sie an erster Stelle zu setzen.
+
+Dies funktioniert auch mit einem Zeilenbereich.  Gehen Sie zuerst eine über
+die erste Zeilen und markieren Sie sie mit »mt«.  Dann gehen Sie zur
+letzten Zeile in dem Bereich und tippen: >
+
+	:'t+1,.g/^/m 't
+
+==============================================================================
+*12.5*	Wörter zählen
+
+Manchmal müssen Sie einen Text mit einer Höchstanzahl von Wörtern schreiben.
+Vim kann die Wörter für Sie zählen.
+   Wenn Sie alle Wörter in der Datei zählen wollen, benutzen Sie diesen
+Befehl: >
+
+	g CTRL-G
+
+Tippen Sie kein Leerzeichen nach dem g, dies wird hier nur benutzt, damit der
+Befehl leichter zu lesen ist.
+   Die Ausgabe sieht ungefähr so aus:
+
+	Sp 1 von 0; Zeile 141 von 157; Wort 748 von 774; Byte 4489 von 4976 ~
+
+Sie sehen auf welchem Wort Sie sich befinden (748) und die Gesamtanzahl der
+Wörter in der Datei (774).
+
+Wenn der Text nur ein Teil einer Datei ist, könnten Sie zum Beginn des
+Textes gegen, »g CTRL-G« tippen, zum Ende des Textes gehen, nochmals »g
+CTRL-G« tippen, und dann Ihr Hirn benutzen, um die Textlänge aus dem
+Unterschied der Positionen zu berechnen.  Eine gute Übung, aber es gibt
+einen einfacheren Weg.  Wählen Sie den Text, in dem Sie die Wörter zählen
+möchten, im visuellen Modus aus.  Dann tippen Sie »g CTRL-G«. Das
+Ergebnis:
+
+	5 von 293 Zeilen; 70 von 1884 Wörtern; 359 von 10928 Bytes ~
+
+Für andere Möglichkeiten, Wörter, Zeilen und andere Elemente zu zählen,
+siehe |count-items|.
+
+==============================================================================
+*12.6*	Eine Man-Page finden				*find-manpage*
+
+Während Sie ein Shell-Skript oder C-Programm editieren, benutzen Sie einen
+Befehl oder eine Funktion, für die Sie die Man-Page finden wollen (unter
+Unix).  Lassen Sie uns erst den einfachen Weg gehen: Bewegen Sie den Cursor
+auf das Wort, für das Sie Hilfe finden wollen, und drücken Sie >
+
+	K
+
+Vim startet das externe Programm »man« mit diesem Wort als Argument.  Wenn
+die Man-Page gefunden wird, wird sie angezeigt.  Dies benutzt den normalen
+Pager, um durch den Text zu gehen (meistens das Programm »more«.  Wenn Sie
+an das Ende kommen, bringt Sie ein Druck auf <Enter> zurück nach Vim.
+
+Ein Nachteil ist, dass Sie nicht zur gleichen Zeit die Man-Page und den
+Text, an dem Sie arbeiten, sehen können.  Es gibt einen Trick, um die
+Man-Page in einem Vim-Fenster erscheinen zu lassen.  Laden Sie zunächst das
+Dateityp-Plugin man: >
+
+	:runtime! ftplugin/man.vim
+
+Setzen Sie diesen Befehl in Ihre vimrc, falls Sie vorhaben, dies häufiger
+zu tun.  Nun können Sie den Befehl »:Man« benutzen, um ein Fenster mit
+einer Man-Page zu öffnen: >
+
+	:Man csh
+
+Sie können umherrollen und der Text wird hervorgehoben.  Dies erlaubt Ihnen,
+die Hilfe zu finden, nach der Sie suchen.  Benutzen Sie CTRL-W w, um in das
+Fenster mit dem Text, an dem Sie arbeiten, zu springen.
+   Um eine Man-Page in einem bestimmten Abschnitt zu finden, stellen Sie die
+Nummer des Abschnitts voran.  Um zum Beispiel in Abschnitt 3 »echo«
+nachzuschlagen: >
+
+	:Man 3 echo
+
+Um auf eine andere Man-Page zu springen, die im Text typischerweise wie
+»word(1)« angegeben ist, drücken Sie darauf CTRL-].  Weitere
+»:Man«-Anweisungen benutzen dasselbe Fenster.
+
+Um eine Man-Page für das Wort unter dem Cursor anzuzeigen, benutzen Sie
+dies: >
+
+	\K
+
+(Falls Sie <Leader> umdefiniert haben, benutzen Sie dies statt des
+Backslash.  Sie wollen zum Beispiel den Rückgabewert von »strstr()«
+wissen, während Sie diese Zeile editieren:
+
+	if ( strstr (input, "aap") == ) ~
+
+Bewegen Sie den Cursor auf »strstr« und tippen Sie »\K«.  Ein Fenster
+öffnet sich, um die Manpage für strstr() anzuzeigen.
+
+==============================================================================
+*12.7*	Leerzeichen abschneiden
+
+Manche Leute finden Leerzeichen und Tabulatoren am Zeilenende nutzlos,
+verschwenderisch und hässlich.  Um den Leerraum am Ende jeder Zeile zu
+entfernen, führen Sie den folgenden Befehl aus: >
+
+	:%s/\s\+$//
+
+Als Zeilenbereich wird »%« benutzt, also arbeitet dies auf der ganzen
+Datei.  Das Muster, das der Befehl »:substitute« sucht, ist »\s\+$«.  Dies
+findet Leerraumzeichen (\s), eines oder mehrere (\+), direkt vor dem
+Zeilenende ($).  Später in |usr_27.txt| wird erklärt, wie Sie Muster wie
+dieses schreiben.
+   Der Teil »nach« des Ersetzungsbefehls ist leer: »//«.  Also ersetzt er mit
+nichts, effektive löscht dies den gefundenen Leerraum.
+
+Ein anderer verschwenderischer Gebrauch von Leerzeichen ist, sie vor einen
+Tabulator zu setzen.  Oft können diese gelöscht werden, ohne den Anteil
+von Leerraum zu verändern.  Aber nicht immer!  Daher machen Sie dies am
+Besten von Hand.  Benutzen Sie diesen Suchbefehl: >
+
+	/ 	
+
+Sie können es nicht sehen, aber in diesem Befehl ist ein Leerzeichen vor einem
+Tabulator.  Also »/<Leerzeichen><Tabulator>«.  Nun benutzen Sie »x«, um das
+Leerzeichen zu löschen, und überprüfen, dass sich der Anteil an Leerraum nicht
+ändert.  Sie mögen einen Tabulator einfügen müssen, falls er sich ändert.
+Tippen Sie »n«, um den nächsten Treffer zu finden.  Wiederholen Sie dies, bis
+keine Treffer mehr gefunden werden können.
+
+==============================================================================
+*12.8*	Herausfinden, wo ein Wort benutzt wird
+
+Falls Sie ein Unix-Benutzer sind, können Sie eine Kombination von Vim und dem
+Befehl »grep« benutzen, um alle Dateien zu editieren, die ein gegebenes Wort
+enthalten.  Dies ist extrem nützlich, falls Sie an einem Programm arbeiten und
+alle Dateien betrachten oder editieren wollen, die eine bestimmte Variable
+enthalten.
+   Nehmen Sie zum Beispiel an, Sie wollen alle Dateien eines C-Programms
+editieren, die das Wort »frame_counter« enthalten.  Um das zu tun, benutzen
+Sie diesen Befehl: >
+
+	vim `grep -l frame_counter *.c`
+
+Schauen wir uns diesen Befehl im Detail an.  Der Befehl »grep« sucht in einer
+Menge von Dateien nach einem gegebenen Wort.  Weil das Argument »-l« angegeben
+ist, listet der Befehl nur die Dateien, die das Wort enthalten und gibt nicht
+die gefundenen Zeilen aus.  Das gesuchte Wort ist »frame_counter«.  Dies kann
+in Wirklichkeit jeder reguläre Ausdruck sein.  (Anmerkung:  die regulären
+Ausdrücke, die grep benutzt, sind nicht genau dieselben wie in Vim.)
+   Der gesamte Befehl ist in sogenannte Backticks (`) eingeschlossen.  Dies
+sagt der Unix-Shell, dass sie diesen Befehl ausführen und so tun soll, als
+wäre die Ausgabe in die Befehlszeile getippt.  Dies führt dazu, dass Vim die
+Liste der Dateien editiert, die »grep« ausgeben hat.  Dann können Sie Befehle
+wie »:next« und »:first« benutzen, um durch die Dateien zu gehen.
+
+
+JEDE ZEILE FINDEN
+
+Der obige Befehl findet nur die Dateien, in denen das Wort gefunden wird.  Sie
+müssen immer noch das Wort in den Dateien finden.
+   Vim hat einen eingebauten Befehl, den Sie benutzen können, um eine Menge
+von Dateien nach einer gegebenen Zeichenkette zu durchsuchen.  Falls Sie zum
+Beispiel alle Vorkommen von »error_string« in allen Dateien eines C-Programms
+finden wollen, geben Sie den folgenden Befehl ein: >
+
+	:grep error_string *.c
+
+Dies lässt Vim die Zeichenkette »error_string« in allen angegebenen Dateien
+(*.c) suchen.  Der Editor öffnet nun die erste Datei, in der eine
+Übereinstimmung gefunden wird, und positioniert den Cursor auf der ersten
+passenden Zeile.  Um zu der nächsten passenden Zeile zu gehen (egal in welcher
+Datei), benutzen Sie den Befehl »:cnext«.  Um zur vorigen Übereinstimmung zu
+gehen, benutzen Sie den Befehl »:cprev«.  Benutzen Sie »:clist«, um alle
+Übereinstimmungen zu sehen, und wo sie sind.
+   Der Befehl »:grep« benutzt die externen Befehle »grep« (unter Unix) oder
+»findstr« (unter Windows).  Sie können dies ändern, indem Sie die Option
+'grepprg' setzen.
+
+==============================================================================
+
+Nächstes Kapitel: |usr_20.txt| Befehle auf der Befehlszeile schnell tippen
+
+Copyrigt: siehe |manual-copyright| vim:tw=78:ts=8:ft=help:norl:

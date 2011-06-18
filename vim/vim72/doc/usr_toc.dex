@@ -1,0 +1,358 @@
+*usr_toc.txt*	Für Vim Version 7.2.  Letzte Änderung: 2006-Apr-24
+
+		     VIM-BENUTZER-HANDBUCH - von Bram Moolenaar
+
+			      Inhaltsverzeichnis *benutzerhandbuch* *user-manual*
+
+==============================================================================
+Übersicht ~
+
+Beginnen ~
+|usr_01.txt| Über die Handbücher
+|usr_02.txt| Die ersten Schritte in Vim
+|usr_03.txt| Umherbewegen
+|usr_04.txt| Kleine Änderungen machen
+|usr_05.txt| Eigene Einstellungen setzen
+|usr_06.txt| Syntax-Hervorhebung benutzen
+|usr_07.txt| Mehr als eine Datei editieren
+|usr_08.txt| Fenster aufteilen
+|usr_09.txt| Die GUI benutzen
+|usr_10.txt| Große Änderungen machen
+|usr_11.txt| Nach einem Absturz retten
+|usr_12.txt| Klevere Tricks
+
+
+Effektives Editieren ~
+|usr_20.txt| Befehle auf der Befehlszeile schnell tippen
+|usr_21.txt| Weggehen und wiederkommen
+|usr_22.txt| Die zu editierende Datei finden
+|usr_23.txt| Andere Dateien editieren
+|usr_24.txt| Schnelles Einfügen
+|usr_25.txt| Formatierten Text editieren
+|usr_26.txt| Wiederholen
+|usr_27.txt| Suchbefehle und -muster
+|usr_28.txt| Faltungen
+|usr_29.txt| Durch Programme bewegen
+|usr_30.txt| Programme editieren
+|usr_31.txt| Die GUI ausnutzen
+|usr_32.txt| Der Undo-Baum
+
+
+Vim anpassen ~
+|usr_40.txt| Neue Befehle machen
+|usr_41.txt| Ein Vim-Skript schreiben
+|usr_42.txt| Neue Menüs hinzufügen
+|usr_43.txt| Dateitypen (filetypes) benutzen
+|usr_44.txt| Eigene Syntax-Hervorhebungen
+|usr_45.txt| Die Sprache wählen
+
+
+Vim zum Laufen bringen ~
+|usr_90.txt| Vim installieren
+
+
+
+Referenz-Handbuch ~
+|reference_toc|     Detailiertere Informationen über alle Befehle
+
+Das Benutzer-Handbuch ist als einfache, druckfertige HTML- und PDF-Datei
+hier verfügbar:
+	http://vimdoc.sf.net
+
+==============================================================================
+Beginnen ~
+
+Lesen Sie dies von Anfang bis Ende, um die essenziellen Befehle zu lernen.
+
+|usr_01.txt|  Über die Handbücher
+	|01.1|	Zwei Handbücher
+	|01.2|	Vim installiert
+	|01.3|	Den Vim-Tutor benutzen
+	|01.4|	Copyright
+
+|usr_02.txt|  Die ersten Schritte in Vim
+	|02.1|	Vim zum ersten Mal starten
+	|02.2|	Text einfügen
+	|02.3|	Umherbewegen
+	|02.4|	Zeichen löschen
+	|02.5|	Zurücknehmen (Undo) und Wiederherstellen (Redo)
+	|02.6|	Andere Editier-Befehle
+	|02.7|	Rauskommen
+	|02.8|	Hilfe finden
+
+|usr_03.txt|  Umherbewegen
+	|03.1|	Wortweises Bewegen
+	|03.2|	Zum Anfang oder Ende einer Zeile bewegen
+	|03.3|	Zu einem Zeichen bewegen
+	|03.4|	Die passende Klammer finden
+	|03.5|	Zu einer bestimmten Zeile bewegen
+	|03.6|	Sagen, wo Sie sind
+	|03.7|	Umherrollen
+	|03.8|	Einfache Suchen
+	|03.9|	Einfache Suchmuster
+	|03.10|	Markierungen benutzen
+
+|usr_04.txt|  Kleine Änderungen machen
+	|04.1|	Operatoren und Bewegungen
+	|04.2|	Text verändern
+	|04.3|	Eine Änderung wiederholen
+	|04.4|	Der visuelle Modus
+	|04.5|	Text bewegen
+	|04.6|	Text kopieren
+	|04.7|	Die Zwischenablage benutzen
+	|04.8|	Text-Objekte
+	|04.9|	Ersetzungsmodus
+	|04.10|	Schluss
+
+|usr_05.txt|  Eigene Einstellungen setzen
+	|05.1|	Die vimrc-Datei
+	|05.2|	Die Beispiel-vimrc-Datei erklärt
+	|05.3|	Einfache Tastenbelegungen
+	|05.4|	Ein Plugin hinzufügen
+	|05.5|	Eine Hilfedatei hinzufügen
+	|05.6|	Das Optionen-Fenster
+	|05.7|	Häufig benutzte Optionen
+
+|usr_06.txt|  Syntax-Hervorhebung benutzen
+	|06.1|	Sie einschalten
+	|06.2|	Keine oder die falschen Farben?
+	|06.3|	Verschiedene Farben
+	|06.4|	Mit Farben oder ohne Farben
+	|06.5|	Mit Farben drucken
+	|06.6|	Weiterlesen
+
+|usr_07.txt|  Mehr als eine Datei editieren
+	|07.1|	Eine andere Datei editieren
+	|07.2|	Eine Liste von Dateien
+	|07.3|	Von Datei zu Datei springen
+	|07.4|	Sicherheitskopien
+	|07.5|	Text zwischen Dateien kopieren
+	|07.6|	Eine Datei betrachten
+	|07.7|	Den Dateinamen ändern
+
+|usr_08.txt|  Fenster aufteilen
+	|08.1|	Ein Fenster aufteilen
+	|08.2|	Ein Fenster auf eine andere Datei aufteilen
+	|08.3|	Fenstergröße
+	|08.4|	Vertikales Aufteilen
+	|08.5|	Fenster bewegen
+	|08.6|	Befehle für alle Fenster
+	|08.7|	Unterschiede mit »vimdiff« betrachten
+	|08.8|	Verschiedenes
+
+|usr_09.txt|  Die GUI benutzen
+	|09.1|	Teile der GUI
+	|09.2|	Die Maus benutzen
+	|09.3|	Die Zwischenablage
+	|09.4|	Der Auswahlmodus
+
+|usr_10.txt|  Große Änderungen machen
+	|10.1|	Befehle zum Aufzeichnen und Abspielen
+	|10.2|	Substitution
+	|10.3|	Befehlsbereiche
+	|10.4|	Der Befehl »global«
+	|10.5|	Der Modus »Visueller Block«
+	|10.6|	Teile einer Datei lesen und schreiben
+	|10.7|	Text formatieren
+	|10.8|	Groß-/Kleinschreibung ändern
+	|10.9|	Ein externes Programm benutzen
+
+|usr_11.txt|  Nach einem Absturz retten
+	|11.1|	Grundlegendes Retten
+	|11.2|	Wo ist die Auslagerungsdatei?
+	|11.3|	Abgestürzt oder nicht?
+	|11.4|	Weiterlesen
+
+|usr_12.txt|  Klevere Tricks
+	|12.1|	Ein Wort ersetzen
+	|12.2|	»Nachname, Vorname« in »Vorname Nachname« ändern
+	|12.3|	Eine Liste sortieren
+	|12.4|	Umgekehrte Zeilenreihenfolge
+	|12.5|	Wörter zählen
+	|12.6|	Eine Man-Page finden
+	|12.7|	Leerzeichen abschneiden
+	|12.8|	Herausfinden, wo ein Wort benutzt wird
+
+==============================================================================
+Effektives Editieren ~
+
+Themen, die unabhängig voneinander gelesen werden können.
+
+|usr_20.txt|  Befehle auf der Befehlszeile schnell tippen
+	|20.1|	Editieren der Befehlszeile
+	|20.2|	Abkürzungen auf der Befehlszeile
+	|20.3|	Vervollständigung auf der Befehlszeile
+	|20.4|	Geschichte der Befehlszeile
+	|20.5|	Befehlszeilen-Fenster
+
+|usr_21.txt|  Weggehen und wiederkommen
+	|21.1|	Unterbrechen und fortfahren
+	|21.2|	Shell-Befehle ausführen
+	|21.3|	Informationen merken; die VimInfo
+	|21.4|	Sitzungen
+	|21.5|	Ansichten
+	|21.6|	Moduszeilen
+
+|usr_22.txt|  Die zu editierende Datei finden
+	|22.1|	Der Dateien-Sucher
+	|22.2|	Das aktuelle Verzeichnis
+	|22.3|	Eine Datei finden
+	|22.4|	Die Puffer-Liste
+
+|usr_23.txt|  Andere Dateien editieren
+	|23.1|	DOS-, Mac- und Unix-Dateien
+	|23.2|	Dateien im Internet
+	|23.3|	Verschlüsselung
+	|23.4|	Binäre Dateien
+	|23.5|	Komprimierte Dateien
+
+|usr_24.txt|  Schnelles Einfügen
+	|24.1|	Korrekturen machen
+	|24.2|	Übereinstimmungen zeigen
+	|24.3|	Vervollständigung
+	|24.4|	Eine Einfügung wiederholen
+	|24.5|	Aus einer anderen Zeile kopieren
+	|24.6|	Ein Register einfügen
+	|24.7|	Abkürzungen
+	|24.8|	Spezielle Zeichen eingeben
+	|24.9|	Digraphen
+	|24.10|	Befehle des normalen Modus
+
+|usr_25.txt|  Formatierten Text editieren
+	|25.1|	Zeilen brechen
+	|25.2|	Text ausrichten
+	|25.3|	Einrückungen und Tabulatoren
+	|25.4|	Mit langen Zeilen umgehen
+	|25.5|	Tabellen editieren
+
+|usr_26.txt|  Wiederholen
+	|26.1|	Mit dem visuellen Modus wiederholen
+	|26.2|	Addieren und substrahieren
+	|26.3|	Eine Änderung in vielen Dateien machen
+	|26.4|	Vim aus einem Shell-Skript benutzen
+
+|usr_27.txt|  Suchbefehle und -muster
+	|27.1|	Groß-/Kleinschreibung ignorieren
+	|27.2|	Das Dateiende anfassen
+	|27.3|	Versatze
+	|27.4|	Treffer mehrere Male finden
+	|27.5|	Alternativen
+	|27.6|	Zeichenbereiche
+	|27.7|	Zeichenklassen
+	|27.8|	Einen Zeilenumbruch finden
+	|27.9|	Beispiele
+
+|usr_28.txt|  Faltungen
+	|28.1|	Was ist Falten?
+	|28.2|	Falten von Hand
+	|28.3|	Mit Faltungen arbeiten
+	|28.4|	Faltungen sichern und wiederherstellen
+	|28.5|	Nach Einrückung falten
+	|28.6|	Mit Markierungen falten
+	|28.7|	Nach Syntax falten
+	|28.8|	Nach einem Ausdruck falten
+	|28.9|	Ungeänderte Zeilen falten
+	|28.10|	Welche Faltmethode benutzen?
+
+|usr_29.txt|  Durch Programme bewegen
+	|29.1|	Tags benutzen
+	|29.2|	Das Vorschau-Fenster
+	|29.3|	Durch ein Programm bewegen
+	|29.4|	Globale Identifikatoren finden
+	|29.5|	Lokale Identifikatoren finden
+
+|usr_30.txt|  Programme editieren
+	|30.1|	Kompilieren
+	|30.2|	C-Dateien einrücken
+	|30.3|	Automatisches Einrücken
+	|30.4|	Anderes Einrücken
+	|30.5|	Tabulatoren und Leerzeichen
+	|30.6|	Kommentare formatieren
+
+|usr_31.txt|  Die GUI ausnutzen
+	|31.1|	Der Datei-Browser
+	|31.2|	Bestätigung
+	|31.3|	Menü-Kurztasten
+	|31.4|	Position und Größe des Vim-Fensters
+	|31.5|	Verschiedenes
+
+|usr_32.txt|  Der Undo-Baum
+	|32.1|	Änderungen nummerieren
+	|32.2|	Im Baum umherspringen
+	|32.3|	Reise in der Zeit
+
+==============================================================================
+Vim anpassen ~
+
+Vim arbeiten lassen, wie Sie es mögen.
+
+|usr_40.txt|  Neue Befehle machen
+	|40.1|	Tasten belegen
+	|40.2|	Befehlszeilen-Befehle definieren
+	|40.3|	Automatische Befehle
+
+|usr_41.txt|  Ein Vim-Skript schreiben
+	|41.1|	Einführung
+	|41.2|	Variablen
+	|41.3|	Ausdrücke
+	|41.4|	Bedingungen
+	|41.5|	Einen Ausdruck ausführen
+	|41.6|	Funktionen benutzen
+	|41.7|	Eine Funktion definieren
+	|41.8|	Listen und Wörterbücher
+	|41.9|	Ausnahmen
+	|41.10|	Verschiedene Anmerkungen
+	|41.11|	Ein Plugin schreiben
+	|41.12|	Ein Dateityp-Plugin schreiben
+	|41.13|	Ein Kompiler-Plugin schreiben
+	|41.14|	Ein Plugin so schreiben, dass es schnell lädt
+	|41.15|	Bibliotheksskripte schreiben
+	|41.16|	Vim-Skripte verteilen
+
+|usr_42.txt|  Neue Menüs hinzufügen
+	|42.1|	Einführung
+	|42.2|	Menübefehle
+	|42.3|	Verschiedenes
+	|42.4|	Werkzeugleisten- und Aufklapp-Menüs
+
+|usr_43.txt|  Dateitypen (filetypes) benutzen
+	|43.1|	Plugins für einen Dateityp
+	|43.2|	Einen Dateityp hinzufügen
+
+|usr_44.txt|  Eigene Syntax-Hervorhebungen
+	|44.1|	Grundlegende Syntax-Befehle
+	|44.2|	Schlüsselwörter
+	|44.3|	Übereinstimmungen
+	|44.4|	Regionen
+	|44.5|	Verschachtelte Elemente
+	|44.6|	Folgende Gruppen
+	|44.7|	Andere Argumente
+	|44.8|	Cluster-Gruppen
+	|44.9|	Eine andere Syntax-Datei einlesen
+	|44.10|	Synchronisieren
+	|44.11|	Eine Syntax-Datei installieren
+	|44.12|	Portables Layout für Syntax-Dateien
+
+|usr_45.txt|  Die Sprache wählen
+	|45.1|	Die Sprache für Meldungen
+	|45.2|	Die Sprache für Menüs
+	|45.3|	Eine andere Kodierung benutzen
+	|45.4|	Dateien mit einer anderen Kodierung editieren
+	|45.5|	Sprachtext eingeben
+
+==============================================================================
+Vim zum Laufen bringen ~
+
+
+Bevor man Vim benutzen kann.
+
+|usr_90.txt|  Vim installieren
+	|90.1|	Unix
+	|90.2|	MS-Windows
+	|90.3|	Aktualisieren
+	|90.4|	Übliche Probleme bei der Installation
+	|90.5|	Vim deinstallieren
+
+==============================================================================
+
+Copyright: siehe |manual-copyright| vim:tw=78:ts=8:ft=help:norl:

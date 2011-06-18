@@ -1,0 +1,796 @@
+*usr_44.txt*	Für Vim Version 7.2.  Letzte Änderung: 2006-Apr-24
+
+		     VIM BENUTZERHANDBUCH - von Bram Moolenaar
+
+			 Eigene Syntax-Hervorhebungen
+
+
+Vim wird mit Hervorhebungen für ein paar hundert verschiedener Dateitypen
+ausgeliefert.  Falls die Datei, die Sie editieren, nicht enthalten ist,
+lesen Sie dieses Kapitel, um herauszufinden, wie Sie für diesen Dateityp
+Hervorhebung bekommen.  Siehe auch |:syn-define| im Referenzhandbuch.
+
+|44.1|	Grundlegende Syntax-Befehle
+|44.2|	Schlüsselwörter
+|44.3|	Übereinstimmungen
+|44.4|	Regionen
+|44.5|	Verschachtelte Elemente
+|44.6|	Folgende Gruppen
+|44.7|	Andere Argumente
+|44.8|	Cluster-Gruppen
+|44.9|	Eine andere Syntax-Datei einlesen
+|44.10|	Synchronisieren
+|44.11|	Eine Syntax-Datei installieren
+|44.12|	Portables Layout für Syntax-Dateien
+
+Nächstes Kapitel: |usr_45.txt|  Die Sprache wählen
+ Voriges Kapitel: |usr_43.txt|  Dateitypen (filetypes) benutzen
+Inhaltsübersicht: |usr_toc.txt|
+
+==============================================================================
+*44.1*	Grundlegende Syntax-Befehle
+
+Für den Beginn eine bestehende Syntax-Datei benutzen spart Ihnen eine Menge
+Zeit.  Versuchen Sie in $VIMRUNTIME/syntax eine Syntax-Datei für eine
+ähnliche Sprache zu finden.  Diese Dateien zeigen Ihnen auch das normale
+Layout einer Syntax-Datei.  Um sie zu verstehen, müssen Sie das folgende
+lesen.
+
+Lassen Sie uns mit den grundlegenden Argumenten beginnen.  Bevor wir
+beginnen, irgendeine neue Syntax zu definieren, müssen wir alle alten
+Definitionen entfernen: >
+
+	:syntax clear
+
+Dies ist in der entgültigen Syntax-Datei nicht erforderlich, aber sehr
+nützlich, wenn wir experimentieren.
+
+Es gibt in diesem Kapitel weitere Vereinfachungen.  Falls Sie eine
+Syntax-Datei schreiben, die von anderen benutzt werden soll, lesen Sie alles
+bis zum Ende, um die Details herauszufinden.
+
+
+DEFINIERTE ELEMENTE AUFLISTEN
+
+Benutzen Sie diesen Befehl, um zu prüfen, welche Syntax-Elemente aktuell
+definiert sind: >
+
+	:syntax
+
+Sie können dies benutzen, um zu prüfen, welche Elemente tatsächlich definiert
+wurden.  Ziemlich nützlich, wenn Sie mit einer neuen Syntax-Datei
+experimentieren.  Es zeigt auch die für jedes Element benutzten Farben, was
+hilft, herauszufinden, was was ist.
+   Um die Elemente in einer bestimmten Syntax-Gruppe aufzulisten, benutzen
+Sie: >
+
+	:syntax list {Gruppenname}
+
+Dies kann auch benutzt werden, um Cluster-Gruppen aufzulisten (erklärt in
+|44.8|.  Setzen Sie einfach das »@« in den Namen.
+
+
+ÜBEREINSTIMMUNG AUF GROß-/KLEINSCHREIBUNG
+
+Manche Sprachen sind nicht sensitiv bezüglich Groß-/Kleinschreibung, so wie
+Pascal.  Andere, so wie C, sind hier sensitiv.  Sie müssen Vim sagen mit den
+folgenden Befehlen sagen, was für einen Typ Sie haben: >
+	:syntax case match
+	:syntax case ignore
+
+Das Argument »match« bedeutet, das Vim auf Übereinstimmung in Groß-/
+Kleinschreibung von Syntax-Elementen achtet.  Daher unterscheidet sich »int«
+von »Int« oder »INT«.  Falls das Argument »ignore« benutzt wird, werden die
+folgenden gleich behandelt: »Procedure«, »PROCEDURE« und »procedure«.
+   Die Befehle »:syntax case« können beliebig in einer Syntax-Datei auftauchen
+und beeinflussen die Syntax-Definitionen, welche folgen.  In den meisten
+Fällen haben Sie nur einen Befehl »:syntax case« in Ihrer Syntax-Datei; falls
+Sie aber mit einer ungewöhnlichen Sprache arbeiten, die sowohl
+schreibungssensitive wie nicht-schreibungssensitive Elemente enthält, können
+Sie die Befehle »:syntax case« durch die Datei hindurch verstreuen.
+
+==============================================================================
+*44.2*	Schlüsselwörter
+
+Die grundlegendensten Syntax-Elemente sind Schlüsselwörter.  Um ein
+Schlüsselwort zu definieren, benutzen Sie die folgende Form: >
+
+	:syntax keyword {Gruppe} {Schlüsselwort} ...
+
+{Gruppe} ist der Name einer Syntax-Gruppe.  Mit dem Befehl »:highlight«
+können Sie einer {Gruppe} Farben zuweisen.  Das Argument {Schlüsselwort}
+ist ein tatsächliches Schlüsselwort.  Hier sind ein Paar Beispiele: >
+
+	:syntax keyword xType int long char
+	:syntax keyword xStatement if then else endif
+
+Dieses Beispiel benutzt die Gruppennamen »xType« und »xStatement«.  Nach
+Konvention wird jedem Gruppenname der Dateityp der definierten Sprache
+vorangestellt.  Dieses Beispiel definiert eine Syntax für die Sprache X
+(Beispielsprache eXample ohne einen interessanten Namen).  In einer
+Syntax-Datei für Skripte der »csh« würde der Name »cshType« verwendet.  Also
+ist das Präfix gleich dem Wert von 'filetype'.
+   Diese Befehle veranlassen, dass die Wörter »int«, »long« und »char« auf die
+eine Weise hervorgehoben werden, und die Wörte »if«, »then«, »else« und
+»endif« auf eine andere.  Nun müssen Sie die Gruppenname für die Sprache X mit
+Vims Standardnamen verbinden.  Dies macht man mit den folgenden Befehlen: >
+
+	:highlight link xType Type
+	:highlight link xStatement Statement
+
+Dies sagt Vim, dass er »xType« wie »Type« und »xStatement« wie
+»Statement« hervorheben soll.  Siehe |group-name| für die Standardnamen.
+
+
+UNGEWÖHNLICHE SCHLÜSSELWÖRTER
+
+Die in einem Schlüsselwort verwendeten Zeichen müssen in der Option
+'iskeyword' enthalten sein.  Falls Sie andere Zeichen verwenden, wird für das
+Wort niemals eine Übereinstimmung gefunden.  Vim gibt hierfür keine
+Warnmeldung aus.
+   Die Sprache X benutzt das Zeichen »-« in Schlüsselwörtern.  So wird es
+gemacht:
+>
+	:setlocal iskeyword+=-
+	:syntax keyword xStatement when-not
+
+Der Befehl »:setlocal« wird verwendet, um 'iskeyword' nur für den
+aktuellen Puffer zu ändern.  Immernoch verändert er das Verhalten von
+Befehlen wie »w« und »*«.  Falls das nicht gewollt ist, definieren Sie
+kein Schlüsselwort, sondern verwenden Sie eine Übereinstimmung (erklärt
+im nächsten Abschnitt).
+
+Die Sprache X erlaubt Abkürzungen.  Zum Beispiel kann »next« als »n«, »ne«,
+oder »nex« abgekürzt werden.  Sie können dies mit dem folgenden Befehl
+definieren:
+>
+	:syntax keyword xStatement n[ext]
+
+Dies trifft nicht auf »nextone«, Schlüsselwörter treffen immer nur ganze
+Wörter.
+
+==============================================================================
+*44.3*	Übereinstimmungen
+
+Bedenken Sie, etwas ein wenig komplexeres zu definieren.  Sie wollen
+gewöhnliche Identifikatoren finden.  Um dies zu tun, definieren Sie ein
+Syntaxelement zur Übereinstimmung.  Das folgende findet jedes Wort, das nur
+aus Kleinbuchstaben besteht: >
+
+	:syntax match xIdentifier /\<\l\+\>/
+<
+	Anmerkung:
+	Schlüsselwörter (keywords) überstimmen jedes andere Syntax-Element.
+	Also werden die Schlüsselwörter »if«, »then«, usw. Schlüsselwörter,
+	wie oben mit den Befehlen »:syntax keyword« definiert, sein, selbst
+	wenn Sie auch mit dem Muster für »xIdentifier« übereinstimmen.
+
+Der Teil am Ende ist ein Muster, wie es zur Suche benutzt wird.  Die Zeichen
+»//« werden benutzt, um das Muster einzuschließen (wie es beim Befehl
+»:substitude« geschieht).  Sie können jedes andere Zeichen benutzen, wie
+ein Plus- oder Anführungs-Zeichen.
+
+Definieren Sie nun eine Übereinstimmung für einen Kommentar.  In der
+Sprache X ist dies alles von einem Rautezeichen »#« bis zum Zeilenende: >
+
+	:syntax match xComment /#.*/
+
+Weil Sie jedes Suchmuster verwenden können, können Sie mit einem
+Übereinstimmungs-Element sehr komplexe Dinge hervorheben.  Siehe |pattern|
+für Hilfe zu Suchmustern.
+
+==============================================================================
+*44.4*	Regionen
+
+In der Bespielsprache X werden Zeichenketten in doppelte Anführungszeichen
+eingeschlossen (").  Um Zeichenketten hervorzuheben, definieren Sie eine
+Region.  Sie benötigen für die Region einen Start (doppeltes
+Anführungszeichen) und ein Ende (doppeltes Anführungszeichen).  Die
+Definition ist wie folgt: >
+
+	:syntax region xString start=/"/ end=/"/
+
+Die Direktiven »start« und »end« definieren die zu benutzenden Muster,
+um Anfang und Ende der Region zu finden.  Aber was ist mit Zeichenketten,
+die wie diese aussehen?
+
+	"Zeichenkette, die doppeltes Anführungszeichen (\") enthält." ~
+
+Dies erzeugt ein Problem: Das Gänsefüßchen in der Mitte der Zeichenende
+beendet die Region.  Sie müssen Vim sagen, dass er alle
+fluchtzeichenmarkierte doppelte Anführungszeichen überspringen soll.  Tun
+Sie dies mit dem Schlüsselwort »skip«: >
+
+	:syntax region xString start=/"/ skip=/\\"/ end=/"/
+
+Der doppelte Backslash (\\) findet einen einfachen Backslash, da der
+Backslash in Suchmustern ein Sonderzeichen ist.
+
+Wann benutzt man statt einer Übereinstimmung (match) eine Region.  Der
+Hauptunterschied ist, dass eine Übereinstimmung ein einzelnes Muster ist,
+das als ganzes gefunden werden muss.  Eine Region beginnt, sobald das Muster
+»start« passt.  Ob das Muster »end« gefunden wird, oder nicht, ist nicht
+entscheidend.  Wenn also das Element von dem Muster »end« abhängt,
+können Sie eine Region nicht benutzen.  Andererseits sind Regionen häufig
+einfacher zu definieren.  Und es ist einfacher verschachtelte Elemente zu
+benutzen, wie es im nächsten Abschnitt erklärt wird.
+
+==============================================================================
+*44.5*	Verschachtelte Elemente
+
+Betrachten Sie diesen Kommentar:
+
+	%Eingabe holen  TODO: Leerraum überspringen ~
+
+Sie wollen »TODO« in fetten gelben Lettern hervorheben, selbst obgleich es
+in einem Kommentar steht, der blau hervorgehoben wird.  Um Vim dies wissen
+zu lassen, definieren Sie die folgende Syntax-Gruppe: >
+
+	:syntax keyword xTodo TODO contained
+	:syntax match xComment /%.*/ contains=xTodo
+
+In der ersten Zeile sagt das Argument »contained« Vim, dass dieses
+Schlüsselwort nur in einem anderen Syntax-Element stehen kann.  Die
+nächste Zeile hat »contains=xTodo«.  Dies zeigt an, dass das
+Syntax-Element »xTodo« darin sein kann.  Als Ergebnis stimmt die
+Kommentarzeile als Ganzes mit »xComment« überein und wird blau gemacht.
+Das Wort »TODO« darin stimmt mit »xTodo« überein und wird gelb
+hervorgehoben (Hervorhebung für »xTodo« wurde hierfür eingerichtet).
+
+
+REKURSIVE VERSCHACHTELUNG
+
+Die Sprache X definiert Code-Blöcke in geschwungenen Klammern.  Und ein
+Code-Block darf andere Code-Blöcke enthalten.  Dies kann so definiert
+werden: >
+
+	:syntax region xBlock start=/{/ end=/}/ contains=xBlock
+
+Nehmen Sie an, Sie haben diesen Text:
+
+	while i < b { ~
+		if a { ~
+			b = c; ~
+		} ~
+	} ~
+
+Zuerst beginnt bei der »{« in der ersten Zeile ein »xBlock«.  In der
+zweiten Zeile wird eine weitere »{« gefunden.  Weil wir innerhalb eines
+»xBlock«-Elements sind, und es sich selbst enthält, beginnt hier ein
+eingeschachteltes »xBlock«-Element.  Dann wird in der nächsten Zeile eine
+»}« gefunden, die dem End-Muster der Region entspricht.  Dies beendet das
+eingeschachtelte »xBlock«.  Weil diese »}« in der eingeschachtelten
+Region enthalten ist, wird sie vor der ersten »xBlock«-Region versteckt.
+Dann endet die erste »xBlock«-Region an der letzten »}«.
+
+
+DAS ENDE BEHALTEN
+
+Nehmen wir die folgenden zwei Syntax-Elemente an: >
+
+	:syntax region xComment start=/%/ end=/$/ contained
+	:syntax region xPreProc start=/#/ end=/$/ contains=xComment
+
+Sie definieren einen Kommentar als alles von einem »%« bis zum
+Zeilenende.  Eine Präprozessor-Direktive ist alles von einem »#« bis zum
+Zeilenende.  Weil man einen Kommentar auf einer Präprozessor-Zeile haben
+kann, enthält die Präprozessor-Definition das Argument
+»contains=xComment«.  Sehen wir, was mit diesem Text passiert:
+
+	#define X = Y  % Kommentartext ~
+	int foo = 1; ~
+
+Sie sehen, dass auch die zweite Zeile als xPreProc hervorgehoben wird.  Die
+Präprozessor-Direktive sollte am Zeilenende aufhören.  Deshalb haben wir
+»end=/$/« benutzt.  Was also läuft schief?
+   Das Problem ist der enthaltene Kommentar.  Der Kommentar beginnt mit »%«
+und endet am Zeilenende.  Nachdem der Kommentar endet, läuft die Präprozessor-
+Syntax weiter.  Dies ist nachdem das Zeilenende gesehen wurde, also wird die
+nächste Zeile auch einbezogen.
+   Um dieses Problem zu vermeiden, und um zu vermeiden, dass ein enthaltenes
+Syntax-Element ein verschachteltes Zeilenende aufisst, benutzen Sie das
+Argument »keepend«.  Dieses kümmert sich um die Doppelübereinstimmung des
+Zeilenendes: >
+
+	:syntax region xComment start=/%/ end=/$/ contained
+	:syntax region xPreProc start=/#/ end=/$/ contains=xComment keepend
+
+
+VIELE ELEMENTE ENTHALTEN
+
+Sie können das Argument »contains« benutzen, um anzugeben, dass alles
+enthalten sein kann.  Zum Beispiel: >
+
+	:syntax region xList start=/\[/ end=/\]/ contains=ALL
+
+Alle Syntax-Elemente können in diesem enthalten sein.  Es enthält auch sich
+selbst, aber nicht an derselben Position (das würde eine Endlosschleife
+verursachen).
+   Sie können angeben, dass einige Gruppen nicht enthalten sind.  Also alle
+Gruppen enthalten, außer den aufgelisteten:
+>
+	:syntax region xList start=/\[/ end=/\]/ contains=ALLBUT,xString
+
+Mit dem Element »TOP« können Sie alle Elemente einbeziehen, die kein
+Argument »contained« haben.  »CONTAINED« wird benutzt, um nur Elemente
+einzubeziehen mit einem Argument »contained«.  Siehe für die Details
+|:syn-contains|.
+
+==============================================================================
+*44.6*	Folgende Gruppen
+
+Die Sprache X hat Anweisungen dieser Form:
+
+	if (condition) then ~
+
+Sie wollen diese drei Element verschieden hervorheben.  Aber »(condition)«
+und »then« könnten auch an anderen Stellen auftreten, wo sie eine andere
+Hervorhebung bekommen.  So können Sie dies lösen: >
+
+	:syntax match xIf /if/ nextgroup=xIfCondition skipwhite
+	:syntax match xIfCondition /([^)]*)/ contained nextgroup=xThen skipwhite
+	:syntax match xThen /then/ contained
+
+Das Argument »nextgroup« gibt an, welches Element als nächstes kommen
+kann.  Dies ist nicht erforderlich.  Falls keines der angegebenen Elemente
+gefunden wird, passiert nicht.  Zum Beispiel dieser Text:
+
+	if not (condition) then ~
+
+Das »if« stimmt mit »xIf« überein.  »not« stimmt nicht mit dem als
+»nextgroup« spezifizierten »xIfCondition« überein, also wird nur das
+»if« hervorgehoben.
+
+Das Argument »skipwhite« sagt Vim, dass Leerraum (Leerzeichen und
+Tabulatoren) zwischen den Elementen auftreten kann.  Ähnliche Argumente
+sind »skipnl«, was zwischen den Elementen einen Zeilenumbruch erlaubt, und
+»skipempty«, das Leerzeilen erlaubt.  Beachten Sie, dass »skipnl« keine
+Leerzeile überspringt, irgendwas muss nach dem Zeilenumbruch passen.
+
+==============================================================================
+*44.7*	Andere Argumente
+
+MATCHGROUP
+
+Wenn Sie eine Region definieren, wird die gesamte Region entsprechend dem
+angegebenen Gruppennamen hervorgehoben.  Um zum Beispiel den in runden
+Klammern () eingeschlossenen Text mit der Gruppe »xInside« hervorzuheben,
+benutzen Sie den folgenden Befehl: >
+
+	:syntax region xInside start=/(/ end=/)/
+
+Angenommen, Sie wollen die runden Klammern anders hervorheben.  Sie können
+dies mit einer Menge zusammengerollter Region-Anweisungen machen, oder Sie
+können das Argument »matchgroup« verwenden.  Dieses veranlasst Vim,
+Anfang und Ende einer Region mit einer anderen Hervorhebungsgruppe
+hervorzuheben (in diesem Falle mit der Gruppe xParen): >
+
+	:syntax region xInside matchgroup=xParen start=/(/ end=/)/
+
+Das Arument »matchgroup« gilt für Anfangs- oder End-Übereinstimmung, die
+nach ihm kommen.  Im vorigen Beispiel werden sowohl Anfang wie Ende mit
+»xParen« hervorgehoben.  Um das Ende mit »xParenEnd« hervorzuheben: >
+
+	:syntax region xInside matchgroup=xParen start=/(/
+		\ matchgroup=xParenEnd end=/)/
+
+Ein Seiteneffekt der Benutzung von »matchgroup« ist, dass enthaltenen
+Elementen nicht im Anfang oder Ende der Region übereinstimmen.  Das
+Beispiel für »transparent« benutzt dies.
+
+
+TRANSPARENT
+
+In einer C-Sprach-Datei würden Sie den Text in () nach einem »while« anders
+hervorheben wollen als nach einem »for«. In beiden dieser Fälle kann es
+verschachtelte Elemente geben, die gleich hervorgehoben werden sollten.  Sie
+müssen sicherstellen, dass das Hervorheben der () an der übereinstimmenden »)«
+endet.  Ein Weg, dies zu tun, ist dies:
+>
+	:syntax region cWhile matchgroup=cWhile start=/while\s*(/ end=/)/
+		\ contains=cCondNest
+	:syntax region cFor matchgroup=cFor start=/for\s*(/ end=/)/
+		\ contains=cCondNest
+	:syntax region cCondNest start=/(/ end=/)/ contained transparent
+
+Nun können Sie »cWhile« und »cFor« verschiedene Hervorhebungen geben.  Das
+Element »xCondNext« kann in beiden von ihnen auftreten, aber übernimmt die
+Hervorhebung des Elements, in dem es enthalten ist.  Dies verursacht das
+Argument »transparent«.
+   Beachten Sie, dass das Argument »matchgroup« dieselbe Gruppe wie das
+Element selbst hat.  Warum es dann definieren?  Nun, der Seiteneffekt der
+Benutzung von »matchgroup« ist, dass dann enthaltene Elemente nicht in der
+Übereinstimmung mit dem Startelement gefunden werden.  Dies vermeidet, dass
+die Gruppe »cCondNest« mit der »(« gleich nach dem »while« oder »for«
+übereinstimmt.  Falls dies geschehen würde, würde sie sich über den ganzen
+Text bis zur übereinstimmenden »)« erstrecken und die Region würde nach ihr
+weitergehen.  Jetzt passt »cCondNest« nur nach der Übereinstimmung mit dem
+Startmuster, also nach der ersten »(«.
+
+
+VERSATZE (OFFSETS)
+
+Angenommen, Sie wollen eine Region für den Text zwischen ( und ) nach einem
+»if« definieren.  Aber Sie wollen weder das »if« noch die ()
+einbeziehen.  Sie können dies machen, indem Sie Versatze für die Muster
+angeben.  Ein Beispiel: >
+
+	:syntax region xCond start=/if\s*(/ms=e+1 end=/)/me=s-1
+
+Der Versatz für das Startmuster ist »ms=e+1«.  »ms« steht für »Match Start«
+(Übereinstimmungs-Beginn).  Dies definiert einen Versatz für den Beginn der
+Übereinstimmung.  Normalerweise beginnt die Übereinstimmung dort, wo das
+Muster passt.  »e+1« bedeutet, das die Übereinstimmung nun am Ende des
+passenden Musters beginnt, und dann noch ein Zeichen weiter.
+   Der Versatz für das End-Muster ist »me=s-1«.  »me« steht für »Match End«
+(Übereinstimmungs-Ende) »s-1« bedeutet der Beginn des passenden Musters und
+dann noch ein Zeichen zurück.  Als Ergebnis bekommen wir in diesem Text:
+
+	if (foo == bar) ~
+
+nur den Text »foo == bar« als xCond hervorgehoben.
+
+Mehr über Versatze finden Sie unter |:syn-pattern-offset|.
+
+
+EINZEILER (ONELINE)
+
+Das Argument »oneline« gibt an, dass sich die Region nicht über
+Zeilengrenzen erstreckt.  Zum Beispiel: >
+
+	:syntax region xIfThen start=/if/ end=/then/ oneline
+
+Dies definiert eine Region, die bei »if« beginnt und bei »then« endet.
+Aber falls es kein »then« nach dem »if« gibt, greift die Region nicht.
+
+	Anmerkung:
+	Bei der Benutzung von »oneline« beginnt die Region nicht, falls das
+	End-Muster nicht auf derselben Zeile greift.  Ohne »oneline« überprüft
+	Vim _nicht_, ob es eine Übereinstimmung für das End-Muster gibt.  Die
+	Region beginnt selbst wenn das End-Muster nicht im Rest der Datei
+	greift.
+
+
+FORTSETZUNGSZEILEN UND DIESE VERMEIDEN
+
+Nun werden die Dinge ein wenig komplexer.  Lassen Sie uns eine
+Präprozessor-Zeile definieren.  Diese beginnt mit einem »#« in der ersten
+Zeile und erstreckt sich bis zum Ende der Zeile.  Eine Zeile, die mit \
+endet, lässt die nächste Zeile eine Fortsetzungszeile werden.  Die Weise,
+wie Sie damit umgehen, ist es, dem Syntax-Element zu erlauben, ein
+Fortsetzungs-Muster zu enthalten: >
+
+	:syntax region xPreProc start=/^#/ end=/$/ contains=xLineContinue
+	:syntax match xLineContinue "\\$" contained
+
+Obwohl xPreProc normalerweise auf eine einzelne Zeile passt, lässt in
+diesem Falle die in ihr enthaltene Gruppe (nämlich xLineContinue) sie für
+mehr als eine Zeile weitergehen.  Zum Beispiel würde sie mit diesen beiden
+Zeilen übereinstimmen:
+
+	#define SCHINKEN  Schinken, Schinken, Schinken \ ~
+			Speck und Schinken ~
+
+In diesem Falle ist dies, was Sie wollen.  Falls dies nicht das ist, was Sie
+wollen, können Sie die Region auf einer einzelnen Zeile sein lassen, indem
+Sie dem enthaltenen Muster »excludenl« hinzufügen.  Zum Beispiel wollen
+Sie »end« in xPreProc hervorheben, aber nur am Zeilenende.  Um zu
+vermeiden, dass xPreProc auf der nächsten Zeile weitergeht, wie es
+xLineContinue tun, benutzen Sie »excludenl« wie hier: >
+
+	:syntax region xPreProc start=/^#/ end=/$/
+		\ contains=xLineContinue,xPreProcEnd
+	:syntax match xPreProcEnd excludenl /end$/ contained
+	:syntax match xLineContinue "\\$" contained
+
+»excludenl« muss vor das Muster gesetzt werden.  Weil xLineContinue kein
+»excludenl« hat, erweitert eine Übereinstimmung xPreProc um die nächste
+Zeile wie zuvor
+
+==============================================================================
+*44.8*	Cluster-Gruppen
+
+Eine der Sachen, die Sie bemerken, wenn Sie beginnen, eine Syntax-Datei zu
+schreiben, ist, dass Sie sich darin verheddern, eine große Zahl von Syntax-
+Gruppen zu erzeugen.  Vim gibt Ihnen die Möglichkeit, eine Sammlung von
+Syntax-Gruppen zu definieren, einen sogenannten Cluster.
+   Nehmen wir an, Sie haben eine Sprache, die »for«-Schleifen, »if«-
+Anweisungen, »while«-Schleifen und Funktionen enthält.  Jede von ihnen enthält
+dieselben Syntax-Elemente: Zahlen und Identifikatoren.  Sie definieren sie
+so: >
+
+	:syntax match xFor /^for.*/ contains=xNumber,xIdent
+	:syntax match xIf /^if.*/ contains=xNumber,xIdent
+	:syntax match xWhile /^while.*/ contains=xNumber,xIdent
+
+Sie müssen dasselbe »contains=« jedes Mal wiederholen.  Falls Sie ein weiteres
+enthaltenes Element hinzufügen wollen, müssen Sie es drei Mal hinzufügen.
+Syntax-Cluster vereinfachen diese Definitionen, indem sie Ihnen ermöglichen,
+ein Cluster für mehrere Syntax-Gruppen stehen zu lassen.
+   Um ein Cluster für die zwei Elemente, die die drei Gruppen enthalten,
+benutzen Sie den folgenden Befehl: >
+
+	:syntax cluster xState contains=xNumber,xIdent
+
+Cluster werden genau wie eine Syntax-Gruppe in anderen Syntax-Elementen
+benutzt.  Ihre Namen beginnen mit »@«.  Also können Sie die drei Gruppen
+so definieren: >
+
+	:syntax match xFor /^for.*/ contains=@xState
+	:syntax match xIf /^if.*/ contains=@xState
+	:syntax match xWhile /^while.*/ contains=@xState
+
+Sie können neue Gruppennamen mit dem Argument »add« zu diesem Cluster
+hinzufügen: >
+
+	:syntax cluster xState add=xString
+
+Sie können auch Syntax-Gruppen aus dieser Liste entfernen: >
+
+	:syntax cluster xState remove=xNumber
+
+==============================================================================
+*44.9*	Eine andere Syntax-Datei einlesen
+
+Die Syntax der Sprache C++ ist eine Übermenge der Sprache C.  Weil Sie
+nicht zwei Syntax-Dateien schreiben wollen, können Sie die Syntax-Datei
+für C++ die für C einlesen lassen, indem Sie den folgenden Befehl
+benutzen: >
+
+	:runtime! syntax/c.vim
+
+Der Befehl »:runtime!« durchsucht 'runtimepath' nach allen Dateien, die
+»syntax/c.vim« heißen.  Die lässt die Syntax für C++ so definiert sein, wie
+für C-Dateien.  Falls Sie die Syntax-Datei c.vim ersetzt haben, oder Elemente
+mit einer zusätzlichen Datei hinzugefügt haben, so werden auch diese geladen.
+   Nach dem Laden der C-Syntax-Elemente können die für C++ spezifischen
+Elemente definiert werden.  Zum Beispiel Schlüsselwörter hinzufügen, die in C
+nicht verwendet werden: >
+
+	:syntax keyword cppStatement	new delete this friend using
+
+Dies funktioniert wie in jeder anderen Syntax-Datei.
+
+Nun denken Sie an die Sprache Perl.  Ein Skript besteht aus zwei
+unterschiedlichen Teilen: Ein Dokumentationsabschnitt im Format POD, und ein
+in Perl selbst geschriebenes Programm.  Der POD-Abschnitt beginnt mit »=head«
+und endet mit »=cut«.
+   Sie wollen die POD-Syntax in einer Datei definieren, und diese in der
+Syntax-Datei für Perl benutzen.  Der Befehl »:syntax include« liest eine
+Syntax-Datei ein und speichert die Elemente, die sie definiert, in einem
+Syntax-Cluster.  Für Perl sind die Anweisungen wie folgt: >
+
+	:syntax include @Pod <sfile>:p:h/pod.vim
+	:syntax region perlPOD start=/^=head/ end=/^=cut/ contains=@Pod
+
+Wenn »=head« in einer Perl-Datei gefunden wird, beginnt die Region perlPOD.
+In dieser Region ist das Cluster @Pod enthalten.  Alle Elemente, die auf
+oberster Ebene in der Syntax-Datei definiert sind, stimmen hier überein.  Wenn
+»=cut« gefunden wird, endet die Region, und wir gehen zu den Elementen zurück,
+die in der Perl-Datei definiert werden.
+   Der Befehl »:syntax include« ist schlau genug, einen Befehl »:syntax clear«
+in der eingelesenen Datei zu ignorieren.  Und ein Argument wie »contains=ALL«
+enthält nur Elemente, die in der eingelesenen Datei definiert sind, nicht in
+der Datei, die sie einliest.
+   Der Teil »<sfile>:p:h« benutzt den Dateinamen der aktuellen Datei
+(<sfile>), expandiert ihn zu einem vollständigen Pfad (:p), und nimmt dann den
+vorderen Teil (:h wie head).  Dies ergibt den Namen des Verzeichnisses der
+Datei.  Dies verursacht, dass die Datei pod.vim im selben Verzeichnis
+eingelesen wird.
+
+==============================================================================
+*44.10*	Synchronisieren
+
+Kompiler haben es einfach.  Sie beginnen am Anfang einer Datei und analysieren
+sie direkt durch.  Vim hat es nicht so einfach.  Er muss in der Mitte
+beginnen, wo das Editieren geschieht.  Wie findet er also heraus, wo er ist?
+   Das Geheimnis ist der Befehl »:syntax sync«.  Dieser sagt Vim, wie er
+herausfindet, wo er ist.  Zum Beispiel lässt der folgende Befehl Vim rückwärts
+nach dem Anfang oder Ende eines Kommentares im C-Stil suchen und die Syntax-
+Hervorhebung von dort beginnen: >
+
+	:syntax sync ccomment
+
+Sie können diese Verarbeitung mit einigen Argumenten feinsteuern.  Das
+Argument »minlines« gibt Vim die minimale Anzahl Zeilen, die zurück geschaut
+werden soll, an, und »maxlines« gibt dem Editor die maximale Anzahl Zeilen zum
+Durchsuchen an.
+   Der folgende Befehl zum Beispiel lässt Vim mindestens zehn Zeilen von dem
+Beginn des Bildschirmfensters suchen: >
+
+	:syntax sync ccomment minlines=10 maxlines=500
+
+Falls er nicht herausfinden kann, wo es in dem Bereich ist, beginnt er weiter
+und weiter zurückzuschauen, bis er herausfindet, was zu tun ist.  Aber er geht
+nicht weiter als 500 Zeilen zurück.  (Ein großes »maxlines« verlangsamt die
+Verarbeitung.  Ein kleines kann die Synchronisation scheitern lassen.)
+   Um die Synchronisation ein Bisschen schneller zu machen, sagen Sie Vim,
+welche Syntax-Elemente übersprungen werden können.  Jeder Übereinstimmung und
+jeder Region, die nur benutzt werden müssen, wenn tatsächlich Text angezeigt
+wird, kann das Argument »display« gegeben werden.
+   Standardmäßig wird der zu findende Kommentar als Teil der Syntax-Gruppe
+Comment hervorgehoben.  Falls Sie Dinge anders einfärben wollen, können Sie
+eine unterschiedliche Syntax-Gruppe angeben: >
+
+	:syntax sync ccomment xAltComment
+
+Falls Ihre Programmiersprache keine Kommentare im C-Stil enthält, können
+Sie eine andere Methode der Synchronisation versuchen.  Die einfachste Weise
+ist Vim eine Anzahl von Zeilen zurückgehen und die Dinge von dort
+herausfinden zu lassen.  Der folgende Befehl lässt Vim 150 Zeilen zurück
+gehen und die Analyse von dort beginnen: >
+
+	:syntax sync minlines=150
+
+Ein großer Wert für »minlines« kann Vim langsamer machen, besonders, wenn
+rückwärts in der Datei gerollt wird.
+   Schließlich können Sie eine Syntax-Gruppe, nach der gesucht werden soll,
+angeben, indem Sie diesen Befehl benutzen:
+>
+	:syntax sync match {sync-gruppen-name}
+		\ grouphere {gruppen-name} {muster}
+
+Dies lässt Vim die Syntax-Gruppe {gruppen-name}, wenn er {Muster} sieht,
+gleich nach dem angegebenen Muster beginnen.  {sync-gruppen-name} wird
+benutzt, um dieser Synchronisations-Spezifikation einen Namen zu geben.  Zum
+Beispiel beginnt in der Skript-Sprache sh eine bedingte Anweisung mit »if«
+und endet mit »fi«:
+
+	if [ --f datei.txt ] ; then ~
+		echo "Datei existiert." ~
+	fi ~
+
+Um für diese Syntax eine Direktive »grouphere« zu definieren, benutzen
+Sie den folgenden Befehl: >
+
+	:syntax sync match shIfSync grouphere shIf "\<if\>"
+
+Das Argument »groupthere« sagt Vim, dass das Muster eine Gruppe beendet.
+Zum Beispiel wird das Ende der Gruppe if/fi wie folgt gegeben: >
+
+	:syntax sync match shIfSync groupthere NONE "\<fi\>"
+
+In diesem Beispiel sagt das NONE Vim, dass wir nicht in irgendeinem
+besonderen Syntax-Bereich sind; insbesondere, dass wir nicht in einem
+If-Block sind.
+
+Sie können auch Übereinstimmungen und Bereiche ohne die Argumente
+»grouphere« und »groupthere« definieren.  Diese Gruppen sind für
+Syntax-Gruppen, die während der Synchronisation übersprungen werden.  Zum
+Beispiel überspringt das Folgende alles innerhalb {}, selbst wenn es
+normalerweise mit einer anderen Synchronisations-Methode übereinstimmen
+würde: >
+
+	:syntax sync match xSpecial /{.*}/
+
+Mehr über Synchronisation im Referenz-Handbuch: |:syn-sync|.
+
+==============================================================================
+*44.11*	Eine Syntax-Datei installieren
+
+Wenn Ihre neue Syntax-Datei bereit zur Benutzung ist, legen Sie sie in ein
+Verzeichnis »syntax« in Ihrem 'runtimepath'.  Für Unix wäre dies
+»~/.vim/syntax«.
+  Der Name der Syntax-Datei muss gleich dem Dateityp sein, mit angehängtem
+».vim«.  Also wäre der volle Pfad für die Datei für die Sprache X:
+
+	~/.vim/syntax/x.vim ~
+
+Sie müssen auch dafür sorgen, dass der Datei-Typ erkannt wird.  Siehe
+|43.2|.
+
+Falls Ihre Datei gut funktioniert, wollen Sie sie möglicherweise anderen
+Vim-Benutzern zugänglich machen.  Lesen Sie zunächst den nächsten
+Abschnitt, um sicherzustellen, dass Ihre Datei für andere gut
+funktioniert.  Dann mailen Sie sie an den Vim-Betreuer:
+<maintainer@vim.org>.  Erklären Sie auch, wie der Datei-Typ erkannt werden
+kann.  Mit ein Bisschen Glück wird Ihre Datei in die nächste Vim-Version
+aufgenommen.
+
+
+ZU EINER EXISTIERENDEN SYNTAX-DATEI HINZUFÜGEN
+
+Wir haben angenommen, dass Sie eine komplett neue Syntax-Datei hinzufügen.
+Wenn eine existierende Syntax-Datei funktioniert, ihr aber einige Elemente
+fehlen, können Sie Elemente mit einer getrennten Datei hinzufügen.  Dies
+vermeidet das Ändern der verteilten Syntax-Datei, die verloren geht, wenn eine
+neue Version von Vim installiert wird.
+   Schreiben Sie Syntax-Befehle in Ihre Datei, möglicherweise unter Benutzung
+von Gruppen-Namen aus der existierenden Syntax.  Um zum Beispiel der Syntax-
+Datei von C neue Variablen-Typen hinzuzufügen:
+>
+	:syntax keyword cType off_t uint
+
+Speichern Sie die Datei unter demselben Namen wie die bestehende
+Syntax-Datei.  In diesem Falle »c.vim«.  Platzieren Sie sie in ein
+Verzeichnis am Ende von 'runtimepath'.  Dies sorgt dafür, dass sie nach der
+bestehenden Syntax-Datei geladen wird.  Für Unix wäre dies:
+
+	~/.vim/after/syntax/c.vim ~
+
+==============================================================================
+*44.12*	Portables Layout für Syntax-Dateien
+
+Wäre es nicht schön, wenn alle Vim-Benutzer Syntax-Dateien austauschen
+würden.  Um dies zu ermöglichen, muss die Syntax-Datei einige wenige
+Richtlinien erfüllen.
+
+Beginnen Sie mit Kopfzeilen, die erklären, wofür die Syntax-Datei ist, wer
+sie betreut und wann sie zuletzt aktualisiert wurde.  Fügen Sie nicht zu
+viele Informationen über Änderungen ein, die wenigsten werden sie lesen.
+Beispiel: >
+
+	" Vim syntax file
+	" Language:	C
+	" Maintainer:	Bram Moolenaar <Bram@vim.org>
+	" Last Change:	2001 Jun 18
+	" Remark:	Included by the C++ syntax.
+
+Benutzen Sie dasselbe Layout wie bei den anderen Syntax-Dateien.  Eine
+bestehende Syntax-Datei als Beispiel zu nehmen spart Ihnen eine Menge Zeit.
+
+Wählen Sie einen guten beschreibenden Namen für Ihre Syntax-Datei.
+Benutzen Sie Kleinbuchstaben und Ziffern.  Machen Sie ihn nicht zu lang, er
+wird an vielen Stellen benutzt: Der Name der Syntax-Datei »name.vim«,
+'filetype', b:current_syntax, der Beginn jeder Syntax-Gruppe (nameType,
+nameStatement, nameString, usw.).
+
+Beginnen Sie mit einer Prüfung auf »b:current_syntax«.  Falls diese
+Variable definiert ist, wurde bereits eine andere Syntax-Datei, früher in
+'runtimepath', geladen: >
+
+	if exists("b:current_syntax")
+	  finish
+	endif
+
+Um kompatibel mit Vim 5.8 zu sein, benutzen Sie: >
+
+	if version < 600
+	  syntax clear
+	elseif exists("b:current_syntax")
+	  finish
+	endif
+
+Setzen Sie am Ende »b:current_syntax« auf den Namen der Syntax.  Vergessen
+Sie nicht, dass auch eingelesene Dateien dies tun, so dass Sie
+möglicherweise »b:current_syntax« erneut setzen müssen, falls Sie zwei
+Dateien einlesen.
+
+Falls Sie wollen, dass Ihre Datei mit Vim 5.x funktioniert, fügen Sie eine
+Prüfung auf v:version hinzu.  Betrachten Sie yacc.vim als ein Beispiel.
+
+Beziehen Sie nichts ein, was eine Benutzer-Voreinstellung ist.  Setzen Sie
+nicht 'tabstop', 'expandtab', usw.  Diese gehören in ein Datei-Typ-Plugin.
+
+Beziehen Sie keine Tastenbelegungen oder Abkürzungen ein.  Beziehen Sie das
+Setzen von 'iskeyword' nur ein, wenn es für die Erkennung von
+Schlüsselwörtern wirklich notwendig ist.
+
+Um zu ermöglichen, dass Benutzer ihre eigenen bevorzugten Farben
+auswählen, setzen Sie einen eigenen Gruppennamen für jede Art von
+hervorgehobenem Element.  Dann verbinden Sie jede von Ihnen mit einer der
+Standard-Hervorhebungs-Gruppen.  Das lässt es mit jedem Farb-Schema
+funktionieren.  Falls Sie spezifische Farben auswählen, sieht es mit
+einigen Farb-Schemataen schlecht aus.  Und vergessen Sie nicht, dass manche
+Leute eine unterschiedliche Hintergrundfarbe benutzen oder nur acht Farben
+zur Verfügung haben.
+
+Benutzen Sie für das Verbinden »hi def link«, so dass der Benutzer eine
+unterschiedliche Hervorhebung auswählen kann, bevor Ihre Syntax-Datei
+geladen wird.  Beispiel: >
+
+	  hi def link nameString	String
+	  hi def link nameNumber	Number
+	  hi def link nameCommand	Statement
+	  ... etc ...
+
+Fügen Sie das Argument »display« Elementen hinzu, die beim
+Synchronisieren nicht benutzt werden, um das Rückwärtsrollen und CTRL-L zu
+beschleunigen.
+
+==============================================================================
+
+Nächstes Kapitel: |usr_45.txt| Die Sprache wählen
+
+
+Copyright: siehe |manual-copyright| vim:tw=78:ts=8:ft=help:norl:

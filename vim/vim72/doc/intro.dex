@@ -1,0 +1,951 @@
+*intro.txt*     Für Vim Version 7.2.  Letzte Änderung: 2008-Jun-24
+
+
+		  VIM REFERENZ-HANDBUCH   von Bram Moolenaar
+
+
+Einführung in Vim					*ref* *reference*
+
+1. Einführung			|intro|
+2. Vim im Internet		|internet|
+3. Danksagungen			|credits|
+4. Notation			|notation|
+5. Modi, Einführung		|vim-modes-intro|
+6. Von Modus zu Modus schalten	|mode-switching|
+7. Der Inhalt des Fensters	|window-contents|
+8. Definitionen			|definitions|
+
+==============================================================================
+2. Einführung						*intro*
+
+Vim steht für Vi IMproved (Verbesserter Vi).  Einst war es Vi Imitation, aber
+es gibt so viele Verbesserungen, dass ein Namenswechsel angemessen war.  Vim
+ist ein Text-Editor, der fast alle Befehle des Unix-Programms »vi« beinhaltet
+und viele neue.  Er ist sehr nützlich, um Programme und anderen Klartext zu
+editieren.
+   Alle Befehle werden über die Tastatur gegeben.  Dies hat den Vorteil, dass
+man die Finger auf der Tastatur lassen kann und die Augen auf dem Bildschirm.
+Für diejenigen, die es wollen, gibt es Mausunterstützung und eine GUI-Version
+mit Rollleisten und Menüs (siehe |gui.txt|).
+
+Eine Übersicht dieses Handbuchs kann in der Datei |help.txt| gefunden werden.
+Auf sie kann innerhalb von Vim mit der Taste <Help> oder <F1> und mit dem
+Befehl |:help| (tippen Sie nur »:help«, ohne Balken oder Zitatzeichen)
+zugegriffen werden.
+   Die Option 'helpfile' kann auf den Namen der Hilfedatei gesetzt werden,
+falls die nicht an dem voreingestellten Ort ist.  Sie können ganz wie auf Tags
+auf Themen springen:  Benutzen Sie CTRL-], um auf ein Thema unter dem Cursor
+zu springen, benutzen Sie CTRL-T, um zurück zu springen.
+
+Durch dieses Handbuch hindurch werden die Unterschiede zwischen Vi und Vim
+in geschwungenen Klammern angegeben, wie hier: {Vi hat keine Online-Hilfe}.
+Siehe |vi_diff.txt| für eine Zusammenfassung der Unterschiede zwischen Vim
+und Vi.
+
+Dieses Handbuch behandelt Vim auf verschiedenen Maschinen.  Es mag kleine
+Unterschiede zwischen verschiedenen Computern und Terminals geben.  Neben
+der in diesem Dokument gegebenen Anmerkungen gibt es ein eigenes Dokument
+für jedes unterstützte Betriebssystem, siehe |sys-file-list|.
+
+Dieses Handbuch ist eine Referenz für alle Vim-Befehle und -Optionen.  Dies
+ist keine Einführung in die Benutzung von Vi oder Vim, hier und da wird es
+ein Bisschen kompliziert.  Für Anfänger gibt es einen interaktiven
+|tutor|.  Um die Benutzung von Vim zu lernen, lese man das Benutzer-Handbuch
+|usr_toc.txt|.
+
+						*Buch* *book*
+Es gibt viele Bücher über Vi, die einen Abschnitt für Anfänger enthalten.  Es
+gibt zwei Bücher, die ich empfehlen kann:
+
+	»Vim -- Vi Improved« von Steve Qualline
+
+Dies ist das allererste komplett Vim gewidmete Buch.  Es ist sehr gut für
+Anfänger.  Die am Häufigsten benutzten Befehle werden mit Bildern und
+Beispielen erläutert.  Die weniger oft benutzten Befehle werden auch erklärt,
+die fortgeschritteneren Features werden zusammengefasst.  Es gibt einen
+ausführlichen Index und eine Schnellreferenz.  Teile dieses Buches wurden in
+das Benutzer-Handbuch aufgenommen |frombook|.
+Veröffentlicht von New Riders Publishing.  ISBN 0735710015
+	http://iccf-holland.org/click5.html
+	http://www.vim.org/iccf/click5.html
+
+	"Learning the Vi editor" by Linda Lamb and Arnold Robbins
+
+Dies ist ein Buch über Vi, das ein Kapitel zu Vim enthält (in der sechsten
+Auflage).  Die ersten Schritte in Vi sind sehr gut erklärt.  Die Befehle,
+die in Vim hinzugefügt werden, werden nur kurz erklärt.  Es gibt auch eine
+deutsche Übersetzung.  Veröffentlicht von O'Reilly.  ISBN: 1-56592-426-6.
+
+==============================================================================
+2. Vim im Internet					*internet*
+
+			*www* *WWW*  *faq* *FAQ* *distribution* *download*
+Die Vim-Seiten enthalten die neuesten Informationen über Vim.  Sie enthalten
+auch Verknüpfungen auf die neueste Version von Vim.  Die FAQ ist eine Liste
+häufig gestellter Fragen.  Lesen Sie diese, falls Sie Probleme haben.
+
+	VIM-Homepage:	  http://www.vim.org/
+	VIM-FAQ:	  http://vimdoc.sf.net/
+	Herunterladen:	  ftp://ftp.vim.org/pub/vim/MIRRORS
+
+
+Newsgruppen im Usenet, wo Vim diskutiert wird:		*news* *usenet*
+	comp.editors
+	de.comp.editoren
+Diese Gruppen sind auch für andere Editoren.  Falls Sie über Vim schreiben,
+vergessen Sie nicht, dies zu erwähnen.
+
+						*mail-list* *maillist*
+Es gibt mehrere Mailing-Listen für Vim:
+<vim@vim.org>
+	Für Diskussionen, die die Benutzung existierender Versionen von Vim
+	betreffen: Nützliche Mappings, Fragen, Antworten, wo man eine
+	besondere Version bekommt, usw.  Es gibt einige wenige Leute, die
+	diese Liste beobachten und Fragen beantworten.  Scheuen Sie sich
+	nicht, hier Ihre Frage zu stellen.
+ <vim-dev@vim.org>				*vim-dev* *vimdev*
+	Für Diskussionen, die Veränderungen an Vim betreffen: Neue Features,
+	Portierungen, Patche, Versionen zum Betatest usw.
+<vim-announce@vim.org>				*vim-announce*
+	Ankündigungen über neue Versionen von Vim; auch für Versionen zum
+	Betatest und Portierungen auf verschiedene Betriebssysteme.  Diese
+	Liste kann nur gelesen werden.
+<vim-multibyte@vim.org>				*vim-multibyte*
+	Für Diskussionen über Benutzung und Verbesserung des
+	Multi-Byte-Aspekts von Vim.
+<vim-mac@vim.org>				*vim-mac*
+	Für Diskussionen zur Benutzung und Verbesserung der Macintosh-Version
+	von Vim.
+
+Siehe http://www.vim.org/maillist.php für neueste Informationen.
+
+Anmerkung:
+- Sie können nur Nachrichten an diese Listen schicken, falls Sie angemeldet
+  sind!
+- Sie müssen die Nachrichten vom selben Ort schicken, wie zu dem Zeitpunkt,
+  als Sie sich angemeldet haben (um Spam-Mail zu vermeiden).
+- Maximale Größe einer Nachricht ist 40000 Zeichen.
+
+						*subscribe-maillist*
+Falls Sie beitreten möchten, schicken Sie eine Nachricht an
+	<vim-subscribe@vim.org>
+Vergewissern Sie sich, dass Ihre »From:«-Adresse korrekt ist.  Dann gibt Ihnen
+der Listen-Server Hilfe, wie Sie sich anmelden können.
+
+						*maillist-archive*
+Für weitere Informationen und Archive schauen Sie auf Vims
+Mailinglistenseite:
+http://www.vim.org/maillist.php
+
+
+Fehlerberichte:	*fehlerberichte* *bugs* *bug-reports* *bugreport.vim*
+
+Schicken Sie Fehlerberichte an:
+	Vim bugs <bugs@vim.org>.
+Dies ist keine Mailingliste, sondern die Nachricht wird an den Vim-Betreuer
+weitergeleitet.  Halten Sie sich bitte kurz; alle Zeit, die für das
+Beantworten von Email verwandt wird, geht von der Zeit ab, die für das
+Verbessern von Vim verwandt wird!  Geben Sie immer ein reproduzierbares
+Beispiel und versuchen Sie herauszufinden, welche Einstellungen oder anderen
+Dinge das Auftreten des Fehlers beeinflussen.  Versuchen Sie verschiedene
+Maschinen, wenn möglich.  Schicken Sie mir Patche, falls Sie können!
+
+Es hilft, Informationen über die Version von Vim, die Sie benutzen, und Ihr
+Setup hinzuzufügen.  Sie können diese mit diesem Befehl erhalten: >
+   :so $VIMRUNTIME/bugreport.vim
+Dies erzeugt eine Datei »bugreport.txt« im aktuellen Verzeichnis, mit einer
+Menge Informationen über Ihre Umgebung.  Bevor Sie diese verschicken, prüfen
+Sie, ob sie nicht vertrauliche Informationen enthält!
+
+Falls Vim abstürzt, versuchen Sie bitte, herauszufinden wo.  Sie können
+hier darüber Hilfe finden: |debug.txt|.
+
+Im Zweifelsfall oder wenn Sie sich fragen, ob das Problem bereits behoben
+wurde, aber Sie können dafür keinen Fix finden, werden Sie ein Mitglied
+der |vim-dev| Mailingliste und stellen Sie dort Ihre Frage. |maillist|
+
+							*year-2000* *Y2K*
+Da Vim intern kein Datum zum Editieren verwendet, gibt es kein Jahr-2000-
+Problem, über das man sich Sorgen machen müsste.  Vim benutzt die Zeit in der
+Form Sekunden seit dem ersten Januar 1970.  Dies wird benutzt für eine
+Zeitstempel-Überprüfung der editierten Datei und der Auslagerungsdatei; dies
+ist nicht kritisch und sollte nur Warnnachrichten verursachen.
+
+Es mag ein Jahr-2038-Problem geben, wenn die Sekunden nicht mehr in ein
+32-Bit-Integer passen.  Dies hängt ab von Kompiler, Bibliotheken und
+Betriebssystem.  Konkret werden time_t und die Funktion ctime() benutzt. Und
+time_t wird in vier Bytes in der Auslagerungsdatei gespeichert.  Aber dies
+wird nur benutzt, um Datum/Uhrzeit der wiederherzustellenden Datei
+auszugeben, es wird niemals das normale Editieren beeinflussen.
+
+Die Vim-Funktion strftime() benutzt direkt die Systemfunktion strftime().
+localtime() benutzt die Systemfunktion time().  getftime() benutzt die Zeit,
+die von der Systemfunktion stat() zurückgegeben wird.  Falls Ihre
+System-Bibliotheken Jahr-2000-fest sind, ist es Vim auch.
+
+Der Benutzer mag Vim-Skripte erzeugen, die externe Befehle benutzen.  Diese
+könnten Jahr-2000-Probleme erzeugen, aber diese sind nicht wirklich Teil
+von Vim selbst.
+
+==============================================================================
+3. Danksagungen	*danksagungen* *credits* *author* *Bram* *Moolenaar*
+
+Das Meiste von Vim wurde von Bram Moolenaar <Bram@vim.org> geschrieben.
+
+Teile der Dokumentation stammen aus verschiedenen Vi-Handbücher, geschrieben von
+	W.N. Joy
+	Alan P.W. Hewett
+	Mark Horton
+
+Der Editor Vim basiert auf Stevie und beinhaltet (Ideen von) andere
+Software, an der von den hier erwähnten Leuten gearbeitet wird.  Andere
+Leute halfen mir durch das Schicken von Patchen, mit Vorschlägen, und durch
+Rückmeldung darüber, was gut und schlecht in Vim ist.
+
+Vim wäre nie geworden, was es jetzt ist, ohne die Hilfe dieser Leute!
+
+	Ron Aaron		Änderungen der Win32 GUI
+	Zoltan Arpadffy		Arbeit an der VMS-Portierung
+	Tony Andrews		Stevie
+	Gert van Antwerpen	Änderungen für DJGPP in MS-DOS
+	Berkeley DB(3)		Ideen für die Implementierung der
+				Auslagerungsdatei
+	Keith Bostic		Nvi
+	Walter Briscoe		Aktualisierungen des Makefile, verschiedene
+				Patche
+	Ralf Brown		SPAWNO-Bibliothek für MS-DOS
+	Robert Colon		viele nützliche Anmerkungen
+	Marcin Dalecki		GTK+-GUI-Portierung, Werkzeugleisten-Icons,
+				gettext()
+	Kayhan Demirel		schickte mir Neuigkeiten nach Uganda
+	Chris & John Downey	xvi (Ideen für Version mit mehreren Fenstern)
+	Henk Elbers		erste VMS-Portierung
+	Daniel Elstner		GTK+-2-Portierung
+	Eric Fischer		Mac Portierung, 'cindent' und andere
+				Verbesserungen
+	Benji Fisher		Beantworten einer Menge Benutzer-Fragen
+	Bill Foster		Athena-GUI-Portierung
+	Loic Grenie		xvim (Ideen für Version mit mehreren Fenstern
+	Sven Guckes		Vim-Promoter und ehemaliger Betreuer der
+				WWW-Seiten
+	Darren Hiebert		Exuberant ctags
+	Jason Hildebrand	GTK+-2-Portierung
+	Bruce Hunsaker		Verbesserungen für die VMS-Portierung
+	Andy Kahn		Cscope-Unterstützung, GTK+-GUI-Portierung
+	Oezguer Kesim		Betreuer der Vim-Mailinglisten
+	Axel Kielhorn		Arbeit an der Macintosh-Portierung
+	Steve Kirkendall	Elvis
+	Roger Knobbe		original Portierung auf Windows NT
+	Sergey Laskavy		Vims Hilfe in Moskau
+	Felix von Leitner	früherer Betreuer der Vim-Mailinglisten
+	David Leonard		Portierung der Python-Erweiterung nach Unix
+	Avner Lottem		Editieren in rechts-links-Fenstern
+	Flemming Madsen		X11 Client-Server, verschiedene Features und
+				Patche
+	Microsoft		Gab mir eine Kopie von DevStudio, um damit Vim
+				zu kompilieren
+	Paul Moore		Erweiterungen der Python-Schnittstelle, viele
+				Patche
+	Katsuhito Nagano	Arbeit an Multi-Byte-Versionen
+	Sung-Hyun Nam		Arbeit an Multi-Byte-Versionen
+	Vince Negri		Erweiterungen der Win32 GUI und der
+				generischen Konsole
+	Steve Qualline		Autor des ersten Vim-Buches |frombook|
+	Dominique Pelle		Ausknobeln von Valgrind-Berichten und
+				Korrekturen
+	A.Politz		Viele Fehlerberichte und einige Korrekturen
+	George V. Reilly	Win32-Portierung, Starten der Win32-GUI
+	Stephen Riehm		Fehlersammler
+	Stefan Roemer		verschiedene Patche und Hilfe an Benutzer
+	Ralf Schandl		IBM OS/390-Portierung
+	Olaf Seibert		DICE und BeBox-Version, RegExp-Verbesserungen
+	Mortaza Shiran		Farsi Patche
+	Peter da Silva		termlib
+	Henry Spencer		reguläre Ausdrücke
+	Dany St-Amant		Macintosh-Portierung
+	Tim Thompson		Stevie
+	G. R. (Fred) Walter	Stevie
+	Sven Verdoolaege	Perl-Schnittstelle
+	Robert Webb		Befehlszeilen-Vervollständigung, GUI-Versionen
+				und eine Menge Patche
+	Ingo Wilken		Tcl-Interface
+	Mike Williams		Postscript-Druck
+	Juergen Weigert		Lattice-Version, AUX-Verbesserungen, UNIX und
+				MS-DOS Portierungen, autoconf
+	Stefan 'Sec' Zehl	Betreuer von vim.org
+
+Ich möchte allen Leuten danken, die mir Fehlerberichte und Vorschläge
+geschickt haben.  Die Liste ist zu lang, um sie hier alle zu erwähnen.  Vim
+wäre nicht derselbe ohne die Ideen all dieser Leute: Sie halten Vim am
+Leben!
+
+
+In dieser Dokumentation gibt es mehrere Verweise auf andere Vi-Versionen:
+							*Vi* *vi*
+Vi	»Das Original«.  Ohne weitere Anmerkungen ist dies die Version von Vi,
+	die in Sun OS 4.x erschien.  »:version« gibt »Version 3.7, 6/7/85«.
+	Manchmal wird auf andere Versionen verwiesen.  Läuft nur unter Unix.
+	Quellkode nur mit Lizenz verfügbar.  Weitere Informationen über Vi
+	können hier gefunden werden:
+		http://vi-editor.org	[funktioniert gegenwärtig nicht...]
+							*Posix*
+Posix	Aus dem IEEE-Standard 1003.2, Teil 2: Shell and utilities.
+	Allgemein bekannt als »Posix«.  Dies ist eine textuelle Beschreibung,
+	wie sich Vi verhalten soll.  Siehe |posix-compliance|.
+							*Nvi*
+Nvi	Der »Neue« Vi.  Die Version von Vi die in BSD 4.4 und FreeBSD
+	enthalten ist.  Sehr gute Kompatibilität mit dem originalen Vi, mit
+	ein paar Erweiterungen.  Die benutzt Version ist 1.79.  »:version«
+	gibt »Version 1.79 (10/23/96)«.  Es gab in den letzten paar Jahren
+	kein Release, obwohl es eine Entwicklerversion 1.81 gibt.  Quellkode
+	ist frei verfügbar.
+							*Elvis*
+Elvis	Ein weiterer Vi-Klon von Steve Kirkendall.  Sehr kompakt, aber nicht
+	so flexibel wie Vim.
+	Die benutzte Version ist 2.1.  Er ist noch in der Entwicklung.
+	Quellkode ist frei verfügbar.
+
+==============================================================================
+4. Notation						*notation*
+
+Wenn zum Lesen dieses Textes Syntaxhervorhebung benutzt wird, wird Text, der
+nicht wörtlich getippt wird, oft mit der speziellen Gruppe hervorgehoben.
+Dies sind Dinge in [], {} und <>, sowie CTRL-X.
+
+Beachten Sie, dass Vim in Befehlen alle möglichen Zeichen benutzt.
+Manchmal sind [], {} und <> Teil dessen, was Sie tippen; im Zusammenhang
+sollte dies klar sein.
+
+
+[]		Zeichen in eckigen Klammern sind optional.
+
+				 *anzahl* *[Anzahl]* *count* *[count]* *E489*
+[Anzahl]	Eine optionale Zahl, die dem Befehl vorangehen kann, um den
+		Befehl zu vervielfachen oder zu iterieren.  Wenn keine Anzahl
+		gegeben wird, wird eine Anzahl von eins angenommen, wenn nicht
+		anders angemerkt.  Beachten Sie, dass in diesem Handbuch die
+		[Anzahl] nicht in der Beschreibung des Befehls angegeben wird,
+		sondern nur in der Erklärung.  Dies wurde gemacht, damit man
+		die Befehle einfacher nachschlagen kann.  Falls die Option
+		'showcmd' aktiviert ist, wird die (partiell) eingegebene
+		Anzahl am unteren Rand des Bildschirms angezeigt.  Sie können
+		mit <Entf> die zuletzt eingegebene Ziffer löschen (|N<Del>|).
+
+							*[quotex]*
+["x]		Ein optionales Register-Ziel, wo Text gespeichert werden kann.
+		Siehe |registers|.  Das »x« ist ein einzelnes Zeichen zwischen
+		»a« und »z« oder »A« und »Z« oder »"« und in einigen Fällen
+		(mit dem Befehl »put«) zwischen »0« und »9«, »%«, »#« oder
+		anderen.  Groß- und Kleinschreibung bezeichnen dasselbe
+		Register, aber beim Kleinbuchstaben wird der vorige Inhalt des
+		Registers überschrieben, während beim Großbuchstaben an den
+		vorigen Inhalt des Registers angehängt wird.  Ohne »"x« oder
+		mit »""« wird der gespeicherte Text in das unbenannte Register
+		gelegt.
+
+							*{}*
+{}		Geschwungene Klammern bezeichnen Teile des Befehls, die
+		erscheinen müssen, die aber mehrere verschiedene Werte
+		annehmen können.  Die Unterschiede zwischen Vim und Vi werden
+		ebenfalls in geschwungenen Klammern angegeben (dies ergibt
+		sich aus dem Zusammenhang).
+
+					*{Zeich1-Zeich2}* *{char1-char2}*
+{Zeich1-Zeich2}	Ein einzelnes Zeichen aus dem Bereich Zeich1 bis Zeich2.  Zum
+		Beispiel ist {a-z} ein Kleinbuchstabe.  Mehrfachbereiche
+		können aneinander gehängt werden.  Zum Beispiel ist {a-zA-Z0-9}
+		ein alphanummerisches Zeichen.
+
+				*{Bewegung}* *{motion}* *movement*
+{Bewegung}	Ein Befehl, der den Cursor bewegt.  Diese werden in
+		|motion.txt| erklärt.  Beispiele:
+			w		zum Anfang des nächsten Wortes
+			b		zum Beginn des aktuellen Wortes
+			4j		vier Zeilen nach unten
+			/The<CR>	zum nächsten Auftreten von »The«
+		Dies wird nach einem |operator|-Befehl benutzt, um über den zu
+		bearbeitenden Text zu fahren.
+		- Falls die Bewegung eine Anzahl enthält, und der Operator
+		  ebenfalls, werden diese beiden Anzahlen multipliziert.  Zum
+		  Beispiel löscht »2d3w« sechs Wörter.
+		- Die Bewegung kann rückwärts gerichtet sein, z.B. »db« um zum
+		  Anfang des Wortes zu löschen.
+		- Die Bewegung kann auch ein Mausklick sein.  Die Maus wird
+		  allerdings nicht in allen Terminals unterstützt.
+		- Der Befehl »:omap« kann benutzt werden, um Zeichen zu
+		  belegen, während ein Operator wartet.
+		- Ex-Befehle können benutzt werden, um den Cursor zu bewegen.
+		  Dies kann benutzt werden, um eine Funktion aufzurufen, die
+		  eine komplizierte Bewegung vollführt.  Die Bewegung
+		  ist immer zeichenweise exklusiv, egal welcher »:«-Befehl
+		  benutzt wird.  Dies bedeutet, es ist unmöglich, das letzte
+		  Zeichen einer Zeile ohne den Zeilenumbruch einzubeziehen
+		  (solange nicht 'virtualedit' gesetzt ist).
+		  Falls der Ex-Befehl den Text vor der Position, wo der
+		  Operator beginnt, ändert oder zu einem anderen Puffer
+		  springt, ist das Ergebnis unvorhersagbar.  Zu einem anderen
+		  Puffer zu springen ist möglich, falls der aktuelle Puffer
+		  nicht entladen wird.
+
+					*{Visuell}* *{Visual}*
+{Visuell}	Ein ausgewählter Textbereich.  Er wird mit den Befehlen »v«,
+		»V« oder CTRL-V gestartet, dann kann jeder Befehl zur
+		Cursorbewegung benutzt werden, um das Ende des ausgewählten
+		Bereichs zu bestimmen.
+		Dies wird vor einem |operator|-Befehl benutzt, um den zu
+		bearbeitenden Text hervorzuheben.
+		Siehe |Visual-mode|.
+
+					*<Zeichen>* *<character>*
+<Zeichen>	Ein spezielles Zeichen aus der Tabelle unten, optional
+		mit Modifikatoren, oder ein einzelnes ASCII-Zeichen mit
+		Modifikatoren.
+
+					*'Zeichen'* *'character'*
+'c'		Ein einzelnes ASCII-Zeichen.
+
+				*CTRL-{Zeich}* *CTRL-{char}*
+CTRL-{Zeich}	{Zeich} getippt als Steuerzeichen; das heißt, {Zeich} tippen,
+		während die Taste »Strg« gehalten wird.  Groß-/Kleinschreibung
+		von {Zeich} ist egal; somit sind CTRL-A und CTRL-a gleich.
+		Aber auf einigen Terminals produziert die Umschalttaste einen
+		anderen Kode, benutzen Sie sie dann nicht.
+
+							*'option'*
+'option'	Eine Option, oder ein Parameter, die auf einen Wert gesetzt
+		werden kann, wird in einfache Anführungszeichen eingeschlossen.
+		Siehe |options|.
+
+							*quotecommandquote*
+»Befehl«	Ein Verweis auf einen Befehl, den Sie tippen können, wird in
+		doppelten oder umgekehrt französischen Anführungszeichen
+		eingeschlossen.
+
+			*Tastenkodes* *key-notation* *key-codes* *keycodes*
+Diese Namen für Tasten werden in der Dokumentation benutzt.  Sie können auch
+mit dem Befehl »:map« benutzt werden (fügen Sie den Tastennamen ein, indem Sie
+CTRL-K drücken und dann die Taste, für die Sie den Namen wollen).
+
+Notation	Bedeutung		    Äquivalent	Dezimale/r Wert/e   ~
+-----------------------------------------------------------------------
+<Nul>		Null			CTRL-@	  0 (gespeichert als 10) *<Nul>*
+<BS>		Zeichenrückschritt	CTRL-H	  8	*backspace*
+<Tab>		Tabulator		CTRL-I	  9	*tab* *Tab*
+							*linefeed*
+<NL>		Zeilenvorschub		CTRL-J	 10 (benutzt für <Nul>)
+<FF>		Seitenvorschub		CTRL-L	 12	*formfeed*
+<CR>		Wagenrücklauf		CTRL-M	 13	*carriage-return*
+<Return>	dasselbe wie <CR>				*<Return>*
+<Enter>		dasselbe wie <CR>				*<Enter>*
+<Esc>		Fluchttaste		CTRL-[	 27	*escape* *<Esc>*
+<Space>		Leertaste			 32	*space*
+<lt>		weniger-als		<	 60	*<lt>*
+<Bslash>	Backslash		\	 92	*backslash* *<Bslash>*
+<Bar>		vertikaler Strich	|	124	*<Bar>*
+<Del>		Löschen				127
+<CSI>		Befehlsfolgeneinleiter  ALT-Esc 155	*<CSI>*
+<xCSI>		CSI in der GUI getippt			*<xCSI>*
+
+<EOL>		Zeilenende (kann <CR>, <LF> oder <CR><LF> sein, hängt ab vom
+		System und 'fileformat')	*<EOL>*
+
+<Up>		Cursor rauf			*cursor-up* *cursor_up*
+<Down>		Cursor runter			*cursor-down* *cursor_down*
+<Left>		Cursor links			*cursor-left* *cursor_left*
+<Right>		Cursor rechts			*cursor-right* *cursor_right*
+<S-Up>		Umschalttaste Cursor rauf
+<S-Down>	Umschalttaste Cursor runter
+<S-Left>	Umschalttaste Cursor links
+<S-Right>	Umschalttaste Cursor rechts
+<C-Left>	Steuerung Cursor links
+<C-Right>	Steuerung Cursor rechts
+<F1> - <F12>	Funktionstaste 1 bis 12		*function_key* *function-key*
+<S-F1> - <S-F12> Umschalttaste Funktionstaste 1 bis 12	*<S-F1>*
+<Help>		Hilfetaste
+<Undo>		Undo-Taste
+<Insert>	Einfügetaste
+<Home>		Anfang				*home*
+<End>		Ende				*end*
+<PageUp>	Bild rauf				*page_up* *page-up*
+<PageDown>	Bild runter				*page_down* *page-down*
+<kHome>		Anfang auf dem Ziffernblock (oben links)*keypad-home*
+<kEnd>		Ende auf dem Ziffernblock (unten links)	*keypad-end*
+							*keypad-page-up*
+<kPageUp>	Bild rauf auf dem Ziffernblock (oben rechts)
+							*keypad-page-down*
+<kPageDown>	Bild runter auf dem Ziffernblock (unten rechts)
+<kPlus>		+ auf dem Ziffernblock			*keypad-plus*
+<kMinus>	- auf dem Ziffernblock			*keypad-minus*
+<kMultiply>	* auf dem Ziffernblock			*keypad-multiply*
+<kDivide>	/ auf dem Ziffernblock			*keypad-divide*
+<kEnter>	Enter auf dem Ziffernblock		*keypad-enter*
+<kPoint>	Dezimalzeichen auf dem Ziffernblock	*keypad-point*
+<k0> - <k9>	0 bis 9 auf dem Ziffernblock		*keypad-0* *keypad-9*
+<S-...>		Umschalttaste			*shift* *<S-*
+<C-...>		Steuerungstaste			*control* *ctrl* *<C-*
+<M-...>		Alt-Taste oder Meta-Taste	*meta* *alt* *<M-*
+<A-...>		dasselbe wie <M-...>		*<A-*
+<D-...>		Befehlstaste (nur Macintosh)	*<D-*
+<t_xx>		Taste mit dem Eintrag »xx« in der TermCap
+-----------------------------------------------------------------------
+
+Man beachte: Umschalttaste-Cursortasten, die Hilfe-Taste und die Undo-Taste
+sind nur auf wenigen Terminals verfügbar.  Auf dem Amiga produziert
+Umschalttaste-F10 einen Kode (CSI), der auch von Tastenfolgen benutzt wird.
+Er wird erst erkannt, nachdem eine andere Taste getippt wurde.
+
+Man beachte: Es gibt zwei Kodes für die Löschtaste.  127 ist der dezimale
+ASCII-Wert für die Löschtaste, der immer erkannt wird.  Manche
+Löschtasten senden einen anderen Wert, in welchem Fall dieser Wert von dem
+TermCap-Eintrag »kD« bezogen wird.  Beide Werte haben denselben Effekt.
+Siehe auch |:fixdel|.
+
+Man beachte: Die Tasten auf dem Ziffernblock werden auf dieselbe Weise
+benutzt wie die entsprechenden »normalen« Tasten.  Zum Beispiel hat
+<kHome> denselben Effekt wie <Home>.  Falls eine Taste auf dem Ziffernblock
+denselben rohen Tastenkode sendet wie ihre Nicht-Ziffernblock-Entsprechung,
+wird er als der Nicht-Ziffernblock-Kode erkannt.  Wenn zum Beispiel <kHome>
+denselben Kode sendet wie <Home>, denkt Vim, wenn <kHome> gedrückt wurde,
+dass <Home> gedrückt wurde.  Dann funktioniert das Belegen von <kHome>
+nicht.
+
+								*<>*
+Beispiele werden oft in der Notation <> gegeben.  Manchmal ist dies nur, um
+klar zu machen, was man tippen muss, aber oft kann es wörtlich eingegeben
+werden, z.B. mit dem Befehl »:map«.  Die Regeln sind:
+ 1.  Jedes druckbare Zeichen kann direkt getippt werden, außer Backslash und
+     '<'
+ 2.  Ein Backslash wird als »\\«, doppelter Backslash oder »<Bslash>«
+     repräsentiert.
+ 3.  Eine echte '<' wird durch »\<« oder »<lt>« repräsentiert.  Wenn keine
+     Verwirrung besteht, kann eine '<' direkt benutzt werden.
+ 4.  »<Taste>« meint die Sondertaste tippen.  Diese Notation wird in obiger
+     Tabelle erklärt.  Ein Paar Beispiele:
+	   <Esc>		Fluchttaste
+	   <C-G>		CTRL-G
+	   <Uo>			Cursor rauf
+	   <C-LeftMouse>	Steuerung-Mausklick-links
+	   <S-F11>		Umschalttaste-Funktionstaste-11
+	   <M-a>		Meta- a  ('a' mit gesetztem achten Bit)
+	   <M-A>		Meta- A  ('A' mit gesetztem achten Bit)
+	   <t_kd>		TermCap-Eintrag »kd« (Cursor runter)
+
+Falls Sie die volle <>-Notation in Vim benutzen möchten, müssen Sie
+sicherstellen, dass das Flag '<' nicht in 'cpoptions' enthalten ist (wenn
+'compatible' nicht gesetzt ist, ist es dies standardmäßig). >
+	:set cpo-=<
+Die <>-Notation benutzt <lt>, um die besondere Bedeutung von Tastennamen
+aufzuheben.  Einen Backslash zu benutzen funktioniert auch, aber nur, wenn
+'cpoptions' nicht das Flag 'B' enthält.
+
+Beispiele, um CTRL-H mit den sechs Zeichen »<Home>« zu belegen: >
+	:imap <C-H> \<Home>
+	:imap <C-H> <lt>Home>
+Das erste funktioniert nur, wenn das Flag 'B' in 'cpoptions' nicht gesetzt ist.
+Das zweite funktioniert immer.
+Um ein wörtliches »<lt>« in einer Tastenbelegung zu erhalten: >
+	:map <C-L> <lt>lt>
+
+Für Belegungen, Abkürzungen und Menübefehle können Sie die Beispiele
+kopieren und direkt benutzen.  Oder wörtlich abtippen, einschließlich der
+Zeichen '<' und '>'.  Dies funktioniert NICHT für andere Befehle, wie
+»:set« oder »:autocmd«!
+
+==============================================================================
+5. Modi, Einführung				*vim-modes-intro* *vim-modes*
+
+Vim hat sechs GRUNDLEGENDE Modi:
+
+					*Normal* *Normal-mode* *command-mode*
+Normaler Modus		Im normalen Modus können Sie alle normalen Editor-
+			Befehle eingeben.  Wenn Sie den Editor starten, sind
+			Sie in diesem Modus (außer Sie haben die Option
+			'insertmode' gesetzt, siehe unten).  Er ist auch als
+			Befehls-Modus bekannt.
+
+Visueller Modus		Dieser ist wie der normale Modus, aber Bewegungsbefehle
+			spannen einen hervorgehobenen Bereich auf.  Wenn ein
+			nicht-Bewegungsbefehl benutzt wird, wird er für den
+			hervorgehobenen Bereich ausgeführt.  Siehe
+			|Visual-mode|.
+			Falls die Option 'showmode' gesetzt ist, wird unten im
+			Fenster »-- VISUELL --« angezeigt.
+
+Auswahlmodus		Dieser sieht sehr wie der Auswahlmodus unter MS-Windows
+			aus.  Beim Tippen eines druckbaren Zeichens wird die
+			Auswahl gelöscht und in den Einfügemodus gegangen.
+			Siehe |Select-mode|.
+			Falls die Option 'showmode' gesetzt ist, wird unten im
+			Fenster »-- AUSWAHL --« angezeigt.
+
+Einfügemodus		Im Einfügemodus wird der Text, den Sie tippen, in den
+			Puffer eingefügt.  Siehe |Insert-mode|.
+			Falls die Option 'showmode' gesetzt ist, wird unten im
+			Fenster »-- EINFÜGEN --« angezeigt.
+
+Befehlszeilenmodus	Im Befehlszeilenmodus können Sie am unteren Rand des
+			Bildschirms eine Zeile Text eingeben.  Dies ist für
+			Ex-Befehle, »:«, die Befehle zur Mustersuche, »?« und
+			»/«, und den Filterbefehl, »!«. |Cmdline-mode|
+
+Ex-Modus		Wie der Befehlszeilenmodus, aber nach Eingabe
+			eines Befehls bleibt man im Ex-Modus.  Sehr
+			beschränktes Editieren der Befehlszeile. |Ex-mode|
+
+Es gibt sechs ZUSÄTZLICHE Modi.  Diese sind Varianten der GRUNDLEGENDEN
+Modi.
+
+				*Operator-pending* *Operator-pending-mode*
+Operator-Warte-Modus	Dieser ist wie der normale Modus, aber nachdem ein
+			Operator-Befehl begonnen wurde, und Vim wartet auf eine
+			{Bewegung}, um den Text auszuwählen, auf dem der
+			Operator arbeiten soll.
+
+Ersetzungsmodus		Der Ersetzungsmodus ist ein Sonderfall des
+			Einfügemodus.  Sie können dieselben Dinge wie im
+			Einfügemodus machen, aber für jedes eingegebene Zeichen
+			wird ein Zeichen des bestehenden Textes gelöscht.
+			Siehe |Replace-mode|.
+			Falls die Option 'showmode' gesetzt ist, wird am
+			unteren Rand des Fensters »-- ERSETZEN --« angezeigt.
+
+Virtueller Ersetzungsmodus  Dieser Modus ist ähnlich dem Ersetzungsmodus, aber
+			statt Dateizeichen ersetzen Sie, was wirklich auf dem
+			Bildschirm ist. Siehe |Virtual-Replace-mode|.
+			Falls die Option 'showmode' gesetzt ist, wird
+			»-- V-ERSETZEN --« am unteren Bildschirmrand angezeigt.
+
+Einfüge-Normalmodus	Wird betreten, wenn im Einfügemodus CTRL-O gegeben
+			wird.  Dieser ist wie der normale Modus, Vim kehrt aber
+			nach Ausführung eines Befehls in den Einfügemodus
+			zurück.
+			Falls die Option 'showmode' gesetzt ist, wird am
+			unteren Fensterrand »-- (einfügen) --« angezeigt.
+
+Einfüge-Visuell-Modus	Wird betreten, wenn man vom Einfügemodus eine visuelle
+			Auswahl macht, d.h. durch CTRL-O und dann »v«, »V« oder
+			CTRL-V.  Wenn die visuelle Auswahl endet, kehrt Vim zum
+			Einfügemodus zurück.
+			Falls die Option 'showmode' gesetzt ist, wird am
+			unteren Rand des Fensters »-- (einfügen) VISUELL --«
+			angezeigt.
+
+Einfüge-Auswahl-Modus	Wird betreten, wenn der Auswahlmodus vom Einfügemodus
+			aus gestartet wird.  Z.B. durch Ziehen der Maus oder
+			<S-Right>.  Wenn der Auswahlmodus endet, kehrt Vim zum
+			Einfügemodus zurück.
+			Falls die Option 'showmode' gesetzt ist, wird am
+			unteren Fensterrand »-- (einfügen) AUSWAHL --«
+			angezeigt.
+
+==============================================================================
+6. Umschalten von Modus zu Modus			*mode-switching*
+
+Falls Sie aus irgendwelchen Gründen nicht mehr wissen, in welchen Modus Sie
+sich befinden, können Sie immer zum normalen Modus zurückkehren, indem Sie
+zweimal <Esc> tippen.  Dies funktioniert allerdings nicht im Ex-Modus,
+benutzen Sie »:visual«.  Sie wissen, dass Sie wieder im normalen Modus
+sind, wenn Sie den Bildschirm blinken sehen oder das Signal hören, nachdem
+Sie <Esc> tippen.  Wenn Sie jedoch <Esc> drücken, nachdem Sie CTRL-O im
+Einfügemodus benutzt haben, bekommen Sie ein Signal, aber Sie sind immer
+noch im Einfügemodus, tippen Sie nochmals <Esc>.
+
+							*i_esc*
+		NACH Modus						   ~
+		Normal	Visuell	Auswahl	Einfügen  Ersetzen  Befehlszeile Ex~
+VON Modus							 ~
+Normal			v V ^V	  *4	 *1	   R gR     : / ? !   Q
+Visuell		 *2		  ^G	 c C	    --	      :       --
+Auswahl		 *5	^O ^G		 *6	    --	      --      --
+Einfügen	 <Esc>	  --	  --		  <Insert>    --      --
+Ersetzen	 <Esc>	  --	  --	<Insert>	      --      --
+Befehlszeile	 *3	  --	  --	 :start	    --		      --
+Ex		 :vi	  --	  --	 --	    --	      --
+
+- NA -- nicht möglich
+
+*1 Gehen Sie vom normalen Modus in den Einfügemodus, indem Sie die Befehle
+   »i«, »I«, »a«, »A«, »o«, »O«, »c«, »C«, »s« oder »S« geben.
+*2 Gehen Sie vom visuellen Modus in den normalen Modus, indem Sie einen Nicht-
+   Bewegungs-Befehl geben, was den Befehl ausführen lässt, oder durch Drücken
+   von <Esc>, »v«, »V« oder CTRL-V, was einfach den visuellen Modus ohne
+   Seiteneffekte beendet.
+*3 Gehen Sie vom Befehlszeilenmodus in den normalen Modus durch:
+   - Drücken von <CR> oder <NL>, was den eingegebenen Befehl ausführen lässt.
+   - Löschen der ganzen Zeile (z.B. durch CTRL-U) und ein abschließendes <BS>.
+   - Drücken von CTRL-C oder <Esc>, was die Befehlszeile schließt, ohne den
+Befehl auszuführen.
+   Im letzten Falle kann <Esc> das Zeichen sein, das mit der 'wildchar'-Option
+   definiert wurde, in welchem Falle es die Befehlszeilen-Vervollständigung
+   startet.  Sie können dies ignorieren und nochmals <Esc> tippen. {Vi: beim
+   Drücken von <Esc> wird die Befehlszeile ausgeführt.  Für die meisten Leute
+   ist dies unerwartet; deshalb wurde es in Vim geändert.  Aber wenn <Esc>
+   Teil einer Belegung ist, wird die Befehlszeile ausgeführt.  Falls Sie das
+   Vi-Verhalten wollen, auch wenn <Esc> getippt wird, benutzen Sie
+   »:cmap ^V<Esc> ^V^M«}
+*4 Gehen Sie vom normalen in den Auswahlmodus durch:
+   - Benutzen der Maus, um Text auszuwählen, wenn 'selectmode' »mouse« enthält
+   - Benutzen eines nicht-druckbaren Befehls zum Cursor bewegen bei gedrückter
+Umschalttaste, und wenn die Option 'selectmode' key enthält
+   - Benutzen von »v«, »V« oder »CTRL-V«, wenn 'selectmode' »cmd« enthält
+   - Benutzen von »gh«, »gH« oder »g CTRL-H«  |g_CTRL-H|
+*5 Gehen Sie vom Auswahlmodus in den Normalmodus durch Benutzen eines nicht-
+druckbaren Befehls um den Cursor zu bewegen, ohne die Umschalttaste zu halten.
+*6 Gehen Sie vom Auswahlmodus in den Einfügemode durch Tippen eines druckbaren
+Zeichens.  Die Auswahl wird gelöscht und das Zeichen eingefügt.
+
+Falls die Option 'insertmode' gesetzt ist, startet das Editieren einer Datei
+im Einfügemodus.
+
+	*CTRL-\_CTRL-N* *i_CTRL-\_CTRL-N* *c_CTRL-\_CTRL-N* *v_CTRL-\_CTRL-N*
+Zusätzlich kann der Befehl CTRL-\ CTRL-N oder <C-\><C-N> benutzt werden, um
+von jedem anderen Modus in den Normalmodus zu gehen.  Dies kann benutzt werden,
+um sicherzustellen, dass Vim im Normalmodus ist, ohne ein Signal zu
+verursachen, wie es <Esc> würde.  Jedoch funktioniert dies nicht im Ex-Modus.
+Wenn er nach einem Befehl benutzt wird, der ein Argument nimmt, so wie |f|
+oder |m|, greift das mit 'ttimeoutlen' gesetzte Timeout.
+
+	*CTRL-\_CTRL-G* *i_CTRL-\_CTRL-G* *c_CTRL-\_CTRL-G* *v_CTRL-\_CTRL-G*
+Der Befehl CTRL-\ CTRL-G oder <C-\><C-G> kann benutzt werden, um in den
+Einfügemodus zu gehen, wenn 'insertmode' gesetzt ist.  Ansonsten geht er in
+den Normalmodus.  Die kann benutzt werden, um sicherzustellen, dass Vim in dem
+Modus ist, der von 'insertmode' angezeigt wird, ohne zu wissen, in welchem
+Modus Vim aktuell ist.
+
+				    *Q* *mode-Ex* *Ex-mode* *Ex* *EX* *E501*
+Q			Schalte in den »Ex«-Modus.  Dies ist ein bisschen wie
+			»:«-Befehle einen nach dem anderen zu tippen, außer:
+			- Sie brauchen nicht wiederholt »:« drücken.
+			- Der Bildschirm wird nicht nach jedem Befehl
+			  aktualisiert.
+			- Es gibt kein normales Befehlszeilen-Editieren.
+			- Belegungen und Abkürzungen werden nicht benutzt.
+			Tatsächlich editieren Sie die Zeilen mit den »standard«
+			Zeileneingabebefehlen (<Del> oder <BS> zum Löschen,
+			CTRL-U um die ganze Zeile zu löschen).
+			Vim betritt diesen Modus, wenn er auf der Befehlszeile
+			mit »ex« aufgerufen wird.
+			Benutzen Sie den Befehl »:vi« |:visual|, um den
+			»Ex«-Modus zu verlassen.
+			Beachten Sie: In älteren Versionen von Vim formatierte
+			»Q« Text, das macht man nun mit |gq|.  Aber falls Sie
+			das Skript |vimrc_example.vim| benutzen, arbeitet »Q«
+			wie »gq«.
+
+					*gQ*
+gQ			Schalte wie mit »Q« in den »Ex«-Modus, aber verhalte
+			Dich wirklich, als ob »:«-Befehle nacheinander eingeben
+			würden.  Alles an Befehlszeileneditieren,
+			Vervollständigung usw. ist verfügbar.  Benutzen Sie
+			den Befehl »:vi« |:visual|, um den »Ex«-Modus zu
+			verlassen. {Nicht in Vi}
+
+==============================================================================
+7. Der Fensterinhalt					*window-contents*
+
+Im Normalmodus und Einfüge/Ersetzen-Modus zeigt das Bildschirmfenster den
+aktuellen Inhalt des Puffers: Was Sie sehen, ist was Sie kriegen.  Es gibt
+zwei Ausnahmen:
+- Wenn die Option 'cpoptions' »$« enthält, und die Änderung innerhalb einer
+  Zeile ist, wird der Text nicht direkt gelöscht, sondern ein »$« wird auf das
+  letzte gelöschte Zeichen gesetzt.
+- Wenn in einem Fenster Text eingegeben wird, werden andere Fenster mit
+  demselben Text nicht aktualisiert, bis die Texteingabe beendet ist.
+{Vi: Der Bildschirm wird bei langsamen Terminals nicht immer aktualisiert}
+
+Zeilen, die länger sind als die Fensterbreite werden umbrochen, außer die
+Option 'wrap' ist nicht gesetzt (siehe unten).  Die Option 'linebreak' kann
+gesetzt werden, um an weißen Zeichen zu umbrechen.
+
+Falls in dem Fenster nach der letzten Zeile des Puffers noch Platz ist,
+zeigt Vim »~« in der ersten Spalte der letzten Zeilen des Fensters, wie
+hier: >
+
+	+-----------------------+
+	|eine Zeile		|
+	|letzte Zeile		|
+	|~			|
+	|~			|
+	+-----------------------+
+
+Somit zeigen die »~«-Zeilen an, dass das Ende des Puffers erreicht wurde.
+
+Falls die letzte Zeile in einem Fenster nicht passt, zeigt Vim dies mit
+einem »@« in der ersten Spalte der letzten Zeilen des Fensters an, wie
+hier: >
+
+	+-----------------------+
+	|erste Zeile		|
+	|zweite Zeile		|
+	|@			|
+	|@			|
+	+-----------------------+
+
+Somit zeigen die »@«-Zeilen an, dass da eine Zeile ist, die nicht in das
+Fenster passt.
+
+Wenn das Flag »lastline« in der Option 'display' gesetzt ist, sehen Sie
+keine »@«-Zeichen auf der linken Seite des Fensters.  Falls die letzte
+Zeile nicht komplett passt, wird nur der Teil angezeigt, der passt, und die
+letzten drei Zeichen der Zeile werden durch »@@@« ersetzt, wie hier: >
+
+	+-----------------------+
+	|erste Zeile		|
+	|zweite Zeile		|
+	|eine sehr lange Zeile, |
+	|die nicht in das Fen@@@|
+	+-----------------------+
+
+Falls es eine einzelne Zeile gibt, die zu lang ist, um in das Fenster zu
+passen, ist dies eine besondere Situation.  Vim zeigt nur einen Teil der
+Zeile, um den Cursor herum.  Es werden keine besonderen Zeichen angezeigt so
+dass Sie alle Teile dieser Zeile editieren können. {Vi: gibt einen
+»internen Fehler« auf Zeilen, die nicht in das Fenster passen}
+
+Die Möglichkeit »@« in der Option 'highlight' kann benutzt werden, um
+eine besondere Hervorhebung für die Zeichen »@« und »~« zu setzen.
+Dies macht es möglich, sie von echten Zeichen in dem Puffer zu
+unterscheiden.
+
+Die Option 'showbreak' enthält die vor umbrochene Zeilen zu setzende
+Zeichenkette.
+
+							*wrap-off*
+Falls die Option 'wrap' nicht gesetzt ist, werden lange Zeilen nicht umbrochen.
+Nur der Teil, der auf den Bildschirm passt, wird angezeigt.  Falls der Cursor
+in einen Teil der Zeile bewegt wird, der nicht angezeigt wird, wird der
+Bildschirm horizontal gerollt.  Der Vorteil dieser Methode ist, das Spalten
+angezeigt werden, wie sie sind und Zeilen, die nicht auf den Bildschirm passen,
+editiert werden können.  Der Nachteil ist, dass Sie nicht alle Zeichen einer
+Zeile auf einmal sehen können.  Die Option 'sidescroll' kann auf die minimale
+zu rollende Anzahl Spalten gesetzt werden.  {Vi: hat keine Option 'wrap'}
+
+Alle normalen ASCII-Zeichen werden direkt auf dem Bildschirm angezeigt.
+<Tab> wird durch die Anzahl Leerzeichen ersetzt, die es repräsentiert.
+Andere nicht-druckende Zeichen werden ersetzt durch »^{Zeich}«, wobei
+{Zeich} das nicht-druckende Zeichen plus 64 ist.  Somit wird Zeichen 7
+(Signal) als »^G« angezeigt.  Zeichen zwischen 127 und 160 werden durch
+»~{Zeich}« ersetzt, wobei {Zeich} das Zeichen minus 64 ist.  Diese Zeichen
+beanspruchen mehr als eine Position auf dem Bildschirm.  Der Cursor kann nur
+auf der ersten positioniert werden.
+
+Falls Sie die Option 'number' setzen, wird allen Zeilen ihre Zeilennummer
+vorangestellt.  Tipp: Falls Sie nicht mögen, dass sich umbrechende Zeilen mit
+den Zeilennummern mischen, setzen Sie die Option 'showbreak' auf acht
+Leerzeichen:
+	»:set showbreak=\ \ \ \ \ \ \ \ «
+
+Falls Sie die Option 'list' setzen, wird <Tab> nicht als mehre Leerzeichen
+angezeigt, sondern als »^I«.  Ein »$« wird an das Ende der Zeile
+gesetzt, so dass Sie Leerzeichen am Ende der Zeile finden können.
+
+Im Befehlszeilenmodus wird nur die Befehlszeile selbst korrekt angezeigt.
+Die Anzeige des Pufferinhalts wird aktualisiert, sobald Sie in den
+Normalmodus zurückkehren.
+
+Die letzte Zeile des Fensters wird für Status- und andere Meldungen
+benutzt.  Die Statusmeldungen werden nur benutzt, wenn eine Option gesetzt
+ist:
+
+Statusmeldung			Option	 Voreinstellung	Unix-Voreinstellung  ~
+aktueller Modus			'showmode'	ja	     ja
+Befehlszeichen			'showcmd'	ja	    nein
+Cursorposition			'ruler'	       nein	    nein
+
+Der aktuelle Modus ist »-- EINFÜGEN --« oder »-- ERSETZEN --«, siehe
+|'showmode'|.  Die Befehlszeichen sind die, die Sie getippt haben, die aber
+noch nicht verwendet wurden . {Vi: zeigt nicht die getippten Zeichen oder
+die Cursor-Position}
+
+Falls Sie ein langsames Terminal haben, können Sie die Status-Nachrichten
+ausschalten, um das Editieren zu beschleunigen:
+	:set nosc noru nosm
+
+Falls es einen Fehler gibt, wird eine Fehler-Meldung für mindestens eine
+Sekunde angezeigt (in inverser Darstellung).  {Vi: Fehler-Meldungen können
+von anderen Meldungen überschrieben werden, bevor man eine Chance hat, sie
+zu lesen}
+
+Einige Befehle zeigen an, wieviele Zeilen betroffen waren.  Ab welcher
+Grenze dies geschieht, kann mit der Option 'report' gesteuert werden
+(Voreinstellung 2).
+
+Auf dem Amiga läuft Vim in einem CLI-Fenster.  Der Name »Vim« und der
+volle Name der aktuellen Datei werden in der Titelleiste angezeigt.  Wenn
+die Größe des Fensters verändert wird, zeichnet Vim automatisch das
+Fenster neu.  Sie können das Fenster so klein machen, wie Sie wollen, wenn
+es aber zu klein wird, passt keine ganze Zeile mehr hinein.  Machen Sie es
+mindestens 40 Zeichen breit, damit Sie in der letzten Zeile die meisten
+Meldungen lesen können.
+
+Auf den meisten Unixmaschinen wird eine Größenänderung des Fenster von
+Vim korrekt erkannt und behandelt.  {Vi: nicht in Ordnung}
+
+==============================================================================
+8. Definitionen					*definitionen* *definitions*
+
+  Bildschirm		Der gesamte Bereich, den Vim benutzt, um darauf zu
+			arbeiten.  Dies kann das Fenster eines
+			Terminalemulators, wie XTerm, sein.  Auch »das
+			Vim-Fenster« genannt.
+  Fenster		Eine Sicht auf einen Puffer.
+
+Ein Bildschirm enthält ein oder mehr Fenster, getrennt durch Statuszeilen
+und mit der Befehlszeile in der letzten Zeile.
+
+		+-------------------------------+
+Bildschirm	| Fenster 1	| Fenster 2	|
+		|		|		|
+		|		|		|
+		|= Statuszeile =|= Statuszeile =|
+		| Fenster 3			|
+		|				|
+		|				|
+		|==== Statuszeile ==============|
+		|Befehlszeile			|
+		+-------------------------------+
+
+Die Befehlszeile wird auch für Meldungen benutzt.  Sie rollt den Bildschirm
+nach oben, wenn in der letzten Zeile nicht genug Platz ist.
+
+Es wird zwischen vier Typen von Zeilen unterschieden:
+
+  Pufferzeilen		Die Zeilen im Puffer.  Dies ist dasselbe wie die
+			Zeilen, wie sie aus einer Datei gelesen bzw. in eine
+			Datei geschrieben werden.  Sie können Tausende Zeichen
+			lang sein.
+  logische Zeilen	Die Pufferzeilen mit angewandtem Falten.  Pufferzeilen
+			in einer geschlossenen Faltung werden in eine einzelne
+			logische Zeile umgewandelt: »+-- 99 Zeilen«.  Sie
+			können Tausende von Zeichen lang sein.
+  Fensterzeilen		Die Zeilen angezeigt in einem Fenster: Ein Bereich
+			logischer Zeilen mit angewandtem Umbruch usw.  Sie
+			können so lang sein, wie es das Fenster erlaubt,
+			längere Zeilen werden umbrochen oder abgeschnitten.
+  Bildschirmzeilen	Die Zeilen des Bildschirms, den Vim benutzt.  Besteht
+			aus den Fensterzeilen aller Fenster, mit den
+			Statuszeilen und der Befehlszeile hinzugefügt.  Sie
+			können nur so lang sein, wie die Breite des Bildschirms
+			erlaubt.  wenn die Befehlszeile länger wird, bricht sie
+			um, und die Zeilen werden nach oben gerollt, um Platz
+			zu machen.
+
+Pufferzeilen	logische Zeilen	Fensterzeilen	Bildschirmzeilen ~
+
+1. eins		1. eins		1. +-- gefaltet 1.  +-- gefaltet
+2. zwei		2. +-- gefaltet	2. fünf		2.  fünf
+3. drei		3. fünf		3. sechs	3.  sechs
+4. vier		4. sechs	4. sieben	4.  sieben
+5. fünf		5. sieben			5.  === Statuszeile ===
+6. sechs					6.  aaa
+7. sieben					7.  bbb
+						8.  ccc ccc c
+1. aaa		1. aaa		1. aaa		9.  cc
+2. bbb		2. bbb		2. bbb		10. ddd
+3. ccc ccc ccc	3. ccc ccc ccc	3. ccc ccc c	11. ~ 
+4. ddd		4. ddd		4. cc		12. === Statuszeile ===
+				5. ddd		13. (Befehlszeile)
+				6. ~ 
+
+==============================================================================
+ vim:tw=78:ts=8:ft=help:norl:

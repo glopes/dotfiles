@@ -1,0 +1,232 @@
+*sponsor.txt*   Für Vim Version 7.2.  Letzte Änderung: 2008-Jun-21
+
+
+		  VIM REFERENZHANDBUCH    von Bram Moolenaar
+
+
+
+VIM ENTWICKLUNG SPONSERN					*sponsor*
+
+Fehler beheben und neue Features hinzufügen nimmt eine Menge Zeit und
+Anstrengung.  Um Ihre Anerkennung für die Arbeit zu zeigen, und um Bram und
+Andere zu motivieren, weiter an Vim zu arbeiten, senden Sie bitte eine
+Spende.
+
+Da Bram wieder einen bezahlten Job hat, wird das Geld nun benutzt, um
+Kindern in Uganda zu helfen.  Siehe |Uganda|.  Aber gleichzeitig erhöhen
+Spenden Brams Motivation, weiter an Vim zu arbeiten!
+
+Für die neuesten Informationen zum Sponsering schauen Sie bitte auf die
+Webseite von Vim:
+
+	http://www.vim.org/sponsor/
+
+Weitere Erklärungen können in der |sponsor-faq| gefunden werden.
+
+
+REGISTRIERTER VIM-BENUTZER					*register*
+
+Sie können ein registrierter Vim-Benutzer werden, indem Sie mindestens 10
+Euro schicken.  Dies funktioniert ähnlich wie Vim zu sponsern, siehe
+|sponsor| weiter oben.  Die Registrierung wurde ermöglicht für die
+Situation wo der Chef oder Buchhalter bereit ist, Software zu registrieren,
+aber die Begriffe »Sponsern« und »Spenden« nicht mag.
+
+Weitere Erklärungen können in der |register-faq| gefunden werden.
+
+
+FÜR FEATURES STIMMEN					*vote-for-features*
+
+Um registrierten Vim-Benutzern und Sponsoren einen Vorteil gegenüber denen,
+die nur nehmen, zu geben, können sie für das, woran Bram arbeiten soll,
+abstimmen.  Wie funktioniert diese Abstimmung?
+
+1.  Sie schicken mindestens 10 Euro.  Siehe unten für Möglichkeiten, Geld
+    zu überweisen |send-money|.
+
+2.  Sie bekommen per Email einen Registrierungsschlüssel.  Geben Sie diesen
+    Schlüssel auf Ihrer Kontoseite auf der Vim-Webseite ein.  Ein Konto
+    richten Sie ganz einfach ein, falls Sie noch keines haben.
+
+3.  Sie können Ihre Stimmen auf der Abstimmungsseite eingeben.  Nach
+    Eingabe des Registrierungsschlüssels gibt es auf Ihrer Kontoseite eine
+    Verknüpfung dorthin.  Ihre Stimmen werden für zwei Jahre gezählt.
+
+4.  Die Abstimmungsergebnisse erscheinen auf der Ergebnisseite, die für
+    jeden sichtbar ist: http://www.vim.org/sponsor/vote_results.php
+
+Wenn Sie zusätzlich insgesamt 100 Euro oder mehr gesandt haben, erscheint
+Ihr Name in der »Vim Ruhmeshalle«:
+	http://www.vim.org/sponsor/hall_of_honour.php
+Aber nur, falls Sie dies auf Ihrer Kontoseite aktivieren.
+
+
+WIE GELD SCHICKEN					*send-money*
+
+Kreditkarte	Über PayPal, siehe die PayPal Seite für Informationen:
+			https://www.paypal.com/en_US/mrb/pal=XAC62PML3GF8Q
+		Die Email-Adresse, um Geld für eine Sponsorenschaft zu
+		schicken, ist:
+			donate@vim.org
+		Die Email-Adresse zur Vim-Registrierung ist:
+			register@vim.org
+		Euros sind bevorzugt, andere Währungen werden auch akzeptiert.
+		In Euro-Ländern wird eine Banküberweisung bevorzugt, dies hat
+		niedrigere Kosten.
+
+Andere Methoden	Siehe |iccf-donations|.
+		Fügen Sie dem Verwendungszweck Ihrer Überweisung »Vim sponsor«
+		oder »Vim registration« hinzu.  Schicken Sie mir eine Email,
+		die den überwiesenen Betrag erwähnt, falls Sie für Features
+		abstimmen und anderen zeigen möchten, dass Sie ein 
+		registrierter Vim-Benutzer oder Sponsor sind.
+
+Bargeld		Kleine Beträge können mit der normalen Post verschickt werden.
+		Legen Sie etwas um das Geld, so dass es von außen nicht
+		erkennbar ist.  Erwähnen Sie Ihre Email-Adresse, falls Sie für
+		Features  abstimmen und anderen zeigen wollen, dass Sie ein
+		registrierter Vim-Benutzer oder Sponsor sind.
+
+Sie können diese permanente Adresse benutzen:
+			Bram Moolenaar
+			Finsterruetihof 1
+			8134 Adliswil
+			Switzerland
+
+
+
+FRAGEN UND ANTWORTEN				*sponsor-faq* *register-faq*
+
+Warum sollt Ich Geld geben?
+
+Falls Sie nicht Ihre Wertschätzung für Vim zeigen, dann wird Bram weniger
+motiviert sein, Fehler zu beheben und neue Features hinzuzufügen.  Er tut
+stattdessen etwas anderes.
+
+
+Wie viel Geld sollte ich schicken?
+
+Das liegt an Ihnen.  Je mehr Sie geben, desto mehr Kindern kann geholfen
+werden.  Ein Richtwert für Personen, die Vim zu Hause benutzen: 10 Euro pro
+Jahr.  Für berufliche Nutzung: 30 Euro pro Jahr und Person.  Schicken Sie
+mindestens 10 Euro, um für Features abstimmen zu können.
+
+
+Was bekomme ich zurück?
+
+Jeder registrierte Vim-Nutzer und Sponsor, der mindestens 10 Euro gibt, kann
+für neue Features abstimmen.  Diese Stimmen geben der Arbeit an Vim
+Prioritäten.  Die Stimmen sind für zwei Jahre gültig.  Je mehr Geld Sie
+schicken, desto mehr zählen Ihre Stimmen |votes-counted|.
+
+Falls Sie insgesamt 100 Euro oder mehr schicken, werden Sie in der »Vim
+Ruhmeshalle« auf der Vim-Webseite erwähnt.  Aber nur, falls Sie dies auf
+Ihrer Kontoseite aktivieren.  Sie können auch wählen, ob der Betrag
+sichtbar ist.
+
+
+Wie werde ich ein Vim-Sponsor oder ein registrierter Vim-Nutzer?
+
+Schicken Sie Geld, wie weiter oben |send-money| erklärt, und fügen Sie
+Ihre Email-Adresse bei.  Wenn das Geld angekommen ist, bekommen Sie einen
+einmaligen Registrierungsschlüssel.  Dieser Schlüssel kann auf der
+Vim-Webseite benutzt werden, um das Abstimmen für Ihr Vim-Konto zu
+aktivieren.  Sie bekommen dann eine Extraseite, wo sie für Features stimmen
+und auswählen können, ob andere sehen können, dass Sie gespendet haben.
+Zu dieser Seite gibt es eine Verknüpfung auf Ihrer »My Account«-Seite.
+
+
+Was ist der Unterschied zwischen Sponsern und Registrieren?
+
+Es hat einen unterschiedlichen Namen.  Benutzen Sie den Begriff
+»Registrierung«, wenn Ihr Chef weder »Sponsern« noch »Spenden« mag.
+Der Nutzen ist derselbe.
+
+
+Wie kann ich Geld schicken?
+
+Siehe |send-money|.  Prüfen Sie die Webseite für die neuesten
+Informationen: http://www.vim.org/sponsor/
+
+
+Warum benutzen Sie nicht SourceForges Spendensystem?
+
+SourceForge behält 5% der Spenden ein.  Falls Sie SourceForge unterstützen
+wollen, können Sie ihnen direkt Geld schicken.
+
+
+Ich kann es mir nicht leisten, Geld zu schicken.  Darf ich Vim benutzen?
+
+Ja.
+
+
+Ich habe Vim nicht registriert.  Kann ich alle verfügbaren Features
+benutzen?
+
+Ja.
+
+
+Ich habe einen Fehler bemerkt.  Muss ich registrieren, bevor ich ihn melden
+kann?
+
+Nein.  Vorschläge zur Verbesserung von Vim können immer gegeben
+werden. Für Verbesserungen benutzen Sie die Entwickler- |maillist|, zum
+Melden von Fehlern siehe |bugs|
+
+
+Wie werden meine Stimmen gezählt?			*votes-counted*
+
+Sie dürfen abstimmen, wenn Sie 10 Euro oder mehr schicken.  Sie können bis
+zu zehn Stimmen eingeben.  Sie können dieselbe Sache mehrere Male
+auswählen, um ihr mehr Punkte zu geben.  Sie können auch drei
+Kontra-Stimmen eingeben, diese zählen als negative Punkte.
+
+Wenn Sie 30 Euro oder mehr schicken werden die Punkte verdoppelt.  Über 100
+Euro zählen sie vierfach, über 300 Euro sechsfach, über 1000 Euro
+zehnfach.
+
+
+Kann ich meine Stimmen ändern?
+
+Sie können Ihre Stimmen jederzeit ändern, wie sie wollen, bis zu zwei
+Jahren nachdem Sie Geld geschickt haben.  Die Punkte werden sofort gezählt.
+
+
+Kann ich eine Abstimmungssache hinzufügen?
+
+Nicht direkt.  Sie können Bram Abstimmungssachen vorschlagen.  Er
+entscheidet, Ihre Sache in die Liste einzufügen.
+
+
+Wie ist es mit Charityware?
+
+Gegenwärtig gehen die Gaben für Vim sowieso nach |Uganda|.  Damit ist es
+nicht entscheidend, ob Sie Vim oder ICCF unterstützen.  Außer dass
+Sponsern für Vim Ihnen erlaubt, für Features abzustimmen.
+
+
+Ich habe $$$ gegeben, bitte fügen Sie jetzt Feature XYZ hinzu!
+
+Es gibt keine direkte Beziehung zwischen Ihrer Gabe und der Arbeit, die Bram
+erledigt.  Ansonsten würden Sie für Arbeit bezahlen und wir müssten über
+die Gabe Steuern zahlen.  Wenn Sie Bram für eine bestimmte Arbeit anheuern
+wollen, kontaktieren Sie ihn direkt, benutzen Sie nicht das Gaben-System.
+
+
+Sind die Gaben steuerlich absetzbar?
+
+Das hängt von Ihrem Land ab.  Die Spenden, um den Kindern in |Uganda| zu
+helfen sind in den Niederlanden, Deutschland, Kanada und den Vereinigten
+Staaten steuerlich absetzbar.  Siehe die ICCF Webseite
+http://iccf-holland.org/donate.html.  Sie müssen Bram eine Email schicken,
+um ihm zu sagen, dass die Spende wegen der Benutzung von Vim geschah.
+
+
+Können Sie mir eine Rechnung schicken?
+
+Nein, weil es keine Beziehung zwischen dem Geld, das Sie schicken und der
+erledigten Arbeit gibt.  Aber eine Quittung ist möglich.
+
+
+
+ vim:tw=78:ts=8:ft=help:norl:

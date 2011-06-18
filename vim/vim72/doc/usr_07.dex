@@ -1,0 +1,520 @@
+*usr_07.txt*	Für Vim Version 7.2.  Letzte Änderung: 2006-Apr-24
+
+		     VIM BENUTZERHANDBUCH - von Bram Moolenaar
+
+			  Mehr als eine Datei editieren
+
+
+Egal wie viele Dateien Sie haben, Sie können Sie editieren, ohne Vim zu
+verlassen.  Definieren Sie eine Liste von Dateien, die zu bearbeiten sind,
+und springen Sie von einer zur anderen.  Kopieren Sie Text aus einer Datei
+und schreiben Sie ihn in eine andere.
+
+|07.1|	Eine andere Datei editieren
+|07.2|	Eine Liste von Dateien
+|07.3|	Von Datei zu Datei springen
+|07.4|	Sicherheitskopien
+|07.5|	Text zwischen Dateien kopieren
+|07.6|	Eine Datei betrachten
+|07.7|	Den Dateinamen ändern
+
+
+Nächstes Kapitel: |usr_08.txt|  Fenster aufteilen
+ Voriges Kapitel: |usr_06.txt|  Syntax-Hervorhebung benutzen
+Inhaltsübersicht: |usr_toc.txt|
+
+==============================================================================
+*07.1*	Eine andere Datei editieren
+
+Bis hier her mussten Sie Vim für jede Datei, die Sie editieren wollten,
+starten.  Es gibt einen einfacheren Weg.  Benutzen Sie diesen Befehl, um das
+Editieren einer anderen Datei zu beginnen: >
+
+	:edit foo.txt
+
+Statt »foo.txt« können Sie jeden Dateinamen benutzen.  Vim schließt die
+aktuelle Datei und öffnet die neue.  Falls aber die aktuelle Datei
+ungesicherte Änderungen hat, zeigt Vim eine Fehlermeldung und öffnet die
+neue Datei nicht:
+
+	E37: Kein Schreibvorgang seit der letzten Änderung (erzwinge mit !) ~
+
+	Anmerkung:
+	Vim setzt eine Fehlernummer an den Anfang jeder Fehlermeldung.  Falls 
+	Sie die Meldung nicht verstehen, oder was sie verursacht hat, schauen
+	Sie in der Hilfe nach dieser Nummer.  In diesem Falle: >
+
+		:help E37
+
+Jetzt haben Sie mehrere Alternativen.  Sie können die Datei mit diesem
+Befehl schreiben: >
+
+	:write
+
+Oder Sie können Vim zwingen, Ihre Änderungen zu verwerfen und die neue
+Datei zu editieren, indem Sie das Überstimmzeichen »!« verwenden: >
+
+	:edit! foo.txt
+
+Falls Sie eine andere Datei editieren wollen, aber die Änderungen in der
+aktuellen Datei noch nicht schreiben wollen, können Sie sie verstecken: >
+
+	:hide edit foo.txt
+
+Der Text mit den Änderungen ist noch da, aber Sie können ihn nicht sehen.
+Dies wird in Abschnitt |22.4|: Die Puffer-Liste näher erklärt.
+
+==============================================================================
+*07.2*	Eine Liste von Dateien
+
+Sie können Vim starten, um eine Folge von Dateien zu editieren.  Zum
+Beispiel: >
+
+	vim eins.c zwei.c drei.c
+
+Dieser Befehl startet Vim und sagt ihm, dass Sie drei Dateien editieren
+werden.  Vim zeigt nur die erste Datei an.  Nachdem Sie mit dieser Datei
+fertig sind, benutzen Sie diesen Befehl, um die nächste Datei zu editieren:
+>
+
+	:next
+
+Falls Sie in der aktuellen Datei ungesicherte Änderungen haben, bekommen
+Sie eine Fehlermeldung, und das »:next« funktioniert nicht.  Dies ist
+dasselbe Problem wie mit dem »:edit« im vorigen Abschnitt.  Um die
+Änderungen zu verwerfen: >
+
+	:next!
+
+Aber meisten wollen Sie die Änderungen speichern und zur nächsten Datei
+gehen.  Dafür gibt es einen besonderen Befehl: >
+
+	:wnext
+
+Dies macht dasselbe wie die zwei getrennten Befehle: >
+
+	:write
+	:next
+
+
+WO BIN ICH?
+
+Um zu sehen, welche Datei aus der Argumentenliste Sie editieren, schauen Sie
+in den Fenstertitel.  Er sollte wie »(2 von 3)« aussehen.  Dies bedeutet, dass
+Sie die zweite von drei Dateien editieren.
+   Falls Sie die Liste der Dateien sehen wollen, benutzen Sie diesen Befehl: >
+
+	:args
+
+Dies ist die Abkürzung für »arguments« (Argumente).  Die Ausgabe könnte
+so aussehen:
+
+	eins.c [zwei.c] drei.c ~
+
+Dies sind die Dateien, mit denen Sie Vim gestartet haben.  Die, die Sie
+aktuell editieren, »zwei.c«, ist in eckigen Klammern.
+
+
+ZU ANDEREN ARGUMENTEN GEHEN
+
+Um eine Datei zurückzugehen: >
+
+	:previous
+
+Dies ist genau wie der Befehl »:next«, außer dass er in die andere
+Richtung geht.  Und wieder gibt es eine Abkürzung, wenn Sie zuerst die
+Datei sichern wollen: >
+
+	:wprevious
+
+Um zur letzten Datei in der Liste zu gehen: >
+
+	:last
+
+Und um wieder zur ersten zu gehen: >
+
+	:first
+
+Allerdings gibt es keine Befehle »:wlast« oder »:wfirst«!
+
+Sie können für »:next« und »:previous« eine Anzahl verwenden.  Um zwei
+Dateien vorwärts zu springen: >
+
+	:2next
+
+
+AUTOMATISCHES SPEICHERN
+
+Wenn Sie durch die Dateien gehen und Änderungen machen, müssen Sie daran
+denken, »:write« zu benutzen.  Ansonsten bekommen Sie eine Fehlermeldung.
+Falls Sie sicher sind, dass Sie modifizierte Dateien immer sichern wollen,
+können Sie Vim sie automatisch sichern lassen: >
+
+	:set autowrite
+
+Wenn Sie eine Datei editieren, die sie möglicherweise nicht sichern wollen,
+schalten Sie es wieder aus: >
+
+	:set noautowrite
+
+
+EINE ANDERE LISTE VON DATEIEN EDITIEREN
+
+Sie können die Liste von Dateien ändern, ohne Vim verlassen und neustarten
+zu müssen.  Benutzen Sie diesen Befehl, um drei andere Datei zu editieren:
+>
+
+	:args fuenf.c sechs.c sieben.h
+
+Oder benutzen Sie ein Globbing, wie in der Shell benutzt: >
+
+	:args *.txt
+
+Vim bringt Sie zu der ersten Datei in der Liste.  Falls wiederum die
+aktuelle Datei Änderungen hat, müssen Sie die Datei entweder sichern, oder
+mit »:args!« (mit dem Überstimmmodifikator »!«) die Änderungen
+verwerfen.
+
+
+HABEN SIE DIE LETZTE DATEI EDITIERT?
+					*arglist-quit* *arglist-beenden*
+Wenn Sie eine Liste von Dateien benutzen, nimmt Vim an, dass Sie alle
+editieren wollen.  Um Sie davor zu bewahren, Vim zu früh zu beenden, bekommen
+Sie diese Fehlermeldung, wenn Sie noch nicht die letzte Datei in der Liste
+editiert haben:
+
+	E173: 46 weitere Dateien zum Editieren ~
+
+Falls Sie Vim wirklich beenden wollen, geben Sie diesen Befehl einfach noch
+mal.  Dann funktioniert es (aber nicht, wenn Sie dazwischen andere Befehle
+gegeben haben).
+
+==============================================================================
+*07.3*	Von Datei zu Datei springen
+
+Um schnell zwischen zwei Dateien hin und her zu springen, drücken Sie
+CTRL-^ (Auf deutschen Tastaturen ist das ^ neben der 1).  Beispiel: >
+
+	:args eins.c zwei.c drei.c
+
+Sie befinden sich nun in eins.c. >
+
+	:next
+
+Jetzt befinden Sie sich in zwei.c.  Nun benutzen Sie CTRL-^ um zu eins.c
+zurückzugehen.  Nochmal CTRL-^, und Sie befinden sich wieder in zwei.c.
+Noch einmal CTRL-^, und Sie sind wieder in eins.c.  Falls Sie jetzt dies
+geben: >
+
+	:next
+
+... sind Sie in drei.c.  Beachten Sie, dass der Befehl CTRL-^ nichts an der
+Idee ändert, wo in der Liste der Dateien sind.  Nur Befehle wie »:next«
+und »:previous« tun das.
+
+Die Datei, die Sie zuvor editiert haben, wird die »alternative« Datei
+genannt.  Wenn Sie gerade Vim gestartet haben, funktioniert CTRL-^ nicht,
+weil es keine vorige Datei gibt.
+
+
+VORDEFINIERTE MARKEN
+
+Nachdem Sie in eine andere Datei gesprungen sind, können Sie zwei
+vordefinierte Marken benutzen, die sehr nützlich sind: >
+
+	`"
+
+Dies bringt Sie zu der Position, wo der Cursor war, als Sie die Datei
+verlassen haben.  Vim merkt sich noch eine Markierung, die Position, wo Sie
+die letzte Änderung gemacht haben: >
+
+	`.
+
+Nehmen Sie an, Sie editieren die Datei »eins.txt«.  Irgendwo mitten in der
+Datei benutzen Sie »x« um ein Zeichen zu löschen.  Dann gehen Sie mit
+»G« in die letzte Zeile und sichern die Datei mit »:w«.  Sie editieren
+mehrere andere Dateien, und benutzen dann »:edit eins.txt« um zu
+»eins.txt« zurückzukommen.  Falls Sie nun `" geben, springt Vim in die
+letzte Zeile der Datei.  Wenn Sie `. benutzen, gelangen Sie zu der Position
+wo Sie das Zeichen gelöscht haben.  Selbst wenn Sie in der Datei
+umhergehen, gehen `" und `. zu den gemerkten Positionen.  Zumindest solange,
+bis Sie eine weitere Änderung machen oder die Datei verlassen.
+
+
+DATEIMARKIERUNGEN
+
+In Kapitel 4 wurde erklärt, wie Sie mit »mx« eine Markierung in einer Datei
+setzen und mit »`x« zu dieser Position springen können.  Das funktioniert
+innerhalb einer Datei.  Falls Sie eine andere Datei editieren und dort
+Markierungen setzen, sind diese auf diese Datei beschränkt.  Also hat jede
+Datei ihren eigenen Satz Markierungen, sie sind lokal für diese Datei.
+   Bis jetzt haben wir Markierungen mit einem Kleinbuchstaben benutzt.  Es
+gibt auch Markierungen mit einem Großbuchstaben.  Diese sind global, sie
+können aus jeder Datei heraus angesprungen werden.  Nehmen wir zum Beispiel
+an, dass wir die Datei »foo.txt« editieren.  Gehen wir etwa zur Mitte der
+Datei (»50%«) und setzen wir dort die Markierung F (F wie foo): >
+
+	50%mF
+
+Nun editieren wir die Datei »bar.txt« und setzen die Marke B (B wie bar) in
+ihre letzte Zeile: >
+
+	GmB
+
+Nun können wir den Befehl »'F« verwenden um in die Mitte von foo.txt zu
+springen.  Oder noch eine andere Datei editieren, »'B« drücken, und wir
+sind wieder am Ende von bar.txt.
+
+Die Dateimarkierungen werden solange gemerkt, bis sie irgend woanders gesetzt
+werden.  Also können Sie die Markierung setzen, stundenlang editieren, und
+immer noch zu dieser Markieren zurück springen.
+   Es ist oft nützlich, sich eine einfache Verbindung zwischen der Marke und
+wo sie gesetzt ist auszudenken.  Benutzen Sie zum Beispiel H in einer Header-
+Datei, M in einem Makefile und C in eine Datei mit C-Quelltext.
+
+Um zu sehen, wo eine spezielle Markierung ist, geben Sie sie als Argument an
+den Befehl »:marks«: >
+
+	:marks M
+
+Sie können auch mehrere Argumente geben: >
+
+	:marks MCP
+
+Vergessen Sie nicht, dass Sie CTRL-O und CTRL-I verwenden können, um zu
+älteren und neueren Positionen zu springen, ohne dort Markierungen zu
+setzen,
+
+==============================================================================
+*07.4*	Sicherheitskopien
+
+Vim produziert für gewöhnlich keine Sicherheitskopie.  Falls Sie eine
+wollen, müssen Sie nur den folgenden Befehl ausführen: >
+
+	:set backup
+
+Der Name der Sicherheitskopie ist der der originalen Datei mit einem ~ an das
+Ende gehängt.  Falls Ihre Datei zum Beispiel data.txt heißt, ist die
+Sicherheitskopie data.txt~.
+   Falls Sie die Tatsache, dass Sicherheitskopien auf ~ enden, nicht mögen,
+können Sie die Erweiterung ändern: >
+
+	:set backupext=.bak
+
+Dies benutzt data.txt.bak statt data.txt~.
+   Eine weitere entscheidende Option ist 'backupdir'.  Sie gibt an, wo die
+Sicherheitskopie geschrieben wird.  Die Voreinstellung, die Sicherheitskopie
+in dasselbe Verzeichnis wie die originale Datei zu schreiben, ist meistens das
+richtige.
+
+	Anmerkung:
+	Wenn die Option 'backup' nicht gesetzt ist, aber 'writebackup',
+	erzeugt Vim immer noch eine Sicherheitskopie.  Allerdings wird sie
+	gelöscht, sobald das Sichern der Datei erfolgreich war.  Dies fungiert
+	als Sicherheit gegen den Verlust Ihrer Originaldatei, wenn aus
+	irgendwelchen Gründen das Sichern scheitert (Medium voll ist die
+	häufigste Ursache; vom Blitz getroffen zu werden mag eine andere,
+	allerdings seltenere sein).
+
+
+DIE ORIGINALDATEI BEHALTEN
+
+Falls Sie Quelldateien editieren, möchten sie vielleicht die Datei halten,
+bevor Sie irgendwelche Änderungen machen.  Aber die Sicherheitskopie wird
+jedes Mal überschrieben, wenn Sie die Datei sichern.  Damit enthält sie nur
+die vorige Version, nicht die erste
+   Um Vim die Originaldatei halten zu lassen, setzen Sie die Option
+'patchmode'.  Dies gibt die zu benutzende Erweiterung für die erste
+Sicherheitskopie einer geänderten Datei an.  Für gewöhnlich werden Sie dies
+tun: >
+
+	:set patchmode=.orig
+
+Wenn Sie nun die Datei data.txt zum ersten Mal editieren, Änderungen machen
+und die Datei sichern, hält Vim eine Kopie der ungeänderten Datei unter dem
+Namen »data.txt.orig«.
+   Falls Sie weitere Änderungen an der Datei vornehmen, bemerkt Vim, dass
+»data.txt.orig« bereits besteht und lässt sie in Ruhe.  Weitere
+Sicherheitskopien werden dann »data.txt~« genannt (oder was Sie in 'backupext'
+angegeben haben).
+   Falls Sie 'patchmode' leer lassen (die Voreinstellung), wird die originale
+Datei nicht gehalten.
+
+==============================================================================
+*07.5*	Text zwischen Dateien kopieren
+
+Hier wird erklärt, wie Sie Text von einer Datei in eine andere kopieren.
+Lassen wir uns mit einem einfachen Beispiel beginnen.  Editieren Sie die
+Datei, die den Text enthält, den Sie kopieren wollen.  Bewegen Sie den Cursor
+auf den Anfang des Textes und drücken Sie »v«.  Dies startet den visuellen
+Modus.  Nun bewegen Sie den Cursor auf das Ende des Textes und drücken »y«.
+Dies kopiert den ausgewählten Text.
+   Um den obigen Absatz zu kopieren, würden Sie machen: >
+
+	:edit diesedatei
+	/Hier
+	vjjjj$y
+
+Nun editieren Sie die Datei, in der Sie den Text einsetzen wollen.  Bewegen
+Sie den Cursor auf das Zeichen, nach dem Sie den Text sehen wollen.  Benutzen
+Sie »p« um den Text dort hinzusetzen. >
+
+	:edit anderedatei
+	/Dort
+	p
+
+Natürlich können Sie viele andere Befehle benutzen, um den Text zu kopieren.
+Um zum Beispiel ganze Zeilen auszuwählen, starten Sie den visuellen Modus mit
+»V«.  Oder benutzen Sie CTRL-V, um einen rechteckigen Block auszuwählen.  Oder
+benutzen Sie »Y«, um eine einzelne Zeile zu kopieren, »yaw« für ein Wort usw.
+   Der Befehl »p« platziert den Text hinter dem Cursor.  Benutzen Sie »P«, um
+den Text vor dem Cursor zu platzieren.  Beachten Sie, dass Vim sich merkt, ob
+Sie eine ganze Zeile oder einen Block kopiert haben, und platziert
+entsprechend.
+
+
+REGISTER VERWENDEN
+
+Wenn Sie mehrere Textteile von einer Datei in eine andere kopieren wollen,
+nimmt es viel Zeit, zwischen den Dateien zu wechseln und die Zieldatei zu
+beschreiben.  Um dies zu vermeiden, kopieren Sie jeden Textteil in sein
+eigenes Register.
+   Ein Register ist ein Ort, wo Vim Text speichert.  Hier benutzen wir die mit
+»a« bis »z« benannten Register (später sehen Sie, dass es andere gibt).
+Lassen Sie uns einen Satz in das Register e kopieren (e wie erster): >
+
+	"eyas
+
+Der Befehl »yas« kopiert einen Satz wie zuvor.  Es ist das "e, das Vim sagt,
+dass der Text in das Register e gehen soll.  Dies muss genau vor dem Befehl
+»y« kommen.
+   Nun kopieren Sie drei ganze Zeile in das Register z (z wie Zeile): >
+
+	"z3Y
+
+Die Anzahl hätte genausogut vor dem "z stehen können.  Um einen Textblock
+in das Register b (b wie Block) zu kopieren: >
+
+	CTRL-Vjjww"by
+
+Beachten Sie, dass die Registerangabe "b direkt vor dem Befehl »y« steht.
+Wenn man es vor den Befehl »w« setzt, funktioniert es nicht.
+   Nun haben Sie drei Textstücke in den Registern e, z und b.  Editieren Sie
+eine andere Datei, gehen Sie herum, und platzieren Sie den Text wo Sie ihn
+wollen: >
+
+	"ep
+
+Und wieder kommt die Registerangabe "e vor dem Befehl »p«.
+   Sie können die Register in jeder Reihenfolge setzen.  Und der Text bleibt
+in dem Register, bis sie etwas anderes hinein kopieren.  Also können Sie ihn
+so oft setzen, wie Sie wollen.
+
+Wenn Sie Text löschen, können Sie auch ein Register angeben.  Benutzen Sie
+dies, um mehrere Textstücke umherzubewegen.  Um zum Beispiel ein Wort zu
+löschen und es in das Register w zu schreiben: >
+
+	"wdaw
+
+Und wieder kommt die Registerangabe vor dem Löschbefehl »d«.
+
+
+AN EINE DATEI ANHÄNGEN
+
+Wenn Sie Textzeilen in einer Datei sammeln, können Sie diesen Befehl
+benutzen: >
+
+	:write >> logfile
+
+Dies schreibt den Text der aktuellen Datei an das Ende von »logfile«.  Also
+wird er angehängt.  Dies vermeidet, dass Sie die Zeilen kopieren, die Logdatei
+öffnen und die Zeilen dort setzen müssen.  Also sparen Sie zwei Schritte.
+Aber Sie können nur an das Ende einer Datei anhängen.
+   Um nur ein paar Zeilen anzuhängen, wählen Sie sie im visuellen Modus, bevor
+Sie »:write« tippen.  In Kapitel 10 lernen Sie andere Wege einen Bereich von
+Zeilen auszuwählen.
+
+==============================================================================
+*07.6*	Eine Datei betrachten
+
+Manchmal wollen Sie nur sehen, was eine Datei enthält, ohne die Absicht sie
+zurückzuschreiben.  Es besteht das Risiko, dass Sie »:w« tippen, ohne
+Nachzudenken, und die Originaldatei überschreiben.  Um dies zu vermeiden,
+editieren Sie die Datei nur-lesend.
+   Um Vim im Nur-Lese-Modus zu starten, benutzen Sie diesen Befehl: >
+
+	vim -R file
+
+Unter Unix sollte dieser Befehl dasselbe tun: >
+
+	view file
+
+Nun editieren Sie »file« im Nur-Lese-Modus.  Wenn Sie versuchen, »:w« zu
+benutzen, bekommen Sie eine Fehlermeldung, und die Datei wird nicht
+geschrieben.
+   Wenn Sie versuchen, die Datei zu ändern, gibt Vim Ihnen eine Warnung:
+
+	W10: Warnung: Ändern einer schreibgeschützten Datei ~
+
+Allerdings wird die Änderung gemacht.  Dies erlaubt es, die Datei, zum
+Beispiel zum besseren Lesen, zu formatieren.
+   Falls Sie Änderungen an einer Datei machen und vergessen, dass sie
+nur-lesend war, können Sie sie immer noch sichern.  Fügen Sie dem Schreibbefehl
+ein ! hinzu, um das Schreiben zu erzwingen.
+
+Falls Sie wirklich Änderungen in einer Datei verbieten wollen, tun Sie
+dies; >
+
+	vim -M file
+
+Jetzt wird jeder Versuch, den Text zu ändern, scheitern,  Die Hilfe-Dateien
+sind zum Beispiel so.  Falls Sie versuchen, eine Änderung zu machen,
+bekommen Sie diese Fehlermeldung:
+
+	E21: Kann keine Änderungen machen, 'modifiable' ist aus ~
+
+Sie könnten das Argument -M benutzen, um Vim im Anzeigermodus laufen zu
+lassen.  Dies ist allerdings freiwillig, da diese Befehle den Schutz
+entfernen: >
+
+	:set modifiable
+	:set write
+
+==============================================================================
+*07.7*	Den Dateinamen ändern
+
+Ein klever Weg, das Editieren einer neuen Datei zu beginnen, ist es, eine
+existierende Datei zu benutzen, die das meiste enthält, was Sie brauchen.
+Sie beginnen zum Beispiel ein Programm zu schreiben, das eine Datei
+umbenennt.  Sie wissen, dass Sie bereits ein Programm haben, das eine Datei
+kopiert, also beginnen Sie mit: >
+
+	:edit copy.c
+
+Sie können das, was sie nicht brauchen, löschen.  Nun müssen Sie die
+Datei unter einem neuen Namen speichern.  Hierfür kann der Befehl
+»:saveas« benutzt werden: >
+
+	:saveas move.c
+
+Vim speichert die Datei unter dem gegebenen Namen und editiert diese Datei.
+Wenn Sie also das nächste Mal »:write« geben, schreibt er »:move.c«.  »copy.c«
+bleibt unverändert.
+   Wenn Sie den Namen der Datei, die Sie editieren, ändern wollen, aber nicht
+die Datei schreiben, können Sie diesen Befehl verwenden: >
+
+	:file move.c
+
+Vim markiert die Datei als »Nicht editiert«.  Dies bedeutet, Vim weiß
+dies ist nicht die Datei, mit der Sie das Editieren begonnen haben.  Wenn
+Sie versuchen, die Datei zu sichern, mögen Sie diese Meldung bekommen:
+
+	E13: Datei existiert bereits (erzwinge mit !) ~
+
+Dies schützt Sie davor, aus Versehen eine andere Datei zu überschreiben.
+
+==============================================================================
+
+Nächstes Kapitel: |usr_08.txt| Fenster aufteilen
+
+Copyright: siehe |manual-copyright| vim:tw=78:ts=8:ft=help:norl:

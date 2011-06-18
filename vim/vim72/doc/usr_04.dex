@@ -1,0 +1,555 @@
+*usr_04.txt*	Für Vim Version 7.2.  Letzte Änderung: 2006-Jun-21
+
+		     VIM BENUTZERHANDBUCH - von Bram Moolenaar
+
+			     Kleine Änderungen machen
+
+
+Dieses Kapitel zeigt Ihnen mehrere Möglichkeiten, Korrekturen vorzunehmen
+und Text umherzubewegen.  Es lehrt Sie die drei grundlegenden Arten, Text zu
+ändern:  Operatorbewegungen, visueller Modus und Textobjekte.
+
+|04.1|	Operatoren und Bewegungen
+|04.2|	Text verändern
+|04.3|	Eine Änderung wiederholen
+|04.4|	Der visuelle Modus
+|04.5|	Text bewegen
+|04.6|	Text kopieren
+|04.7|	Die Zwischenablage benutzen
+|04.8|	Text-Objekte
+|04.9|	Ersetzungsmodus
+|04.10|	Schluss
+
+
+Nächstes Kapitel: |usr_05.txt|  Eigene Einstellungen setzen
+ Voriges Kapitel: |usr_03.txt|  Umherbewegen
+Inhaltsübersicht: |usr_toc.txt|
+
+==============================================================================
+*04.1*	Operatoren und Bewegungen
+
+In Kapitel 02 haben Sie den Befehl »x« kennengelernt, um ein einzelnes Zeichen
+zu löschen.  Und das Benutzen einer Anzahl:  »4x« löscht vier Zeichen.
+   Der Befehl »dw« löscht ein Wort.  Sie mögen den Befehl »w« zum wortweisen
+Bewegen wiedererkennen.  Tatsächlich kann dem Befehl »d« jeder Bewegungsbefehl
+folgen, und er löscht von der aktuellen Stelle zu der, wo der Cursor stoppt.
+   Zum Beispiel bewegt der Befehl »4w« den Cursor über vier Wörter.  Der
+Befehl »d4w« löscht vier Wörter.
+
+	To err is human. To really foul up you need a computer. ~
+			 ------------------>
+				 d4w
+
+	To err is human. you need a computer. ~
+
+Vim löscht nur bis zu der Position, wohin die Bewegung den Cursor bewegt.
+Das ist deshalb, weil Vim weiß, dass Sie wahrscheinlich nicht das erste
+Zeichen eines Wortes löschen wollen.  Falls Sie den Befehl »e« benutzen,
+um zum Ende eines Wortes zu gehen, nimmt Vim an, dass Sie dieses letzte
+Zeichen einbeziehen wollen:
+
+	To err is human. you need a computer. ~
+			-------->
+			   d2e
+
+	To err is human. a computer. ~
+
+Ob das Zeichen unter dem Cursor einbezogen wird, hängt von dem Befehl ab,
+der benutzt wurde, um zu diesem Zeichen zu gehen.  Das Referenzhandbuch
+spricht von »exklusiv«, wenn das Zeichen nicht einbezogen wird, und von
+»inklusiv«, wenn es wird.
+
+Der Befehl »$« geht zum Ende der Zeile.  Der Befehl »d$« löscht vom
+Cursor Zum Zeilenende.  Diese Bewegung ist inklusiv, also wird das letzte
+Zeichen der Zeile in den Löschvorgang einbezogen:
+
+	To err is human. a computer. ~
+		       ------------>
+			    d$
+
+	To err is human ~
+
+Hierbei gibt es ein Muster:  Operatorbewegung.  Sie tippen zuerst einen
+Operator.  Zum Beispiel ist »d« der Löschoperator.  Dann tippen Sie einen
+Bewegungsbefehl, wie »4l« oder »w«.  Auf diese Weise können Sie mit
+jedem Text operieren, über den Sie sich bewegen können.
+
+==============================================================================
+*04.2*	Text verändern
+
+Ein anderer Operator ist »c«, ändern (change).  Er verhält sich genau
+wie der Operator »d«, außer dass er Sie anschließend in den
+Einfügemodus setzt.  Zum Beispiel ändert »cw« ein Wort.  Oder genauer,
+es löscht ein Wort und setzt Sie dann in den Einfügemodus.
+
+	To err is human ~
+	   ------->
+	     c2wbe<Esc>
+
+	To be human ~
+
+Dieses »c2wbe<Esc>« enthält diese Teile:
+
+	c	der Änderungsoperator
+	2w	zwei Worte bewegen (sie werden gelöscht und der Einfügemodus
+		beginnt)
+	be	diesen Text einfügen
+	<Esc>	zurück zum Normalmodus
+
+Falls Sie Acht gegeben haben, haben Sie etwas ungewöhnliches bemerkt:  Das
+Leerzeichen vor »human« wurde nicht gelöscht.  Es gibt ein Sprichwort,
+dass es für jedes Problem eine Antwort gibt, die einfach ist, klar und
+falsch.  Das ist bei dem hier benutzten Beispiel der Fall bei dem Befehl
+»cw«.  Der Operator »c« arbeitet genau wie der Operator »d«, mit einer
+Ausnahme:  »cw«.  Es arbeitet in Wirklichkeit wie »ce«, ändere bis zum
+Ende des Wortes.  Also wird das Leerzeichen nach dem Wort nicht einbezogen.
+Dies ist eine Ausnahme, die auf den alten Vi zurückdatiert.  Weil es viele
+Leute gewohnt sind, blieb diese Inkonsistenz in Vim bestehen.
+
+
+WEITERE ÄNDERUNGEN
+
+So wie »dd« eine ganze Zeile löscht, ändert »cc« eine ganze Zeile.  Es
+behält aber den bestehenden Einzug (führende weiße Zeichen) bei.
+
+Genau wie »d$« bis zum Ende einer Zeile löscht, ändert »c$« bis zum
+Ende einer Zeile.  Es ist, als führe man »d$« aus, um den Text zu
+löschen, und dann »a«, um in den Einfügemodus zu gehen und neuen Text
+anzuhängen.
+
+
+ABKÜRZUNGEN
+
+Einige Operatorbewegungsbefehle werden so oft benutzt, dass man ihnen einen
+einbuchstabigen Befehl gegeben hat:
+
+	x  steht für  dl  (Zeichen unter dem Cursor löschen)
+	X  steht für  dh  (Zeichen vor dem Cursor löschen)
+	D  steht für  d$  (bis zum Zeilenende löschen)
+	C  steht für  c$  (bis zum Zeilenende ändern)
+	s  steht für  cl  (ein Zeichen ändern)
+	S  steht für  cc  (eine ganze Zeile ändern)
+
+
+WOHIN DIE ANZAHL ZU SETZEN IST
+
+Die Befehle »3dw« und »d3w« löschen drei Wörter.  Falls Sie es ganz
+genau nehmen möchten, der erste Befehl »3dw« löscht drei Mal ein Wort;
+der Befehl »d3w« löscht drei Wörter auf einmal.  Dies ist ein
+Unterschied ohne eine Unterscheidung.  Sie können sogar zwei Anzahlen
+setzen.  Zum Beispiel löscht »3d2w« dreimal wiederholt zwei Wörter,
+insgesamt also sechs.
+
+
+DURCH EIN ZEICHEN ERSETZEN
+
+Der Befehl »r« ist kein Operator.  Er wartet, dass Sie ein Zeichen tippen,
+und ersetzt das Zeichen unter dem Cursor durch dieses.  Sie könnten
+dasselbe mit den Befehlen »cl« oder »s« machen, aber bei »r« brauchen
+Sie nicht <Esc> drücken.
+
+	there is somerhing grong here ~
+	rT	     rt    rw
+
+	There is something wrong here ~
+
+Eine Anzahl mit »r« ersetzt so viele Zeichen durch dasselbe Zeichen.
+Beispiel:
+
+	There is something wrong here ~
+			   5rx
+
+	There is something xxxxx here ~
+
+Um ein Zeichen durch einen Zeilenumbruch zu ersetzen benutzen Sie
+»r<Enter>«.  Dies löscht ein Zeichen und fügt einen Zeilenumbruch ein.
+Hier wird eine Anzahl nur auf die Zahl gelöschter Zeichen verwendet:
+»4r<Enter>« ersetzt vier Zeichen durch einen Zeilenumbruch.
+
+==============================================================================
+*04.3*	Eine Änderung wiederholen
+
+Der Befehl ».« (Punkt) ist einer der einfachsten aber mächtigsten Befehle
+in Vim.  Er wiederholt die letzte Änderung.  Nehmen Sie zum Beispiel an,
+Sie editieren eine HTML-Datei und wollen alle <B>-Tags löschen.  Sie setzen
+den Cursor auf die erste »<« und löschen <B> mit dem Befehl »df>«.
+Dann gehen Sie zur »<« des nächsten </B> und löschen es mit dem Befehl
+».«.  Der Befehl ».« führt den letzten Änderungsbefehl aus (in diesem
+Falle »df>«).  Um ein weiteres Tag zu löschen, setzen Sie den Cursor auf
+die »<« und benutzen Sie den Befehl ».«.
+
+			      To <B>generate</B> a table of <B>contents ~
+	f<   finde erste <    --->
+	df>  lösche bis >	 -->
+	f<   finde nächste <	   --------->
+	.    wiederhole df>		    --->
+	f<   finde nächste <		       ------------->
+	.    wiederhole df>				    -->
+
+Der Befehl ».« funktioniert für alle Änderungen, die Sie vornehmen,
+außer bei »u« (undo), CTRL-R (redo) und Befehlen, die mit einem
+Doppelpunkt (:) beginnen.
+
+Noch ein Beispiel:  Sie wollen das Wort »four« in »five« ändern.  Es
+taucht mehrmals in Ihrem Text auf.  Sie können dies schnell mit folgender
+Befehlsfolge erledigen:
+
+	/four<Enter>	finde das erste »four«
+	cwfive<Esc>	ändere das Wort in »five«
+	n		finde das nächste »four«
+	.		wiederhole die Änderung in »five«
+	n		finde das nächste »four«
+	.		wiederhole die Änderung
+			usw.
+
+==============================================================================
+*04.4*	Der visuelle Modus
+
+Um einfache Elemente zu löschen, funktionieren die Operator-Bewegungs-
+Änderungen recht gut.  Aber oft ist es nicht so einfach zu entscheiden,
+welcher Befehl über den Text geht, den Sie verändern wollen.  Dann können
+Sie den visuellen Modus benutzen.
+
+Sie beginnen den visuellen Modus, indem Sie »v« drücken.  Sie bewegen den
+Cursor über den Text, den Sie bearbeiten wollen.  Während Sie dies tun,
+wird der Text hervorgehoben.  Schließlich können Sie den Operator-Befehl
+tippen.
+   Um zum Beispiel von der Mitte eines Wortes zur Mitte eines anderen Wortes
+zu löschen:
+
+		This is an examination sample of visual mode ~
+			       ---------->
+				 velllld
+
+		This is an example of visual mode ~
+
+Wenn Sie dies tun, müssen Sie nicht wirklich zählen, wie oft Sie »l«
+drücken müssen, um an der richtigen Position zu landen.  Sie können
+unmittelbar sehen, welcher Text gelöscht wird, wenn Sie »d« drücken.
+
+Falls Sie irgendwann entscheiden, dass Sie nichts mit dem hervorgehobenen
+Text machen wollen, drücken Sie einfach <Esc>, und der visuelle Modus
+beendet sich, ohne irgendwas zu tun.
+
+
+ZEILEN AUSWÄHLEN
+
+Falls Sie mit ganzen Zeilen arbeiten wollen, benutzen Sie »V«, um den
+visuellen Modus zu starten.  Sie sehen sofort, dass die ganze Zeile
+hervorgehoben wird, ohne umher zu bewegen.  Wenn Sie sich nach links oder
+rechts bewegen, ändert sich nichts.  Wenn Sie sich nach oben oder unten
+bewegen, wird die Auswahl um ganze Zeilen auf einmal erweitert.
+   Wählen Sie zum Beispiel drei Zeilen mit »Vjj« aus:
+
+			      +------------------------+
+			      | Text mehr Text	       |
+		           >> | mehr Text mehr Text    | |
+	ausgewählte Zeilen >> | Text Text Text	       | | Vjj
+		           >> | Text mehr	       | V
+			      | mehr Text mehr	       |
+			      +------------------------+
+
+
+BLÖCKE AUSWÄHLEN
+
+Falls Sie an einem rechteckigen Block von Zeichen arbeiten wollen, benutzen
+Sie CTRL-V, um den visuellen Modus zu beginnen.  Dies ist sehr nützlich bei
+der Arbeit an Tabellen.
+
+		name		Q1	Q2	Q3
+		pierre		123	455	234
+		john		0	90	39
+		steve		392	63	334
+
+Um die mittlere Spalte »Q2« zu löschen, bewegen Sie den Cursor auf das
+»Q« von »Q2«.  Drücken Sie CTRL-V, um in den blockweisen visuellen
+Modus zu gehen.  Nun bewegen Sie den Cursor mit »3j« drei Zeilen nach
+unten und mit »w« zum nächsten Wort.  Sie können sehen, dass das erste
+Zeichen der letzten Spalte einbezogen ist.  Um es auszuschließen, benutzen
+Sie »h«.  Nun drücken Sie »d« und die mittlere Spalte ist verschwunden.
+
+
+AUF DIE ANDERE SEITE GEHEN
+
+Falls Sie einigen Text im visuellen Modus ausgewählt haben und entdecken,
+dass Sie das andere Ende der Auswahl ändern müssen, benutzen Sie den
+Befehl »o« (»o« wie »other«).  Der Cursor geht an das andere Ende und
+Sie können den Cursor bewegen, um zu ändern, wo die Auswahl beginnt.
+Nochmals »o« drücken bringt Sie wieder ans andere Ende zurück.
+
+Wenn Sie die blockweise Auswahl benutzen, haben Sie vier Ecken.  »o«
+bringt Sie nur diagonal zu einer der anderen Ecken.  Benutzen Sie »O«, um
+zu der anderen Ecke in derselben Zeile zu gehen.
+
+Beachten Sie, dass »o« und »O« im visuellen Modus anders arbeiten, als
+im normalen Modus, wo Sie eine neue Zeile unter oder über dem Cursor
+öffnen.
+
+==============================================================================
+*04.5*	Text bewegen
+
+Wenn Sie etwas mit »d«, »x« oder einem anderen Befehl löschen, wird der Text
+zwischengespeichert.  Sie können ihn mit dem Befehl »p« wieder einfügen.  (Der
+Name dafür in Vim ist »put«, setzen).
+   Schauen wir nun, wie dies funktioniert.  Zuerst löschen wir eine ganze
+Zeile, indem wir den Cursor auf die Zeile setzen, die wir löschen wollen, und
+drücken »dd«.  Nun bewegen wir den Cursor dorthin, wohin wir die Zeile setzen
+wollen, und benutzen den Befehl »p«.  Die Zeile wird unter der Zeile, in der
+sich der Cursor befindet, eingefügt.
+
+	Zeile 1		Zeile 1		Zeile 1
+	Zeile 2	  dd	Zeile 3	  p	Zeile 3
+	Zeile 3				Zeile 2
+
+Weil Sie eine ganze Zeile gelöscht haben, platziert der Befehl »p« die
+Textzeile unter dem Cursor.  Falls Sie einen Teil einer Zeile löschen (zum
+Beispiel ein Wort), setzt es der Befehl »p« gleich nach dem Cursor.
+
+	Some more boring try text to out commands. ~
+			 ---->
+			  dw
+
+	Some more boring text to out commands. ~
+			 ------->
+			    welp
+
+	Some more boring text to try out commands. ~
+
+
+MEHR ÜBER DAS SETZEN (PUTTING)
+
+Der Befehl »P« setzt Text wie »p«, aber vor dem Cursor.  Wenn Sie eine
+ganze Zeile mit »dd« löschen, setzt »P« sie über dem Cursor.  Wenn Sie
+ein Wort mit »dw« löschen, bringt es »P« genau vor dem Cursor wieder.
+
+Sie können das Setzen sooft wiederholen, wie Sie wollen.  Es wird derselbe
+Text benutzt.
+
+Sie können mit »p« und »P« eine Anzahl benutzen.  Der Text wird so oft
+wiederholt, wie durch die Anzahl angegeben.  Die Folge »dd« und dann
+»3p« macht drei Kopien derselben gelöschten Zeile.
+
+
+ZWEI ZEICHEN VERTAUSCHEN
+
+Wenn Sie tippen, kommt es oft vor, dass die Finger dem Hirn voraus sind
+(oder anders herum?).  Das Ergebnis ist ein Tippfehler, so wie »teh« statt
+»the«.  Vim macht es einfach, solche Probleme zu korrigieren.  Setzen Sie
+einfach den Cursor auf das »e« von »teh« und führen Sie den Befehl
+»xp« aus.  Dies arbeitet wie folgt: »x« löscht das Zeichen »e« und
+legt es in ein Register.  »p« stellt diesen Text hinter den Cursor, was
+nach dem »h« ist.
+
+	teh     th     the ~
+	 x       p
+
+==============================================================================
+*04.6*	Text kopieren
+
+Um Text von einem Ort zu einem anderen zu kopieren, könnten Sie ihn löschen,
+»u« benutzen, um das Löschen zurückzunehmen und dann »p«, um ihn irgenwo
+anders hinzusetzen.  Es gibt einen einfacheren Weg:  Yanken.  Der Operator »y«
+kopiert Text in ein Register.  Dann kann ein »p«-Befehl benutzt werden, um ihn
+zu setzen.
+   Yanken ist nur ein Vim-Name für das Kopieren.  Der Buchstabe »c« wurde
+schon für den Änderungsoperator benutzt, und das »y« war noch verfügbar.
+Diesen Operator »Yank« zu nennen macht es einfacher zu merken, dass man die
+Taste »y« benutzt.
+
+Weil »y« ein Operator ist, benutzt man »yw« um ein Wort zu kopieren.
+Wie üblich ist eine Anzahl möglich.  Um zwei Wörter zu kopieren benutze
+man »y2w«.  Beispiel:
+
+	let sqr = LongVariable * ~
+		 -------------->
+		       y2w
+
+	let sqr = LongVariable * ~
+			       p
+
+	let sqr = LongVariable * LongVariable ~
+
+Beachten Sie, dass »yw« das Leerzeichen nach einem Wort einschließt.
+Falls Sie dies nicht wollen, benutzen Sie »ye«.
+
+Der Befehl »yy« kopiert eine ganze Zeile, genau wie »dd« eine ganze
+Zeile löscht.  Während »D« vom Cursor bis zum Zeilenende löscht,
+funktioniert »Y« unerwarteterweise wie »yy«, es kopiert die ganze
+Zeile.  Geben Sie auf diese Inkonsistenz acht!  Benutzen Sie »y$«, um bis
+zum Zeilenende zu kopieren.
+
+	a text line   yy	a text line	       a text line
+	line 2			line 2		p      line 2
+	last line		last line	       a text line
+						       last line
+
+==============================================================================
+*04.7*	Die Zwischenablage benutzen
+
+Falls Sie die GUI-Version von Vim benutzen (gvim), finden Sie den Punkt
+»Kopieren« im Menü »Editieren«.  Wählen Sie zuerst etwas Text mit dem
+visuellen Modus aus, dann benutzen Sie »Editieren->Kopieren«.  Der
+ausgewählte Text wird nun in die Zwischenablage kopiert.  Sie können den
+Text in anderen Programmen einfügen.  Auch in Vim selbst.
+
+Falls Sie in einer anderen Anwendung Text in die Zwischenablage kopiert
+haben, können Sie ihn mit »Editieren->Einfügen« einfügen.  Dies
+funktioniert im Normal-Modus und im Einfüge-Modus.  Im visuellen Modus wird
+der ausgewählte Text durch den eingefügten Text ersetzt.
+
+Der Menüpunkt »Ausschneiden« löscht den Text, nachdem er in die
+Zwischenablage kopiert wurde.  Die Punkte »Kopieren«, »Ausschneiden« und
+»Einfügen« sind auch in dem Popup-Menü verfügbar (selbstverständlich
+nur, wenn es ein Popup-Menü gibt).  Falls Ihr Vim eine Werkzeugleiste hat,
+können Sie diese Aktionen auch dort finden.
+
+Falls Sie die GUI nicht benutzen, oder es nicht mögen, ein Menü zu
+benutzen, müssen Sie einen anderen Weg gehen.  Sie benutzen die normalen
+Befehle »y« und »p«, aber stellen ihnen »"*« voran.  Um eine Zeile in
+die Zwischenablage zu kopieren: >
+
+	"*yy
+
+Um Text von der Zwischenablage in den Text einzufügen: >
+
+	"*p
+
+Dies funktioniert nur in Versionen von Vim, die Unterstützung der
+Zwischenablage enthalten.  Mehr über die Zwischenablage in Abschnitt |09.3|
+und hier: |clipboard|.
+
+==============================================================================
+*04.8*	Text-Objekte
+
+Falls der Cursor in der Mitte eines Wortes ist und Sie wollen dieses Wort
+löschen, müssen Sie zurück auf seinen Anfang gehen, bevor Sie »dw«
+geben können.  Hierfür gibt es eine einfachere Möglichkeit: »daw«.
+
+	this is some example text. ~
+		       daw
+
+	this is some text. ~
+
+Das »d« in »daw« ist der Lösch-Operator.  »aw« ist ein Text-Objekt.
+»aw« steht für »A Word« (ein Wort).  Somit ist »daw« »Lösche ein
+Wort«.  Um genau zu sein, das Leerzeichen nach dem Wort wird auch gelöscht
+(am Zeilenende das Leerzeichen vor dem Wort).
+
+Text-Objekte zu benutzen ist der dritte Weg Änderungen in Vim zu machen.  Wir
+hatten bereits Operator-Bewegung und den visuellen Modus.  Nun bekommen wir
+Operator-Text-Objekt.
+   Es ist der Operator-Bewegung sehr ähnlich, aber statt auf dem Text zwischen
+der Cursor-Position und dort, wo der Bewegungsbefehl stoppt, zu operieren wird
+das Text-Objekt als ganzes benutzt.  Es spielt keine Rolle, wo in dem Objekt
+der Cursor war.
+
+Um einen ganzen Satz zu ändern benutzen Sie »cis«.  Nehmen Sie diesen
+Text:
+
+	Hello there.  This ~
+	is an example.  Just ~
+	some text. ~
+
+Gehen Sie auf den Anfang der zweiten Zeile, auf »is an«.  Jetzt benutzen
+Sie »cis«:
+
+	Hello there.    Just ~
+	some text. ~
+
+Der Cursor ist zwischen den Leerzeichen in der ersten Zeile.  Nun tippen Sie
+den neuen Satz »Another Line«:
+
+	Hello there.  Another line.  Just ~
+	some text. ~
+
+»cis« besteht aus dem »c« (Änderungs-)Operator und dem Text-Objekt
+»is«.  Dies steht für »Inner Sentence« (innerer Satz).  Es gibt auch
+das Objekt »as« (ein Satz).  Der Unterschied ist, dass »as« Leerzeichen
+nach dem Satz einschließt und »is« nicht.  Falls Sie also einen Satz und
+gleichzeitig Leerzeichen nach dem Satz löschen wollen, benutzen Sie
+»das«.  Falls Sie neuen Text tippen wollen, kann der Freiraum bestehen
+bleiben, also benutzen Sie »cis«.
+
+Sie können Text-Objekte auch im visuellen Modus benutzen.  Das Text-Objekt
+wird in die visuelle Auswahl einbezogen.  Vim bleibt im visuellen Modus,
+also können Sie dies mehrere Male machen.  Starten Sie zum Beispiel den
+visuellen Modus mit »v« und wählen Sie einen Satz mit »as« aus.  Nun
+können Sie »as« wiederholen, um weitere Sätze einzuschließen.
+Schließlich benutzen Sie einen Operator, um etwas mit den ausgewählten
+Sätzen zu machen.
+
+Hier gibt es eine lange Liste der Text-Objekte: |text-objects|.
+
+==============================================================================
+*04.9*	Ersetzungsmodus
+
+Der Befehl »R« bringt Vim in den Ersetzungsmodus.  In diesem Modus ersetzt
+jedes Zeichen, das Sie tippen, das unter dem Cursor.  Dies geht weiter bis Sie
+<Esc> tippen.
+   In diesem Beispiel starten Sie den Ersetzungsmodus auf dem ersten »t« von
+»text«:
+
+	This is text. ~
+		Rinteresting.<Esc>
+
+	This is interesting. ~
+
+Sie mögen bemerkt haben, dass dieser Befehl fünf Zeichen auf der Zeile
+durch zwölf andere ersetzt.  Der Befehl »R« erweitert automatisch die
+Zeile, wenn ihm die zu ersetzenden Zeichen ausgehen.  Er macht nicht auf der
+nächsten Zeile weiter.
+
+Sie können mit der <Insert>- oder <Einfg>-Taste zwischen Einfüge- und
+Ersetzungsmodus umschalten.
+
+Wenn Sie <BS> (Rückschritt) benutzen, um Korrekturen vorzunehmen, bemerken
+Sie, das der alte Text wieder erscheint.  Also arbeitet sie wie ein
+Undo-Befehl für das zuletzt getippte Zeichen.
+
+==============================================================================
+*04.10*	Schluss
+
+Operatoren, Bewegungsbefehle und Text-Objekte geben Ihnen die Möglichkeit,
+viele Kombinationen zu machen.  Nun, da Sie wissen, wie es geht, können Sie
+N Operatoren mit M Bewegungsbefehlen benutzen, um N * M Befehle zu machen!
+
+Hier können Sie eine Liste der Operatoren finden: |operator|
+
+Es gibt zum Beispiel viele andere Möglichkeiten, Teile des Textes zu
+löschen.  Hier sind ein paar häufig benutzte:
+
+x	lösche Zeichen unter dem Cursor (kurz für »dl«)
+X	lösche Zeichen vor dem Cursor (kurz für »dh«)
+D	lösche vom Cursor bis Zeilenende (kurz für »d$«)
+dw	lösche vom Cursor bis zum nächsten Wortanfang
+db	lösche vom Cursor bis zum vorigen Wortanfang
+diw	lösche Wort unter dem Cursor (Leerzeichen ausgenommen)
+daw	lösche Wort unter dem Cursor (Leerzeichen eingeschlossen)
+dG	lösche bis zum Dateieinde
+dgg	lösche bis zum Dateianfang
+
+Falls Sie »c« statt »d« benutzen, werden dies Änderungsbefehle.  Und
+mit »y« kopieren Sie den Text.  Und so weiter.
+
+
+Es gibt ein paar häufig benutzte Befehle, die Änderungen machen, die
+nirgendwo anders gepasst haben:
+
+	~	Groß-/Kleinschreibung des Zeichens unter dem Cursor ändern und
+		Cursor zum nächsten Zeichen bewegen.  Dies ist kein Operator
+		(außer 'tildeop' ist gesetzt), also können Sie es nicht mit
+		einer Bewegung benutzen.  Er funktioniert nicht im visuellen
+		Modus und ändert dann die Schreibung für den ganzen
+		ausgewählten Text.
+
+	I	Gehe in den Einfügemodus, nachdem der Cursor auf das erste
+		nicht-leere Zeichen der Zeile gesetzt wurde.
+
+	A	Gehe in den Einfügemodus, nachdem der Cursor auf das
+		Zeilenende gesetzt wurde.
+
+==============================================================================
+
+Nächstes Kapitel: |usr_05.txt| Eigene Einstellungen setzen
+
+Copyright: siehe |manual-copyright| vim:tw=78:ts=8:ft=help:norl:

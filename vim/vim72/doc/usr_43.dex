@@ -1,0 +1,189 @@
+*usr_43.txt*	Für Vim Version 7.2.  Letzte Änderung: 2006-Apr-24
+
+		     VIM-BENUTZERHANDBUCH - von Bram Moolenaar
+
+			       Dateitypen (filetypes) benutzen
+
+
+Wenn Sie eine Datei von einem bestimmten Typ editieren, zum Beispiel ein
+C-Programm oder ein Shell-Skript, benutzen Sie oft dieselben Einstellungen
+und Tastaturbelegungen.  Sie werden schnell müde, diese jedes Mal von Hand
+zu setzen.  Dieses Kapitel erklärt, wie man es automatisiert.
+
+|43.1|	Plugins für einen Dateityp
+|43.2|	Einen Dateityp hinzufügen
+
+
+Nächstes Kapitel: |usr_44.txt|  Eigene Syntax-Hervorhebungen
+ Voriges Kapitel: |usr_42.txt|  Neue Menüs hinzufügen
+Inhaltsübersicht: |usr_toc.txt|
+
+==============================================================================
+*43.1*	Plugins für einen Dateityp				*filetype-plugin*
+
+Wie mit der Benutzung von Dateitypen-Plugins begonnen wird, wurde bereits
+unter |add-filetype-plugin| besprochen.  Aber möglicherweise sind Sie mit
+den Standard-Vorgaben nicht zufrieden, weil diese minimal gehalten wurden.
+Angenommen, Sie wollen für C-Dateien die Option 'softtabstop' auf 4 setzen
+und eine Tastenbelegung definieren, welche einen dreizeiligen Kommentar
+einfügt.  Dies geht mit nur zwei Schritten:
+
+							*your-runtime-dir*
+1. Erzeugen Sie Ihr eigene Laufzeit-Verzeichnis.  Unter Unix ist dies für
+gewöhnlich »~/.vim«.  Erzeugen Sie in diesem Verzeichnis das Verzeichnis
+»ftplugin«: >
+
+	mkdir ~/.vim
+	mkdir ~/.vim/ftplugin
+<
+   Falls Sie nicht unter Unix arbeiten, prüfen Sie den Wert der Option
+'runtimepath', um zu sehen, wo Vim nach dem Verzeichnis »ftplugin« sucht: >
+
+	set runtimepath
+
+<  Sie werden normalerweise den ersten Verzeichnisnamen (vor dem ersten Komma)
+benutzen.  Möglicherweise wollen Sie der Option 'runtimepath' ein Verzeichnis
+in Ihrer Datei |vimrc| voranstellen, falls Ihnen die Vorgabe nicht gefällt.
+
+2. Erzeugen Sie die Datei »~/.vim/ftplugin/c.vim« mit folgendem Inhalt: >
+
+	setlocal softtabstop=4
+	noremap <buffer> <LocalLeader>c o/**************<CR><CR>/<Esc>
+
+Versuchen Sie nun eine C-Datei zu editieren.  Sie sollten bemerken, dass die
+Option 'softtabstop' auf 4 gesetzt wurde.  Wenn Sie aber eine andere Datei
+editieren, wird sie auf das vorgabemäßige 0 zurückgesetzt.  Das ist so,
+weil der Befehl »:setlocal« benutzt wurde.  Dieser setzt die Option
+'settabstop' nur für den lokalen Puffer.  Sobald Sie einen anderen Puffer
+editieren, wird sie auf den Vorgabewert für diesen Puffer gesetzt.  Für
+einen neuen Puffer ist dies der Standardwert oder der Wert des letzten
+»:set«-Befehls.
+
+Desweiteren verschwindet die Tastaturbelegung für »\c«, wenn ein anderer
+Puffer editiert wird.  Der Befehl »:map <buffer>« erzeugt eine
+Tastenbelegung, die lokal zu dem aktuellen Puffer ist.  Dies funktioniert
+mit jedem Belegungsbefehl: »:map!«, »:vmap« usw.  Das |<LocalLeader> in
+der Belegung wird durch den Wert der Variablen »maplocalleader« ersetzt.
+
+In diesem Verzeichnis können Sie Beispiele für Dateitypen-Plugins finden:
+>
+
+	$VIMRUNTIME/ftplugin/
+
+Weitere Details über das Schreiben von Dateitypen-Plugins können unter
+|write-plugin| gefunden werden.
+
+==============================================================================
+*43.2*	Einen Dateityp hinzufügen
+
+Falls Sie einen Dateityp benutzen, der von Vim nicht erkannt wird, bekommen
+Sie ihn folgendermaßen erkannt.  Sie brauchen ein eigenes
+Laufzeitverzeichnis.  Siehe oben |your-runtime-dir|.
+
+Erzeugen Sie eine Datei »filetype.vim«, die einen automatischen Befehl
+für Ihren Dateityp enthält.  (Automatische Befehle werden in Abschnitt
+|40.3| erläutert.)  Zum Beispiel: >
+
+	augroup filetypedetect
+	au BufNewFile,BufRead *.xyz	setf xyz
+	augroup END
+
+Dies lässt alle Dateien, die auf ».xyz« enden, als den Dateityp xyz
+erkennen.  Die Befehle »:augroup« setzen diesen automatischen Befehl in
+die Gruppe »filetypedetect«.  Dies erlaubt es, alle automatischen Befehle
+für die Dateityperkennung zu entfernen, wenn der Befehl »:filetype off«
+gegeben wird.  Der Befehl »setf« setzt die Option 'filetype' auf sein
+Argument, wenn er es nicht schon ohnehin war.  Dies stellt sicher, dass
+'filetype' nicht zweimal gesetzt wird.
+
+Sie können viele verschiedene übereinstimmungsmuster für den Namen Ihrer
+Datei benutzen.  Verzeichnisnamen können ebenfalls einbezogen werden.
+Siehe |autocmd-patterns|.  Zum Beispiel sind die Dateien unter
+»/usr/share/scripts/« alle Ruby-Dateien, aber haben nicht die erwartete
+Datei-Endung.  Fügen wir dies obigem Beispiel hinzu: >
+
+	augroup filetypedetect
+	au BufNewFile,BufRead *.xyz			setf xyz
+	au BufNewFile,BufRead /usr/share/scripts/*	setf ruby
+	augroup END
+
+Falls Sie aber nun eine Datei /usr/share/scripts/READE.txt editieren, ist
+diese keine Ruby-Datei.  Die Gefahr von Mustern, die auf »*« enden ist, dass
+schnell zu viele Dateien erfasst werden.  Um dieses Problem zu vermeiden,
+legen Sie die Datei in ein anderes Verzeichnis, eines, dass am Ende von
+'runtimepath' ist.  Für Unix könnten Sie zum Beispiel
+»~/.vim/after/filetype.vim« benutzen.
+  Jetzt packen Sie die Erkennung von Textdateien in ~/.vim/filetype.vim: >
+
+	augroup filetypedetect
+	au BufNewFile,BufRead *.txt			setf text
+	augroup END
+
+Diese Datei wird zuerst in 'runtimepath' gefunden.  Dann packen Sie dies in
+die ~/.vim/after/filetype.vim, welche zuletzt gefunden wird: >
+
+	augroup filetypedetect
+	au BufNewFile,BufRead /usr/share/scripts/*	setf ruby
+	augroup END
+
+Was nun passiert ist, dass Vim in jedem Verzeichnis in 'runtimepath' nach
+einer Datei »filetype.vim« sucht.  Zuerst wird ~/.vim/filetype.vim gefunden.
+Der automatische Befehl um *.txt Dateien zu erkennen wird dort definiert.
+Dann findet Vim die Datei filetype.vim in $VIMRUNTIME, was in der Mitte von
+'runtimepath' ist.  Schließlich wird ~/.vim/after/filetype.vim gefunden, und
+der automatische Befehl für die Erkennung von Ruby-Dateien in
+/usr/share/scripts wird hinzugefügt.
+   Wenn Sie nun /usr/share/scripts/README.txt editieren, werden die
+automatischen Befehle in der Reihenfolge überprüft, in der sie definiert
+wurden.  Das Muster *.txt trifft, also wird »setf text« ausgeführt, um den
+Dateityp auf »text« zu setzen.  Das Muster für Ruby trifft ebenfalls, und
+»setf ruby« wird ausgeführt.  Aber weil 'filetype' bereits auf »text« gesetzt
+war, passiert hier nichts.
+   Wenn Sie die Datei /usr/share/scripts/foobar editieren, werden dieselben
+automatischen Befehle überprüft.  Nur der für Ruby passt, und »setf ruby«
+setzt 'filetype' auf Ruby.
+
+
+ERKENNUNG NACH INHALT
+
+Falls Ihre Datei nicht am Dateinamen erkannt werden kann, mag es sein, dass
+sie sich an ihrem Inhalt erkennen lässt.  Zum Beispiel beginnen viele
+Skript-Dateien mit einer Zeile wie dieser:
+
+	#!/bin/xyz ~
+
+Um dieses Skript zu erkennen, erzeugen Sie eine Datei »scripts.vim« in
+Ihrem Laufzeit-Verzeichnis (an derselben Stelle wie filetype.vim.  Sie
+könnte so aussehen: >
+
+	if did_filetype()
+	  finish
+	endif
+	if getline(1) =~ '^#!.*[/\\]xyz\>'
+	  setf xyz
+	endif
+
+Die erste Abfrage auf did_filetype() geschieht, um zu vermeiden, dass
+Dateien, die bereits nach ihrem Dateinamen erkannt wurden, auf ihren Inhalt
+untersucht werden.  Dies spart Zeit, die auf das Prüfen der Datei verwandt
+würde, wenn der Befehl »setf« ohnehin ohne Wirkung bliebe.
+   Die Datei scripts.vim wird von einem automatischen Befehl in der
+standardmäßigen filetype.vim eingelesen.  Demnach ist die
+Überprüfungsreihenfolge:
+
+	1. Dateien filetype.vim vor $VIMRUNTIME in 'runtimepath'
+	2. Der erste Teil von $VIMRUNTIME/filetype.vim
+	3. Alle Dateien scripts.vim in 'runtimepath'
+	4. Der Rest von $VIMRUNTIME/filetype.vim
+	5. Dateien filetype.vim nach $VIMRUNTIME in 'runtimepath'
+
+Falls Ihnen dies nicht ausreicht, fügen Sie einen automatischen Befehl, der
+auf alle Dateien passt und ein Skript einliest, oder eine Funktion
+ausführt, die auf den Inhalt der Datei prüft, hinzu.
+
+==============================================================================
+
+Nächstes Kapitel: |usr_44.txt| Eigene Syntax-Hervorhebungen
+
+
+Copyright: siehe |manual-copyright| vim:tw=78:ts=8:ft=help:norl:

@@ -1,0 +1,391 @@
+*usr_42.txt*	Für Vim version 7.2.  Letzte Änderung: 2008-Mai-05
+
+		     VIM BENUTZERHANDBUCH - von Bram Moolenaar
+
+			      Neue Menüs hinzufügen
+
+
+Soweit wissen Sie, dass Vim sehr flexibel ist.  Die schließt die in der
+graphischen Oberfläche benutzten Menüs ein.  Sie können Ihre eigenen
+Menü-Einträge definieren, um bestimmte Befehle schneller erreichbar zu
+machen.  Die ist nur für Benutzer, die mit der Maus glücklich sind.
+
+|42.1|	Einführung
+|42.2|	Menübefehle
+|42.3|	Verschiedenes
+|42.4|	Werkzeugleisten- und Aufklapp-Menüs
+
+
+Nächstes Kapitel: |usr_43.txt|  Dateitypen (filetypes) benutzen
+ Voriges Kapitel: |usr_41.txt|  Ein Vim-Skript schreiben
+Inhaltsübersicht: |usr_toc.txt|
+
+==============================================================================
+*42.1*	Einführung
+
+Die Menüs, die Vim benutzt, werden in der Datei »$VIMRUNTIME/menu.vim«
+definiert.  Falls Sie Ihre eigenen Menüs schreiben wollen, mögen sie sich
+zuerst diese Datei ansehen wollen.
+   Um einen Menü-Eintrag zu definieren, benutzen Sie den Befehl »:menu«.  Die
+Grundform dieses Befehls ist wie folgt: >
+
+	:menu {menue-eintrag} {tasten}
+
+{menue-eintrag} beschreibt, wo im Menü der Eintrag stehen soll.  Ein
+typischer {menue-eintrag} ist »File.Save«, was den Eintrag »Save« im
+Menü »File« repräsentiert.  Der Punkt wird benutzt, um die Namen zu
+trennen.  Beispiel: >
+
+	:menu File.Save  :update<cr>
+
+Der Befehl »:update« schreibt die Datei, falls sie modifiziert wurde.
+   Sie können eine weitere Ebene hinzufügen: »Edit.Settings.Shiftwidth«
+definiert ein Untermenü »Settings« im Menü »Edit«, mit einem Eintrag
+»Shiftwidth«.  Sie könnten sogar noch tiefere Ebenen benutzen.  Benutzen Sie
+dies nicht zu sehr, Sie müssen die Maus um einiges bewegen, um so einen
+Eintrag zu benutzen.
+   Der Befehl »:menu« ähnelt sehr dem Befehl »:map«: Die linke Seite gibt an,
+wie das Element ausgelöst wird, und die rechte Seite definiert die Zeichen,
+die ausgeführt werden.  {tasten} sind Zeichen, sie werden benutzt, als wenn
+man sie eingeben würde.  Wenn also im Einfügemodus {tasten} einfacher Text
+ist, wird dieser Text eingefügt.
+
+
+SCHNELLZUGRIFF
+
+Das kaufmännische Und-Zeichen wird benutzt, um einen Schnellzugriff
+anzuzeigen.  Sie können zum Beispiel Alf-F benutzen, um »File« auszuwählen,
+und S für »Save«.  (Die Option 'winaltkeys' kann dies allerdings
+deaktivieren!)  Danach sieht {menu-eintrag} so aus: »&File.&Save«.  Die
+Schnellzugriffstasten werden im Menü unterstrichen.
+   Sie müssen acht geben, dass jede Taste nur einmal in jedem Menü verwendet
+wird.  Ansonsten können Sie nicht wissen, welche der beiden tatsächlich
+benutzt wird.  Vim gibt hierüber keine Warnung aus.
+
+
+PRIORITÄTEN
+
+Die tatsächliche Definition des Menü-Eintrags File.Save ist wie folgt: >
+
+	:menu 10.340 &File.&Save<Tab>:w  :confirm w<CR>
+
+Die Zahl 10.340 wird die Prioritätsnummer genannt.  Sie wird vom Editor
+benutzt, um zu entscheiden, wo der Menü-Eintrag zu platzieren ist.  Die erste
+Zahl (10) gibt die Position auf der Menü-Leiste an.  Niedriger bezifferte
+Menüs werden weiter links positioniert, höhere weiter rechts.
+   Dies sind die für die Standard-Menüs benutzten Prioritäten:
+
+	  10	20     40     50      60       70		9999
+
+	+------------------------------------------------------------+
+	| File	Edit  Tools  Syntax  Buffers  Window		Help |
+	+------------------------------------------------------------+
+
+Beachten Sie, dass dem Menü Help eine sehr hohe Zahl gegeben wurde, um es weit
+rechts erscheinen zu lassen.
+   Die zweite Zahl (340) entscheidet die Platzierung des Eintrags innerhalb
+des Menüs, das heruntergeklappt wird.  Niedrige Zahlen für den Anfang, hohe
+Zahlen für das Ende.  Dies sind die Prioritäten im Menü File:
+
+			+-----------------+
+	    10.310	|Open...	  |
+	    10.320	|Split-Open...	  |
+	    10.325	|New		  |
+	    10.330	|Close		  |
+	    10.335	|---------------- |
+	    10.340	|Save		  |
+	    10.350	|Save As...	  |
+	    10.400	|---------------- |
+	    10.410	|Split Diff with  |
+	    10.420	|Split Patched By |
+	    10.500	|---------------- |
+	    10.510	|Print		  |
+	    10.600	|---------------- |
+	    10.610	|Save-Exit	  |
+	    10.620	|Exit		  |
+			+-----------------+
+
+Beachten Sie, dass zwischen den Zahlen Raum gelassen wurde.  Hier können Sie
+Ihre eigenen Einträge einfügen, wenn Sie dies wirklich wollen (oft ist es
+besser, die Standard-Menüs in Ruhe zu lassen und für eigene Einträge ein neues
+Menü hinzuzufügen).
+   Wenn Sie ein Untermenü erzeugen, können Sie der Priorität ein weiteres
+».nummer« hinzufügen.  Also hat jeder Name in {menue-eintrag} seine
+Prioritätsnummer.
+
+
+SONDERZEICHEN
+
+In diesem Beispiel ist {menue-eintrag} »&File.&Save<Tab>:w«.  Dies bringt
+einen wichtigen Punkt vor: {menue-eintrag} muss ein Wort sein.  Falls Sie
+Punkte, Leerzeichen oder Tabulatoren verwenden wollen, benutzen Sie entweder
+die Notation mit <> (zum Beispiel <Space> und <Tab>) oder den
+Rückwärtsschrägstrich (\) als Fluchtzeichen. >
+
+	:menu 10.305 &File.&Do\ It\.\.\. :exit<CR>
+
+In diesem Beispiel enthält der Name des Menü-Eintrags »Do It...« ein
+Leerzeichen, und der Befehl ist »:exit<CR>«
+
+Das Zeichen <Tab> in einem Menü-Eintrag wird benutzt, um den Teil, der den
+Menü-Namen definiert, von dem Teil zu trennen, der einen Hinweis an den
+Benutzer gibt.  Bei dem Menü-Punkt File.Save ist »&File.&Save<Tab>:w« der
+benutzte {menue-eintrag}.  Also ist der Name »File.Save« und der Hinweis
+»:w«
+
+
+TRENNLINIEN
+
+Die Trennlinien, die benutzt werden, um verwandte Menü-Einträge zu gruppieren,
+können über einen Namen definiert werden, der mit »-« beginnt und endet.  Wenn
+mehrere Trennlinien verwendet werden, müssen die Namen verschieden sein.
+Ansonsten sind die Namen nicht entscheidend.
+   Der Befehl einer Trennlinie wird nie ausgeführt, dennoch müssen Sie einen
+definieren.  Ein einfacher Doppelpunkt tut es.  Beispiel: >
+
+	:amenu 20.510 Edit.-sep3- :
+
+==============================================================================
+*42.2*	Menübefehle
+
+Sie können Menü-Einträge definieren, die nur in bestimmten Modi
+bestehen.  Dies funktioniert genau wie die Variationen des Befehls »:map«:
+
+	:menu		normaler, visueller und Modus des hängenden Operators
+	:nmenu		Normal-Modus
+	:vmenu		visueller Modus
+	:omenu		Modus des hängenden Operators
+	:menu!		Einfüge- und Befehlszeilen-Modus
+	:imenu		Einfüge-Modus
+	:cmenu		Befehlszeilen-Modus
+	:amenu		Alle Modi
+
+Um zu vermeiden, dass die Befehle eines Menü-Eintrags umbelegt werden,
+benutzen Sie die Befehle »:nnoremenu«, »:anoremenu« usw.
+
+
+DIE BENUTZUNG VON :AMENU
+
+Der Befehl »:amenu« ist ein wenig verschieden.  Er nimmt an, dass die
+gegebenen {tasten} im Normalmodus ausgeführt werden sollen.  Wenn Vim im
+visuellen oder im Einfüge-Modus ist, wenn der Menü-Punkt benutzt wird, muss
+Vim zuerst zum Normal-Modus zurückkehren.  »:amenu« fügt für Sie ein CTRL-C
+bzw. CTRL-O ein.  Falls Sie zum Beispiel diesen Befehl benutzen:
+>
+	:amenu  90.100 Mine.Find\ Word  *
+
+Dann sind die resultierenden Menü-Befehle:
+
+	Normal-Modus:		*
+	Visueller Modus:		CTRL-C *
+	Modus des hängenden Operators:	CTRL-C *
+	Einfüge-Modus:		CTRL-O *
+	Befehlszeilen-Modus:	CTRL-C *
+
+Im Befehlszeilenmodus verlässt das CTRL-C den bis dahin getippten Befehl.  Im
+visuellen Modus und im Modus des hängenden Operators beendet CTRL-C den Modus.
+Das CTRL-O im Einfüge-Modus führt den Befehl aus und kehrt dann zum Einfüge-
+Modus zurück.
+   CTRL-O funktioniert nur für einen Befehl.  Wenn Sie zwei oder mehr Befehle
+benutzen müssen, packen Sie sie in eine Funktion und rufen diese Funktion auf.
+Beispiel >
+
+	:amenu  Mine.Next\ File  :call <SID>NextFile()<CR>
+	:function <SID>NextFile()
+	:  next
+	:  1/^Code
+	:endfunction
+
+Dieser Menü-Eintrag geht mit »:next« zur nächsten Datei in der Argumentenliste.
+Dann sucht es die Zeile, die mit »Code« beginnt.
+   Das <SID> vor dem Funktionsnamen ist die Skript-ID.  Die lässt die Funktion
+lokal zur aktuellen Vim-Skript-Datei werden.  Dies vermeidet Probleme, wenn
+eine andere Skript-Datei eine Funktion mit demselben Namen definiert.  Siehe
+|<SID>|.
+
+
+STILLE MENÜS
+
+Das Menü führt die {tasten} aus, als ob Sie sie getippt hätten.  Für einen
+Befehl mit »:« bedeutet dies, dass Sie den Befehl auf der Befehlszeile sehen.
+Falls es ein langer Befehl ist, erscheint eine Aufforderung, die Eingabetaste
+zu drücken.  Dies kann sehr nervig sein!
+   Um dies zu vermeiden, machen Sie das Menü still.  Dies wird mit dem
+Argument <silent> gemacht.  Nehmen Sie zum Beispiel den Aufruf von NextFile()
+im vorigen Beispiel.  Wenn Sie dieses Menü benutzen, sehen Sie dies auf der
+Befehlszeile:
+
+	:call <SNR>34_NextFile() ~
+
+Um diesen Text auf der Befehlszeile zu vermeiden, fügen Sie »<silent>«
+als erstes Argument ein: >
+
+	:amenu <silent> Mine.Next\ File :call <SID>NextFile()<CR>
+
+Benutzen Sie »<silent>« nicht zu oft.  Es wird für kurze Befehle nicht
+benötigt.  Falls Sie ein Menü für jemand anderes machen, gibt es diesem
+einen Hinweis, was er hätte tippen können, statt die Maus zu benutzen,
+wenn er den ausgeführten Befehl sehen kann.
+
+
+MENÜS AUFLISTEN
+
+Wenn ein Menü-Befehl ohne den Teil {tasten} benutzt wird, listet er die
+bereits definierten Menüs auf.  Sie können ein {menue-eintrag}, oder einen
+Teil davon, angeben, um bestimmte Menüs aufzulisten.  Beispiel: >
+
+	:amenu
+
+Dies listet alle Menüs auf.  Das ist eine lange Liste! Geben Sie besser den
+Namen eines Menüs an, um eine kürzere Liste zu bekommen: >
+
+	:amenu Edit
+
+Dies listet nur die Menü-Einträge mit »Edit« für alle Modi auf.  Um nur
+einen bestimmten Menü-Eintrag für den Eingabe-Modus aufzulisten: >
+
+	:imenu Edit.Undo
+
+Geben Sie acht, dass Sie exakt den richtigen Namen eingeben.
+Groß-/Kleinschreibung ist hier entscheidend.  Aber die »&« für den
+Schnellzugriff können weggelassen werden.  Ein <Tab> und was danach kommt
+kann ebenfalls weggelassen werden.
+
+
+MENÜS LÖSCHEN
+
+Um ein Menü zu löschen, wird derselbe Befehl wie fürs Auflisten verwandt,
+nur dass das »menu« zu »unmenu« wird.  Also wird »:menu« »:unmenu«,
+»:nmenu« wird »:nunmenu« usw.  Um den Eintrag »Tools.Make« für den
+Eingabemodus zu löschen: >
+
+	:iunmenu Tools.Make
+
+Sie können ein ganzes Menüs mit allen seinen Einträgen löschen, indem
+Sie den Namen des Menüs verwenden.  Beispiel: >
+
+	:aunmenu Syntax
+
+Dies löscht das Menü Syntax und alle Einträge darin.
+
+==============================================================================
+*42.3*	Verschiedenes
+
+Sie können das Aussehen der Menüs mit Kennzeichen in 'guioptions'
+verändern.  In der Voreinstellung sind alle, außer »M«, aktiviert.  Sie
+können ein Kennzeichen mit einem Befehl wie folgt entfernen: >
+
+	:set guioptions-=m
+<
+	m		Wenn entfernt, wird die Menüleiste nicht angezeigt.
+
+	M		Wenn hinzugefügt, werden die vorgegebenen Menüs nicht
+			geladen.
+
+	g		Wenn entfernt, werden inaktive Menü-Einträge nicht
+			eingegraut, sondern komplett entfernt.  (Funktioniert
+			nicht unter allen Systemen.)
+
+	t		Wenn entfernt, wird das Abzieh-Feature nicht aktiviert.
+
+Die gepunktete Linie am Anfang eines Menüs ist keine Trennlinie.  Wenn Sie
+diesen Eintrag auswählen, wird das Menü »abgezogen«: Es wird in einem
+eigenen Fenster angezeigt.  Dies nennt sich Abziehmenü (tearoff).  Dies ist
+nützlich, wenn Sie dasselbe Menü oft benutzen.
+
+Für die Übersetzung von Menü-Einträgen siehe |:menutrans|.
+
+Weil die Maus benutzt werden muss, um einen Menü-Eintrag auszuwählen, ist
+es eine gute Sachen, für das Auswählen einer Datei den Befehl »:browse«
+zu verwenden.  Und »:confirm«, um einen Dialog statt einer Fehlermeldung
+zu erhalten, z.B. wenn der aktuelle Puffer Änderungen enthält.  Diese
+beiden können kombiniert werden: >
+
+	:amenu File.Open  :browse confirm edit<CR>
+
+»:browse« lässt einen Datei-Browser erscheinen, um die zu editierende Datei
+auszuwählen.  »:confirm« öffnet einen Dialog, wenn der aktuelle Puffer
+Änderungen enthält.  Ihre Auswahlmöglichkeiten sind Sichern der Änderungen,
+sie verwerfen oder den Befehl abzubrechen.
+   Für kompliziertere Einträge können die Funktionen confirm() und
+inputdialog() benutzt werden.  Die vorgegebenen Menüs enthalten ein Paar
+Beispiele.
+
+==============================================================================
+*42.4*	Werkzeugleisten- und Aufklapp-Menüs
+
+Es gibt zwei besondere Menüs: ToolBar und PopUp.  Einträge, die mit diesen
+Namen beginnen, erscheinen nicht in der normalen Menü-Leiste.
+
+
+WERKZEUGLEISTE (TOOLBAR)
+
+Die Werkzeugleiste erscheint nur, wenn das Kennzeichen »T« in der Option
+'guioptions' steht.
+   Die Werkzeugleiste benutzt Piktogramme statt Text, um den Befehl zu
+kennzeichnen.  Zum Beispiel lässt der {menue-eintrag} »ToolBar.New« das
+Piktogramm »New« auf der Werkzeugleiste erscheinen.
+   Der Editor Vim hat 28 eingebaute Piktogramme.  Hier können Sie eine Tabelle
+finden: |builtin-tools|.  Die meisten werden in der voreingestellten
+Werkzeugleiste verwandt.  Sie können neu definieren, was diese Einträge tun
+(nachdem die vorgegebenen Menüs eingerichtet sind).
+   Sie können eine andere Bitmap für einen Werkzeugleisteneintrag hinzufügen.
+Oder einen neuen Werkzeugleisteneintrag mit einer Bitmap definieren.
+Definieren Sie zum Beispiel einen neuen Werkzeugleisteneintrag mit: >
+
+	:tmenu ToolBar.Compile  Compile the current file
+	:amenu ToolBar.Compile  :!cc % -o %:r<CR>
+
+Nun müssen Sie das Piktogramm erzeugen.  Für MS-Windows muss es im Bitmap-
+Format sein, mit dem Namen »Compile.bmp«.  Für Unix wird das Format XPM, der
+Dateiname ist »Compile.xpm«.  Die Größe muss 18 mal 18 Pixel sein.  Unter
+MS-Windows können auch andere Größen verwendet werden, aber dies sieht
+hässlich aus.
+   Setzen Sie das Bild in das Verzeichnis »bitmaps« in einem der Verzeichnisse
+in 'runtimepath'.  Für Unix z.B. »~/.vim/bitmaps/Compile.xpm«.
+
+Sie können Tooltips für die Einträge in der Werkzeugleiste definieren.
+Ein Tooltip ist ein kurzer Text, der erläutert, was ein
+Werkzeugleisteneintrag macht.  Zum Beispiel »Open file«.  Er erscheint,
+wenn der Mauszeiger auf dem Element ist, ohne sich für einen Moment zu
+bewegen.  Dies ist sehr nützlich, falls die Bedeutung des Bildes nicht so
+offensichtlich ist.  Beispiel: >
+
+	:tmenu ToolBar.Make  Run make in the current directory
+<
+	Anmerkung:
+	Geben Sie auf Groß-/Kleinschreibung acht.  »Toolbar« und »toolbar«
+	unterscheiden sich von »ToolBar«!
+
+Um ein Tooltip zu entfernen, benutzen Sie den Befehl |:tunmenu|.
+
+Die Option 'toolbar' kann benutzt werden, um Text statt Bilder anzuzeigen,
+oder sowohl Text wie auch Bild.  Die meisten Leute benutzen nur die Bilder,
+weil der Text ziemlich Raum einnimmt.
+
+
+AUFKLAPP-MENÜ
+
+Das Aufklappmenü klappt auf, wo der Mauszeiger ist.  Unter MS-Windows
+aktivieren Sie es, indem Sie die rechte Maustaste drücken.  Dann können Sie
+einen Eintrag mit der linken Maustaste auswählen.  Unter Unix wird das
+Aufklappmenü benutzt, indem Sie die rechte Maustaste drücken und halten.
+   Das Aufklappmenü erscheint nur, wenn 'mousemodel' auf »popup« oder
+»popup_setpos« gesetzt wurde.  Der Unterschied zwischen den beiden ist, dass
+»popup_setpos« den Cursor auf die Position des Mauszeigers setzt.  Wenn Sie
+innerhalb einer Auswahl klicken, wird die Auswahl unverändert benutzt.  Wenn
+es eine Auswahl gibt, Sie aber außerhalb klicken, wird die Auswahl entfernt.
+   Es gibt für jeden Modus ein eigenes Aufklappmenü.  Also gibt es nie graue
+Einträge wie in den normalen Menüs.
+
+Was ist die Bedeutung des Lebens, des Universums, von allem?	*42*
+Douglas Adams, die einzige Person, die wusste, worum es bei dieser Frage
+wirklich geht, ist nun unglücklicherweise tot.  Also mögen Sie sich jetzt
+fragen, was die Bedeutung des Todes ist ...
+
+==============================================================================
+
+Nächstes Kapitel: |usr_43.txt| Dateitypen (filetypes) benutzen
+
+
+Copyright: siehe |manual-copyright| vim:tw=78:ts=8:ft=help:norl:

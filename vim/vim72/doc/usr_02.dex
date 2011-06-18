@@ -1,0 +1,604 @@
+*usr_02.txt*	Für Vim Version 7.2.  Letzte Änderung: 2007-Feb-28
+
+		     VIM BENUTZERHANDBUCH - von Bram Moolenaar
+
+			    Die Ersten Schritte In Vim
+
+
+Dieses Kapitel liefert grade genug Informationen, um eine Datei mit Vim zu
+editieren.  Nicht gut oder schnell, aber Sie können editieren.  Nehmen Sie
+sich etwas Zeit, um mit diesen Befehlen zu üben; sie formen die Grundlage
+dessen, was folgt.
+
+|02.1|	Vim zum ersten Mal starten
+|02.2|	Text einfügen
+|02.3|	Umherbewegen
+|02.4|	Zeichen löschen
+|02.5|	Zurücknehmen (Undo) und Wiederherstellen (Redo)
+|02.6|	Andere Editier-Befehle
+|02.7|	Rauskommen
+|02.8|	Hilfe finden
+
+Nächstes Kapitel: |usr_03.txt|  Umherbewegen
+ Voriges Kapitel: |usr_01.txt|  Über die Handbücher
+Inhaltsübersicht: |usr_toc.txt|
+
+==============================================================================
+*02.1*	Vim zum ersten Mal starten
+
+Um Vim zu starten, geben Sie diesen Befehl ein: >
+
+	gvim file.txt
+
+In UNIX können Sie dies an jeder Befehlseingabe tippen.  Falls Sie Microsoft
+Windows benutzen, öffnen Sie ein MS-DOS Eingabe-Fenster und geben Sie den
+Befehl ein.
+   In beiden Fällen beginnt Vim eine file.txt benannte Datei zu editieren. 
+Weil dies eine neue Datei ist, erhalten Sie ein leeres Fenster.  Ihr
+Bildschirm wird so aussehen:
+
+	+---------------------------------------+
+	|#					|
+	|~					|
+	|~					|
+	|~					|
+	|~					|
+	|"file.txt" [Neue Datei]		|
+	+---------------------------------------+
+		(»#« ist die Cursor-Position.)
+
+Die Tilde (~) zeigt Zeilen an, die nicht in der Datei sind.  Mit anderen
+Worten, wenn Vim nichts mehr von der Datei anzuzeigen hat, zeigt er Tilden.
+In der letzten Zeile des Bildschirms zeigt eine Mitteilungslinie an, dass
+die Datei »file.txt« benannt ist und dass Sie eine neue Datei erzeugen.
+Die Mitteilung ist temporär und andere Informationen überschreiben sie.
+
+
+DER VIM-BEFEHL
+
+Der Befehl »gvim« veranlasst den Editor, zum Editieren ein neues Fenster
+zu erzeugen.  Falls Sie diesen Befehl benutzen: >
+
+	vim file.txt
+
+findet das Editieren in Ihrem Befehlsfenster statt.  Mit anderen Worten:
+falls Sie in einem XTerm sind, benutzt der Editor Ihr XTerm-Fenster.  Falls
+Sie eine MS-DOS Eingabeaufforderung unter Microsoft Windows benutzen, findet
+das Editieren in diesem Fenster statt.  Der Text im Fenster sieht in beiden
+Versionen gleich aus, mit »gvim« aber haben Sie zusätzliche Features, wie
+eine Menüleiste.  Mehr hierzu später.
+
+==============================================================================
+*02.2*	Text einfügen
+
+Vim ist ein modaler Editor.  Das heißt, dass sich der Editor
+verschiedenartig verhält, abhängig in welchem Modus Sie sich befinden.  Die
+beiden grundlegenden Modi werden Normal- und Einfüge-Modus genannt.  Im Normal-
+Modus sind die getippten Zeichen Befehle.  Im Einfüge-Modus werden die Zeichen
+als Text eingefügt.
+   Weil Sie Vim gerade gestartet haben, sind Sie im Normal-Modus.  Um den
+Einfüge-Modus zu starten, tippen Sie den Befehl »i« (»i« wie »insert«). 
+Dann können Sie den Text eingeben.  Er wird in die Datei eingefügt.  Um den
+folgenden Programmierer-Limerick einzugeben, tippen Sie dies: >
+
+	iA very intelligent turtle
+	Found programming UNIX a hurdle
+
+Nach dem Tippen von »turtle« drücken Sie die Taste <Enter> um eine neue
+Zeile zu beginnen.  Schließlich drücken Sie die Taste <Esc>, um den
+Einfüge-Modus zu beenden und zum Normal-Modus zurück zu kehren.  Nun haben
+Sie zwei Zeilen Text in Ihrem Vim-Fenster:
+
+	+---------------------------------------+
+	|A very intelligent turtle		|
+	|Found programming UNIX a hurdle	|
+	|~					|
+	|~					|
+	|					|
+	+---------------------------------------+
+
+
+WAS IST DAS FÜR EIN MODUS?
+
+Um sehen zu können, in welchem Modus Sie sich befinden, tippen Sie diesen
+Befehl: >
+
+	:set showmode
+
+Sie bemerken, dass Vim den Cursor in die letzte Zeile des Fensters bewegt,
+wenn Sie den Doppelpunkt tippen.  Dort tippen Sie Doppelpunkt-Befehle (Befehle,
+die mit einem Doppelpunkt beginnen).  Schließen Sie diesen Befehl ab, indem
+Sie <Enter> drücken (alle Doppelpunkt-Befehle werden auf diese Weise
+abgeschlossen).
+   Falls Sie nun den »i«-Befehl tippen, zeigt Vim in der letzten Zeile des
+Fensters -- EINFÜGEN -- an.  Dies zeigt an, dass Sie sich im Einfüge-Modus
+befinden.
+
+	+---------------------------------------+
+	|A very intelligent turtle		|
+	|Found programming UNIX a hurdle	|
+	|~					|
+	|~					|
+	|-- EINFÜGEN --				|
+	+---------------------------------------+
+
+Falls Sie <Esc> drücken, um in den Normal-Modus zurück zu gehen, wird die
+letzte Zeile leer gemacht.
+
+
+AUS DEM SUMPF HERAUS KOMMEN
+
+Eines der Probleme für Vim-Neulinge ist modale Verwirrung, die dadurch
+verursacht wird, dass man vergisst, in welchem Modus man sich befindet, oder
+indem man versehentlich einen Befehl tippt, der den Modus wechselt.  Um zum
+Normal-Modus zurück zu kehren, egal in welchem Modus Sie sich befinden,
+drücken Sie die Taste <Esc>.  Manchmal müssen Sie sie zwei Mal drücken.
+Falls Vim Sie anpiept, sind Sie bereits im Normal-Modus.
+
+==============================================================================
+|02.3|	Umherbewegen
+
+Nachdem Sie zurück im Normal-Modus sind, können Sie umherbewegen, indem
+Sie diese Tasten benutzen:
+
+	h   links					*hjkl*
+	j   runter
+	k   hoch
+	l   rechts
+
+Auf den ersten Blick wirken diese Befehle wie zufällig ausgesucht.  Bei
+allem, wer hat je davon gehört, l für rechts zu benutzen?  Es gibt aber
+einen sehr guten Grund für diese Wahl: den Cursor zu bewegen ist das
+Häufigste, was Sie in einem Editor machen, und diese Tasten sind in der
+Grundstellung der rechten Hand.  Mit anderen Worten, diese Befehle sind da
+platziert, wo man sie am schnellsten tippen kann (besonders, wenn man mit
+zehn Fingern tippt).
+
+	Anmerkung:
+	Sie können den Cursor auch bewegen, indem Sie die Pfeiltasten benutzen. 
+	Falls Sie dies jedoch tun, verlangsamen Sie gewaltig Ihr Editieren,
+	weil Sie, um die Pfeiltasten zu drücken, die Hand von den Texttasten
+	zu den Pfeiltasten bewegen müssen.  Bedenkt man, dass Sie dies
+	hunderte Male in der Stunde tun mögen, kann dies eine bedeutende Menge
+	an Zeit beanspruchen.
+	   Es gibt auch Tastaturen ohne Pfeiltasten, oder solche, die sie an
+	ungewöhnlichen Orten platzieren; daher hilft es in solchen Situationen,
+	die hjkl-Tasten zu kennen.
+
+Ein Weg, sich an diese Befehle zu erinnern ist, dass »h« links, »l«
+rechts ist, und j nach unten zeigt.  In einem Bilde: >
+
+		       k
+		   h     l
+		     j
+
+Der beste Weg, diese Befehle zu lernen, ist, sie zu benutzen.  Benutzen Sie
+den Befehl »i«, um noch ein Paar Zeilen an Text einzugeben.  Dann benutzen
+Sie die Tasten hjkl, um sich umher zu bewegen und irgendwo ein Wort
+einzugeben.  Vergessen Sie nicht, <Esc> zu drücken, um in den Normal-Modus
+zurück zu gehen.  Der |vimtutor| ist auch ein netter Weg, zu lernen, indem
+man es tut.
+
+Benutzern in Japan schlägt Hiroshi Iwatani dieses vor:
+
+			Komsomolsk
+			    ^
+			    |
+	   Huan Ho	<--- --->  Los Angeles
+	(der gelbe Fluss)   |
+			    v
+			  Java (die Insel, nicht die Programmiersprache)
+
+==============================================================================
+*02.4*	Zeichen löschen
+
+Um ein Zeichen zu löschen, bewegen Sie den Cursor auf es und tippen Sie
+»x«.  (Dies ist eine Reminiszenz an die alten Tage der Schreibmaschine,
+als man die Dinge gelöscht hat, indem man auf ihnen »xxxx« tippte.)
+Bewegen Sie den Cursor auf den Anfang der ersten Zeile, und tippen Sie
+»xxxxxxx« (sieben »x«e), um »A very« zu löschen.  Das Ergebnis sollte
+so aussehen:
+
+	+---------------------------------------+
+	|intelligent turtle			|
+	|Found programming UNIX a hurdle	|
+	|~					|
+	|~					|
+	|					|
+	+---------------------------------------+
+
+Nun können Sie neuen Text eingeben, z.B. indem Sie tippen: >
+
+	iA young <Esc>
+
+Dies beginnt eine Einfügung (das »i«), fügt die Worte »A young« ein,
+und verlässt dann den Einfüge-Modus (das abschließende <Esc>).  Das
+Ergebnis:
+
+	+---------------------------------------+
+	|A young intelligent turtle		|
+	|Found programming UNIX a hurdle	|
+	|~					|
+	|~					|
+	|					|
+	+---------------------------------------+
+
+
+EINE ZEILE LÖSCHEN
+
+Um eine ganze Zeile zu löschen, benutzen Sie den Befehl »dd«.  Die
+nachfolgenden Zeilen bewegen sich dann nach oben, um die Lücke zu
+schließen:
+
+	+---------------------------------------+
+	|Found programming UNIX a hurdle	|
+	|~					|
+	|~					|
+	|~					|
+	|					|
+	+---------------------------------------+
+
+
+EINEN ZEILENUMBRUCH LÖSCHEN
+
+In Vim können Sie zwei Zeilen zusammenfügen, das heißt, dass der Zeilenumbruch
+zwischen ihnen entfernt wird.  Dies tut der Befehl »J« (join).
+   Nehmen Sie diese zwei Zeilen:
+
+	A young intelligent ~
+	turtle ~
+
+Bewegen Sie den Cursor in die erste Zeile und drücken Sie »J«:
+
+	A young intelligent turtle ~
+
+==============================================================================
+*02.5*	Zurücknehmen (Undo) und Wiederherstellen (Redo)
+
+Nehmen Sie an, Sie haben zuviel gelöscht.  Nun, Sie können es nochmals tippen,
+aber es gibt einen einfacheren Weg.  Der Befehl »u« nimmt die letzte
+Editierung zurück.  Sehen wir uns dies in Aktion an: Nachdem wir »dd« benutzt
+haben, um die erste Zeile zu löschen, bringt ein »u« sie zurück.
+   Noch eines: bewegen Sie den Cursor auf das »A« in der ersten Zeile:
+
+	A young intelligent turtle ~
+
+Tippen Sie nun »xxxxxxx« um »A young« zu löschen.  Das Ergebnis ist wie
+folgt:
+
+	 intelligent turtle ~
+
+Tippen Sie »u«, um das letzte Löschen zurück zu nehmen.  Dies entfernte
+das »g«, so dass das Zurücknehmen dieses Zeichen wiederbringt.
+
+	g intelligent turtle ~
+
+Der nächste »u«-Befehl bringt das vorletzte gelöschte Zeichen zurück:
+
+	ng intelligent turtle ~
+
+Der nächste »u«-Befehl gibt uns das »u«, und so weiter:
+
+	ung intelligent turtle ~
+	oung intelligent turtle ~
+	young intelligent turtle ~
+	 young intelligent turtle ~
+	A young intelligent turtle ~
+
+	Anmerkung:
+	Falls Sie »u« zwei Mal tippen, und als Ergebnis denselben Text zurück
+	erhalten, ist Vim so konfiguriert, dass er Vi-kompatibel arbeitet. 
+	Siehe hier, um dies zu beheben: |not-compatible|.
+	   Dieser Text nimmt an, das Sie nach dem »Vim-Weg« arbeiten.  Sie
+	mögen es vorziehen, den guten alten Vi-Weg zu gehen, aber Sie müssen
+	dann auf kleinere Unterschiede im Text acht geben.
+
+
+WIEDERHERSTELLEN (REDO)
+
+Falls Sie zu viele Schritte zurück nehmen, können Sie CTRL-R (redo)
+drücken, um den vorigen Befehl umzukehren.  Mit anderen Worten, es nimmt
+die Zurücknahme zurück.  Drücken Sie zwei Mal CTRL-R, um dies in Aktion
+zu sehen.  Das Zeichen »A« und das folgende Leerzeichen verschwinden:
+
+	young intelligent turtle ~
+
+Es gibt eine besondere Version des Zurücknahme-Befehl, den Befehl »U«
+(Zeile zurück nehmen).  Der Befehl Zeile zurück nehmen nimmt alle
+Änderungen auf der zuletzt editierten Zeile zurück.  Diesen Befehl ein
+zweites Mal geben nimmt das vorige »U« zurück.
+
+	A very intelligent turtle ~
+	  xxxx				»very« löschen
+
+	A intelligent turtle ~
+		      xxxxxx		»turtle« löschen
+
+	A intelligent ~
+					Stellen Sie die Zeile mit »U« wieder her
+	A very intelligent turtle ~
+					Nehmen Sie »U« mit »u« zurück
+	A intelligent ~
+
+Der Befehl »U« ist selbst eine Änderung, die der Befehl »u« zurück
+nimmt und CTRL-R wieder herstellt.  Dies mag ein wenig verwirrend sein.
+Machen Sie sich keine Sorgen, mit »u« und CTRL-R können Sie zu jeder
+Situation zurück kehren, die Sie hatten.  Mehr darüber in Abschnitt
+|32.1|.
+
+==============================================================================
+*02.6*	Andere Editier-Befehle
+
+Vim hat eine große Zahl Befehle, um den Text zu ändern.  Siehe |Q_in| und
+abwärts.  Hier ein Paar häufig benutzte.
+
+
+ANFÜGEN
+
+Der Befehl »i« fügt ein Zeichen vor dem Zeichen unter dem Cursor ein.  Das
+funktioniert gut; aber was geschieht, falls Sie etwas am Ende der Zeile
+anfügen wollen?  Dafür müssen Sie Text nach dem Cursor einfügen.  Dies wird
+mit dem Befehl »a« (append) erledigt.
+   Um zum Beispiel folgende Zeile zu ändern:
+
+	and that's not saying much for the turtle. ~
+in
+	and that's not saying much for the turtle!!! ~
+
+bewegen Sie den Cursor auf den Punkt am Ende der Zeile.  Dann tippen Sie
+»x«, um ihn zu löschen.  Der Cursor steht nun am Zeilenende auf dem »e«
+von »turtle«.  Tippen Sie nun >
+
+	a!!!<Esc>
+
+um nach dem »e« von »turtle« drei Ausrufezeichen anzufügen:
+
+	and that's not saying much for the turtle!!! ~
+
+
+EINE NEUE ZEILE ÖFFNEN
+
+Der Befehl »o« erzeugt eine neue, leere Zeile unter dem Cursor und setzt Vim
+in den Einfüge-Modus.  Dann können Sie den Text für die neue Zeile tippen.
+   Nehmen Sie an, der Cursor ist irgendwo in der ersten dieser zwei Zeilen:
+
+	A very intelligent turtle ~
+	Found programming UNIX a hurdle ~
+
+Benutzen Sie nun den Befehl »o« und tippen neuen Text: >
+
+	oThat liked using Vim<Esc>
+
+Das Ergebnis ist:
+
+	A very intelligent turtle ~
+	That liked using Vim ~
+	Found programming UNIX a hurdle ~
+
+Der Befehl »O« (großes »o«) öffnet eine Zeile über dem Cursor.
+
+
+EINE ANZAHL BENUTZEN
+
+Angenommen Sie wollen sich neun Zeilen nach oben bewegen.  Sie können
+»kkkkkkkkk« tippen oder Sie können den Befehl »9k« eingeben.
+Tatsächlich können Sie vielen Befehlen eine Nummer voranstellen.  Oben in
+diesem Kapitel haben Sie zum Beispiel drei Ausrufezeichen an das Ende einer
+Zeile angefügt, indem Sie »a!!!<Esc>« tippten.  Ein anderer Weg, dies zu
+tun, ist es, den Befehl »3a!<Esc>« zu benutzen.  Die Anzahl von drei sagt
+dem Befehl, dass er dreifach arbeiten soll.  Um analog drei Zeichen zu
+löschen, benutzen Sie den Befehl »3x«.  Die Anzahl steht immer vor dem
+Befehl, bei dem sie wirken soll.
+
+==============================================================================
+*02.7*	Rauskommen
+
+Um Vim zu verlassen, benutzen Sie den Befehl »ZZ«.  Dieser Befehl schreibt
+die Datei und beendet Vim.
+
+	Anmerkung:
+	Anders als viele Editoren legt Vim nicht automatisch eine
+	Sicherungskopie der Datei an.  Falls Sie »ZZ« tippen, werden Ihre
+	Änderungen eingefügt und es gibt keinen Weg zurück.  Sie können Vim
+	aber so konfigurieren, dass er Sicherungsdateien anlegt, siehe |07.4|.
+
+
+ÄNDERUNGEN VERGESSEN
+
+Manchmal machen Sie eine Reihe von Änderungen und erkennen plötzlich, dass
+Sie besser dran waren, als Sie begonnen.  Kein Grund zur Sorge; Vim hat
+einen Befehl, um diese Dinge wegzuwerfen und sich zu beenden.  Er lautet: >
+
+	:q!
+
+Vergessen Sie nicht, <Enter> zu drücken, um den Befehl abzuschließen.
+
+Für die, die sich für die Details interessieren, die drei Teile dieses Befehls
+sind der Doppelpunkt (:), der in den Befehlszeile-Modus geht, der Befehl »q«,
+der dem Editor sagt, dass er sich beenden soll; und der Aufhebe-Modifizierer
+(!).
+   Der Aufhebe-Modifizierer wird benötigt, weil Vim widerwillig ist, Dinge
+wegzuwerfen.  Falls Sie nur »:q« tippten, würde Vim eine Fehlermeldung
+anzeigen und sich weigern, sich zu beenden:
+
+	E37: Kein Schreibvorgang seit der letzten Änderung (erzwinge mit !) ~
+
+Indem Sie die Aufhebung angeben, sagen Sie Vim, »Ich weiß, dass das was
+ich tue dumm aussieht, aber ich bin ein großer Junge und will dies wirklich
+tun«.
+
+Falls Sie fortfahren wollen, mit Vim zu editieren: Der Befehl »:e!« ladet
+nochmals die Originalversion der Datei.
+
+==============================================================================
+*02.8*	Hilfe finden
+
+Alles, was Sie jemals wissen wollten, kann in den Vim Hilfe-Dateien gefunden
+werden.  Scheuen Sie sich nicht zu fragen!
+   Um allgemeine Hilfe zu bekommen, benutzen Sie diesen Befehl: >
+
+	:help
+
+Sie könnten auch die erste Funktionstaste <F1> benutzen.  Falls Ihre Tastatur
+eine Taste <Help> hat, könnte sie auch funktionieren.
+   Wenn Sie kein Thema angeben, zeigt »:help« das allgemeine Hilfe-Fenster an.
+Die Macher von Vim taten etwas seht kleveres (oder sehr lahmes) mit dem Hilfe-
+System: Sie haben das Hilfe-Fenster zu einem normalen Editierfenster gemacht.
+Sie können alle normalen Vim-Befehle benutzen, um durch die Hilfe zu
+navigieren.  Daher bewegen Sie h, j, k und l nach links, unten, oben und nach
+rechts.
+   Um aus dem Hilfe-Fenster herauszukommen, benutzen Sie denselben Befehl, den
+Sie benutzen, um aus dem Editor herauszukommen: »ZZ«.  Dies schließt nur das
+Hilfe-Fenster, nicht Vim.
+
+Während Sie den Hilfe-Text lesen, werden sie einigen in vertikale Balken
+eingeschlossenen Text bemerken (zum Beispiel |help|).  Die zeigt eine Hyper-
+Verknüpfung an.  Wenn Sie den Cursor zwischen die Balken bewegen und CTRL-]
+(zu Tag springen), nimmt Sie das Hilfe-System zu dem angegebenen Thema.  (Aus
+hier nicht erörterten Gründen ist die Vim-Terminologie für eine Verknüpfung
+Tag.  Damit springt CTRL-] zu der Stelle, die das Tag unter dem Cursor angibt.)
+   Nach einer Reihe von Sprüngen mögen Sie zurückgehen wollen.  CTRL-T (Tag
+vom Stapel nehmen) bringt Sie zu der vorigen Position.  CTRL-O (auf ältere
+(older) Position springen) funktioniert hier.
+   In der ersten Zeile des Hilfe-Bildschirms ist die Notation *help.txt*.
+Dieser Name zwischen »*«-Zeichen wird vom Hilfe-System benutzt, um ein Tag
+(Verküpfungsziel) zu definieren.
+   Siehe |29.1| für Details über den Gebrauch von Tags.
+
+Um Hilfe zu einem gegebenen Thema zu bekommen, benutzen Sie folgenden
+Befehl: >
+
+	:help {Thema}
+
+Um zum Beispiel Hilfe zu dem Befehl »x« zu bekommen, geben Sie folgendes
+ein: >
+
+	:help x
+
+Um herauszufinden, wie man Text löscht (delete), benutzen Sie diesen
+Befehl: >
+
+	:help deleting
+
+Um einen kompletten Index aller Vim-Befehle zu bekommen, benutzen Sie
+folgenden Befehl: >
+
+	:help index
+
+Wenn Sie Hilfe für einen Steuerzeichen-Befehl benötigen (CTRL-A zum
+Beispiel), müssen Sie Ihm das Präfix »CTRL-« voranstellen. >
+
+	:help CTRL-A
+
+Der Editor Vim hat viele verschiedene Modi.  Das Hilfe-System zeigt
+standardmäßig die Befehle des Normal-Modus.  Zum Beispiel zeigt der
+folgende Befehl die Hilfe für den Befehl CTRL-H im Normal-Modus: >
+
+	:help CTRL-H
+
+Benutzen Sie ein Modus-Präfix, um andere Modi anzugeben.  Falls Sie die
+Hilfe für einen Befehl im Einfüge-Modus wollen, benutzen Sie »i_«.  Für
+CTRL-H gibt dies den folgenden Befehl: >
+
+	:help i_CTRL-H
+
+Wenn Sie Vim starten, können Sie mehrere Befehlszeilen-Argumente benutzen.
+Sie alle beginnen mit einem Minus (-).  Um herauszufinden, was das Argument
+»-t« tut, benutzen Sie zum Beispiel diesen Befehl: >
+
+	:help -t
+
+Vim hat eine Reihe von Optionen, die Ihnen ermöglichen, den Editor zu
+konfigurieren und anzupassen.  Falls Sie die Hilfe für eine Option wollen,
+müssen Sie sie in einfache Anführungszeichen setzen.  Um zum Beispiel
+herauszufinden, was die Option 'number' tut, benutzen Sie folgenden Befehl:
+>
+
+	:help 'number'
+
+Die Tabelle mit allen Modus-Präfixen kann hier gefunden werden:
+|help-context|
+
+Sondertasten werden von spitzen Klammern umgeben.  Um zum Beispiel die Hilfe
+über die Pfeil-nach-oben-Taste im Einfüge-Modus zu finden, benutzen Sie
+diesen Befehl: >
+
+	:help i_<Up>
+
+Falls Sie eine Fehlermeldung sehen, die Sie nicht verstehen, zum Beispiel:
+
+	E37: Kein Schreibvorgang seit der letzten Änderung (erzwinge mit !) ~
+
+können Sie die Fehlernummer am Anfang benutzen, um über sie Hilfe zu
+finden: >
+
+	:help E37
+
+
+Zusammenfassung:					*help-summery*  >
+	:help
+<		Gibt Ihnen sehr allgemeine Hilfe.  Rollen Sie nach unten, um 
+		eine Liste aller Hilfedateien zu sehen, einschließlich derer, 
+		die lokal hinzugefügt wurden (d.h. nicht mit Vim verteilt). >
+	:help user-toc.txt
+<		Inhaltsübersicht des Benutzerhandbuchs. >
+	:help :thema
+<		Ex-Befehl »thema«, zum Beispiel das Folgende: >
+	:help :help
+<		Hilfe zum Bekommen von Hilfe. >
+	:help abc
+<		Befehl »abc« im Normal-Modus. >
+	:help CTRL-B
+<		Steuertasten-Kombination <C-B> im Normal-Modus. >
+	:help i_abc
+	:help i_CTRL-B
+<		Dasselbe im Einfüge-Modus. >
+	:help v_abc
+	:help v_CTRL-B
+<		Dasselbe im Visuellen Modus. >
+	:help c_abc
+	:help c_CTRL-B
+<		Dasselbe im Befehlszeilen-Modus. >
+	:help 'thema'
+<		Option 'thema'. >
+	:help thema()
+<		Funktion »thema«. >
+	:help -thema
+<		Befehlszeilen-Option »-thema«. >
+	:help +thema
+<		Feature zur Kompilierzeit »+thema«. >
+	:help EreignisName
+<		Ereignis für automatische Befehle »EreignisName«. >
+	:help digraphs.txt
+<		Die erste Zeile der Hilfedatei »digraph.txt«.
+		Analog für jede andere Hilfedatei. >
+	:help muster<Tab>
+<		Finde ein mit »muster« beginnendes Hilfe-Tag.
+		<Tab> wiederholen für weitere. >
+	:help muster<CTRL-D>
+<		Zeige alle möglichen auf »muster« passenden Hilfe-Tags 
+		auf einmal. >
+	:helpgrep muster
+<		Durchsuche den ganzen Text aller Hilfe-Dateien nach »muster«.
+		Springe zur ersten Übereinstimmung.  Springe zu anderen
+		Übereinstimmungen mit: >
+	    :cn
+<			nächste Übereinstimmung >
+	    :cprev
+	    :cN
+<			vorige Übereinstimmung >
+	    :cfirst
+	    :clast
+<			erste bzw. letzte Übereinstimmung >
+	    :copen
+	    :cclose
+<			Öffnen bzw. Schließen des Quickfix-Fensters; drücken
+			Sie <Enter>, um zu dem Element unter dem Cursor zu
+			springen
+
+
+==============================================================================
+
+Nächstes Kapitel: |usr_03.txt| Umherbewegen
+
+Copyright: siehe |manual-copyright| vim:tw=78:ts=8:ft=help:norl:
