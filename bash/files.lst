@@ -1,0 +1,5 @@
+!/bin/sh
+echo "$PWD" > Dateiliste.lst
+ls  $PWD >> Dateiliste.lst
+gedit Dateiliste.lst
+
