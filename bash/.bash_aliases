@@ -33,6 +33,9 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 
+# /var/www or htdocs folders
+alias www='cd /var/www'
+
 # Git related 
 alias gst='git status' 
 alias gc='git commit' 

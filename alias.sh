@@ -10,3 +10,6 @@ mv ~/.bash_aliases ~/.bash_aliases_backup
 ln -s $PWD/bash/.bashrc ~/.bashrc
 ln -s $PWD/bash/.bash_logout ~/.bash_logout
 ln -s $PWD/bash/.bash_aliases ~/.bash_aliases
+
+rm -r ~/.config/geany
+ln -s $PWD/geany/ ~/.config/geany

@@ -1,13 +1,16 @@
 #!/bin/bash
 # mount
+# cp script to ~/.gnome2/nautilus-scripts/mount_iso
 
 gksudo -k /bin/echo "got r00t?"
 
 BASENAME=`basename $NAUTILUS_SCRIPT_SELECTED_FILE_PATHS .iso`
+FILE_PATH=${NAUTILUS_SCRIPT_SELECTED_FILE_PATHS%?}
+
 
 sudo mkdir "/media/$BASENAME"
 
-zenity --info --title "ISO Mounter" --text "$BASENAME e $NAUTILUS_SCRIPT_SELECTED_FILE_PATHS"
+zenity --info --title "ISO Mounter" --text "$BASENAME e $FILE_PATH"
 
 
 if sudo mount -o loop -t iso9660 $NAUTILUS_SCRIPT_SELECTED_FILE_PATHS "/media/$BASENAME"
