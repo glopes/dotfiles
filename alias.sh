@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#ln -s ~/.dotfiles/vim/.vimrc ~/.vimrc
-#ln -s ~/.dotfiles/vim/.gvimrc ~/.gvimrc
+#ln -s ~/dotfiles/vim/.vimrc ~/.vimrc
+#ln -s ~/dotfiles/vim/.gvimrc ~/.gvimrc
 
 mv ~/.bashrc ~/.bashrc_backup
 mv ~/.bash_logout ~/.bash_logout_backup
